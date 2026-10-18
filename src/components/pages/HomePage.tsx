@@ -381,6 +381,8 @@ export function HomePage() {
 
   // Show the real multi-chain total once loaded; $0.00 while loading (skeleton covers it).
   const displayTotal     = portfolio.totalUsd
+  const totalUsdNum      = Number(String(displayTotal).replace(/[^0-9.-]/g, ''))
+  const totalLocalNumber = localCcy.code !== 'USD' ? localCcy.localNumber(totalUsdNum) : null
   // Skeleton shows whenever the portfolio batch is still in-flight.
   const isLoadingBalance = portfolio.isLoading
 
@@ -514,9 +516,9 @@ export function HomePage() {
         ) : (
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
             <div style={{ fontSize: 28, fontWeight: 700, letterSpacing: '-0.02em', color: C.text, lineHeight: 1.15, fontFamily: F }}>
-              {hidden ? '••••••' : displayTotal}
+              {hidden ? '••••••' : (totalLocalNumber ?? displayTotal)}
             </div>
-            <span style={{ fontSize: 16, fontWeight: 600, color: C.t2 }}>USD</span>
+            <span style={{ fontSize: 16, fontWeight: 600, color: C.t2 }}>{totalLocalNumber ? localCcy.code : 'USD'}</span>
             <button
               onClick={() => setHidden(h => !h)}
               style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, WebkitTapHighlightColor: 'transparent', flexShrink: 0 }}
@@ -527,13 +529,10 @@ export function HomePage() {
           </div>
         )}
 
-        {/* Local-currency estimate (display only, chosen in Settings) */}
-        {!isLoadingBalance && !hidden && (() => {
-          const local = localCcy.approx(Number(String(displayTotal).replace(/[^0-9.-]/g, '')))
-          return local ? (
-            <div style={{ fontSize: 14, fontWeight: 600, color: C.t2, marginTop: 4, fontFamily: F }}>{local}</div>
-          ) : null
-        })()}
+        {/* USD amount stays visible under the chosen currency */}
+        {!isLoadingBalance && !hidden && totalLocalNumber && (
+          <div style={{ fontSize: 14, fontWeight: 600, color: C.t2, marginTop: 4, fontFamily: F }}>≈ ${displayTotal} USD</div>
+        )}
 
         {/* FX timestamp */}
         {!fxLoading && portfolio.fxUpdatedAt && (
@@ -606,6 +605,17 @@ export function HomePage() {
           onClick={() => {}}
           hidden={hidden} C={C} isLoading={portfolio.isLoading}
         />
+        {totalLocalNumber && (
+          <div style={{ width: CARD_W, flexShrink: 0, background: C.surf, border: `1px solid ${C.bdr}`, borderRadius: 16, padding: '14px 12px 12px', fontFamily: F, textAlign: 'left' }}>
+            <div style={{ marginBottom: 8 }}>
+              <div style={{ width: 30, height: 30, borderRadius: 9, background: C.surf2, border: `1px solid ${C.bdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 800, color: C.blue }}>{localCcy.code.slice(0, 3)}</div>
+            </div>
+            <div style={{ fontSize: 14, fontWeight: 800, color: C.text, fontFamily: MONO, letterSpacing: '-0.02em', marginBottom: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {hidden ? '••••' : totalLocalNumber}
+            </div>
+            <div style={{ fontSize: 10, fontWeight: 600, color: C.blue }}>{localCcy.code} · Value</div>
+          </div>
+        )}
         <CrossChainCard
           networksWithBalance={portfolio.nonArcNetworksWithBalance}
           totalUsd={portfolio.nonArcTotalUsd}
