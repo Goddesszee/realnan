@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { User, Camera, Save, Shield, Bell, Clock, LogOut, ChevronRight, CheckCircle, Sun, Moon, Monitor, ArrowLeft, AtSign, Headphones, Gift, HelpCircle, Star, Lightbulb, Info, Link2, Copy, Check as CheckIcon } from 'lucide-react'
+import { Wallet, User, Camera, Save, Shield, Bell, Clock, LogOut, ChevronRight, CheckCircle, Sun, Moon, Monitor, ArrowLeft, AtSign, Headphones, Gift, HelpCircle, Star, Lightbulb, Info, Link2, Copy, Check as CheckIcon } from 'lucide-react'
 import { useAccount, useDisconnect } from 'wagmi'
 import { useAppStore } from '../../store/appStore'
 import { useNanTheme } from '../../hooks/useNanTheme'
 import { useNanName } from '../../hooks/useNanName'
+import { useDisplayCurrency, currencyFlag } from '../../lib/display-currency'
+import { openCurrencyPicker } from '../../lib/currency-picker'
 
 const F    = "'Inter', -apple-system, sans-serif"
 const MONO = "'JetBrains Mono', Menlo, monospace"
@@ -19,6 +21,7 @@ export function ProfilePage() {
   const { disconnect } = useDisconnect()
   const { auth, profile, setProfile, setActiveView, theme, setTheme, nanHandle, setNanHandle, logout, previousView } = useAppStore()
   const { resolveName, registrySet } = useNanName()
+  const ccy = useDisplayCurrency()
   const [view, setView] = useState<'main' | 'account'>('main')
   const [tab, setTab] = useState<Tab>('profile')
   const [displayName, setDisplayName] = useState(profile.displayName)
@@ -227,6 +230,7 @@ export function ProfilePage() {
         {cardBlock([
           { key: 'account', icon: <User />, label: 'My Account', onClick: () => { setTab('profile'); setView('account') } },
           nanRow,
+          { key: 'currency', icon: <Wallet />, label: 'Show balance in', sub: ccy.code === 'USD' ? 'US dollars only' : `${currencyFlag(ccy.code)} ${ccy.code}`, onClick: () => openCurrencyPicker(ccy.list, ccy.code, ccy.setCode) },
           { key: 'referral', icon: <Gift />, label: 'Refer a Friend', sub: refEarned && Number(refEarned) > 0 ? `$${refEarned} earned` : 'Earn $1 USDC when a friend joins & sends $100', onClick: () => setActiveView('referral') },
         ])}
 
