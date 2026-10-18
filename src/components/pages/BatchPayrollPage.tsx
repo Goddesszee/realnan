@@ -136,8 +136,8 @@ export function BatchPayrollPage() {
     setRows(r => r.map(x => x.id === id ? { ...x, ...patch } : x))
 
   // ── Execute one row ───────────────────────────────────────────────────────
-  const sendOne = async (row: PayrollRow): Promise<void> => {
-    if (!usdcFact || !address) return
+  const sendOne = async (row: PayrollRow): Promise<'done' | 'failed'> => {
+    if (!usdcFact || !address) return 'failed'
     updateRow(row.id, { status: 'sending' })
     const raw = parseAmount(ARC, row.amount).raw
 
@@ -147,7 +147,7 @@ export function BatchPayrollPage() {
         const txHash = await sendFromPasskeyWallet({ clientKey, to: row.address as `0x${string}`, amount: raw })
         updateRow(row.id, { status: 'done', txHash: txHash ?? 'passkey-tx' })
         addActivity({ type: 'sent', description: `Payroll: ${row.name}`, amount: parseFloat(row.amount), sign: '-', status: 'confirmed', counterparty: row.address, txHash: txHash ?? 'passkey-tx' })
-        return
+        return 'done'
       }
 
       if (isCircleUser && auth?.walletId) {
@@ -156,9 +156,15 @@ export function BatchPayrollPage() {
           abiFunctionSignature: 'transfer(address,uint256)',
           abiParameters: [row.address, raw.toString()],
         })
-        updateRow(row.id, { status: 'done', txHash: txHash ?? 'circle-tx' })
-        addActivity({ type: 'sent', description: `Payroll: ${row.name}`, amount: parseFloat(row.amount), sign: '-', status: 'confirmed', counterparty: row.address, txHash: txHash ?? 'circle-tx' })
-        return
+        // No hash back means the payment was cancelled, declined or failed: never count it as paid.
+        if (!txHash) {
+          const why = circleTx.getLastError?.() || 'Payment was not completed'
+          updateRow(row.id, { status: 'failed', error: String(why).slice(0, 80) })
+          return 'failed'
+        }
+        updateRow(row.id, { status: 'done', txHash })
+        addActivity({ type: 'sent', description: `Payroll: ${row.name}`, amount: parseFloat(row.amount), sign: '-', status: 'confirmed', counterparty: row.address, txHash })
+        return 'done'
       }
 
       // Wagmi path — sequential per row (one tx at a time)
@@ -175,25 +181,33 @@ export function BatchPayrollPage() {
           }
         )
       })
+      return 'done'
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Transaction failed'
       updateRow(row.id, { status: 'failed', error: msg.slice(0, 80) })
+      return 'failed'
     }
   }
+
+  // Rows still to pay. Anyone already paid in this batch is never sent to again.
+  const remainingRows = validRows.filter(r => r.status !== 'done')
+  const remainingTotal = remainingRows.reduce((sum, r) => sum + parseFloat(r.amount), 0)
 
   const runPayroll = async () => {
     if (!address) { toast.error('Connect your wallet first'); return }
     if (isWrongChain) { switchChain({ chainId: ARC }); return }
-    if (validRows.length === 0) { toast.error('No valid rows to send'); return }
+    if (remainingRows.length === 0) { toast.error('Everyone in this batch has been paid'); return }
+    const toSend = remainingRows
     setRunning(true)
-    // Reset statuses
-    setRows(r => r.map(x => ({ ...x, status: 'pending' as const, error: undefined, txHash: undefined })))
-    for (const row of validRows) {
-      await sendOne(row)
+    setRows(r => r.map(x => x.status === 'done' ? x : { ...x, status: 'pending' as const, error: undefined, txHash: undefined }))
+    let sent = 0
+    for (const row of toSend) {
+      if (await sendOne(row) === 'done') sent++
     }
     setRunning(false)
     setDone(true)
-    toast.success(`Payroll complete: ${validRows.length - failedCount} sent`)
+    if (sent === toSend.length) toast.success(`Payroll complete: ${sent} sent`)
+    else toast.error(`${sent} sent, ${toSend.length - sent} failed. Nobody is paid twice if you retry.`)
   }
 
   const inputBase: React.CSSProperties = {
@@ -340,9 +354,9 @@ export function BatchPayrollPage() {
 
           {/* Action row */}
           <div style={{ display: 'flex', gap: 8 }}>
-            {!running && !done && (
+            {!running && (
               <button onClick={() => { setRows([]); setDone(false) }} style={{ flex: 1, height: 44, background: 'transparent', color: T2, border: `1px solid ${BDR}`, borderRadius: 11, fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: F }}>
-                Clear all
+                {done ? 'New batch' : 'Clear all'}
               </button>
             )}
             {done && failedCount > 0 && (
@@ -352,14 +366,16 @@ export function BatchPayrollPage() {
             )}
             <button
               onClick={() => { void runPayroll() }}
-              disabled={running || validRows.length === 0 || !address}
+              disabled={running || remainingRows.length === 0 || !address}
               style={{ flex: 2, height: 44, background: running ? SURF2 : BLUE, color: running ? T2 : '#fff', border: `1px solid ${running ? BDR : BLUE}`, borderRadius: 11, fontSize: 14, fontWeight: 600, cursor: running || !address ? 'not-allowed' : 'pointer', fontFamily: F, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7, opacity: !address ? 0.5 : 1 }}
             >
               {running
                 ? <><Spin size={15} /> Sending {doneCount + failedCount}/{validRows.length}…</>
-                : done
-                  ? <><ArrowRight size={15} /> Send again</>
-                  : <><Play size={15} /> Send {validRows.length} payments · {totalAmount.toFixed(2)} USDC</>
+                : remainingRows.length === 0
+                  ? <><CheckCircle2 size={15} /> All payments sent</>
+                  : done
+                    ? <><ArrowRight size={15} /> Retry {remainingRows.length} unpaid · {remainingTotal.toFixed(2)} USDC</>
+                    : <><Play size={15} /> Send {remainingRows.length} payments · {remainingTotal.toFixed(2)} USDC</>
               }
             </button>
           </div>
