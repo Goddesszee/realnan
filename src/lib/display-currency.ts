@@ -112,6 +112,19 @@ export function formatLocalNumber(usd: number, perUsd: number): string {
   return v.toLocaleString('en', { maximumFractionDigits: digits, minimumFractionDigits: digits })
 }
 
+const FLAG_OVERRIDE: Record<string, string> = {
+  EUR: 'EU', ANG: 'CW', XOF: '🌍', XAF: '🌍', XCD: '🌎', XPF: '🌏', XDR: '🌐',
+}
+
+/** Flag emoji for a currency code (country flag, EU flag for the euro, globe for shared currencies). */
+export function currencyFlag(code: string): string {
+  const o = FLAG_OVERRIDE[code]
+  if (o && o.length > 2) return o
+  const iso = o ?? code.slice(0, 2)
+  if (!/^[A-Z]{2}$/.test(iso)) return '🌐'
+  return String.fromCodePoint(...[...iso].map(ch => 0x1F1E6 + ch.charCodeAt(0) - 65))
+}
+
 const POPULAR = ['NGN', 'GHS', 'KES', 'ZAR', 'GBP', 'EUR', 'CAD', 'AUD', 'INR', 'AED', 'UGX', 'TZS', 'XOF', 'EGP']
 
 /** Every currency we have a rate for, popular ones first. USD is always first as "None". */
@@ -121,7 +134,7 @@ export function currencyList(rates: Record<string, number> | undefined): Display
   try { names = new Intl.DisplayNames(['en'], { type: 'currency' }) } catch { /* old browser */ }
   const nameOf = (c: string) => { try { return names?.of(c) ?? c } catch { return c } }
   if (!rates) return [...out, ...DISPLAY_CURRENCIES.filter(c => c.code !== 'USD')]
-  const codes = Object.keys(rates).filter(c => /^[A-Z]{3}$/.test(c) && c !== 'USD' && rates[c] > 0)
+  const codes = Object.keys(rates).filter(c => /^[A-Z]{3}$/.test(c) && c !== 'USD' && rates[c] > 0 && (!c.startsWith('X') || ['XOF', 'XAF', 'XCD', 'XPF'].includes(c)))
   const list = codes.map(code => ({ code, name: nameOf(code) })).filter(c => c.name && c.name !== c.code)
   const pop = POPULAR.map(c => list.find(x => x.code === c)).filter(Boolean) as DisplayCurrency[]
   const rest = list.filter(c => !POPULAR.includes(c.code)).sort((a, b) => a.name.localeCompare(b.name))

@@ -19,7 +19,7 @@ import { TokenLogo } from '../ui/TokenLogo'
 import { useSyncMultiChainBalances } from '../../hooks/useMultiChainBalances'
 import { usePortfolioBalances } from '../../hooks/usePortfolioBalances'
 import { useFxRates } from '../../hooks/useFxRates'
-import { useDisplayCurrency } from '../../lib/display-currency'
+import { useDisplayCurrency, currencyFlag } from '../../lib/display-currency'
 import { TokenNetworkSheet } from './TokenNetworkSheet'
 import { useNanName } from '../../hooks/useNanName'
 import { RewardsSheet } from './RewardsSheet'
@@ -518,7 +518,7 @@ export function HomePage() {
             <div style={{ fontSize: 28, fontWeight: 700, letterSpacing: '-0.02em', color: C.text, lineHeight: 1.15, fontFamily: F }}>
               {hidden ? '••••••' : (totalLocalNumber ?? displayTotal)}
             </div>
-            <span style={{ fontSize: 16, fontWeight: 600, color: C.t2 }}>{totalLocalNumber ? localCcy.code : 'USD'}</span>
+            <span style={{ fontSize: 16, fontWeight: 600, color: C.t2 }}>{totalLocalNumber ? `${currencyFlag(localCcy.code)} ${localCcy.code}` : 'USD'}</span>
             <button
               onClick={() => setHidden(h => !h)}
               style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, WebkitTapHighlightColor: 'transparent', flexShrink: 0 }}
@@ -608,7 +608,7 @@ export function HomePage() {
         {totalLocalNumber && (
           <div style={{ width: CARD_W, flexShrink: 0, background: C.surf, border: `1px solid ${C.bdr}`, borderRadius: 16, padding: '14px 12px 12px', fontFamily: F, textAlign: 'left' }}>
             <div style={{ marginBottom: 8 }}>
-              <div style={{ width: 30, height: 30, borderRadius: 9, background: C.surf2, border: `1px solid ${C.bdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 800, color: C.blue }}>{localCcy.code.slice(0, 3)}</div>
+              <div style={{ width: 30, height: 30, borderRadius: 9, background: C.surf2, border: `1px solid ${C.bdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, lineHeight: 1 }}>{currencyFlag(localCcy.code)}</div>
             </div>
             <div style={{ fontSize: 14, fontWeight: 800, color: C.text, fontFamily: MONO, letterSpacing: '-0.02em', marginBottom: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {hidden ? '••••' : totalLocalNumber}

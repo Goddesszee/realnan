@@ -6,7 +6,7 @@ import { useAppStore } from '../../store/appStore'
 import { formatAddress } from '../../utils/format'
 import { requireChain } from '@/onchain-facts'
 import { Badge } from '../ui/Badge'
-import { useDisplayCurrency } from '../../lib/display-currency'
+import { useDisplayCurrency, currencyFlag } from '../../lib/display-currency'
 import { openCurrencyPicker } from '../../lib/currency-picker'
 import { CONTACT_EMAIL, CONTACT_MAILTO, X_HANDLE, X_URL } from '../../lib/contact'
 
@@ -133,7 +133,7 @@ export function SettingsPage() {
           label="Show balance in"
           sub={ccy.code === 'USD' ? 'US dollars only' : (ccy.ready ? `Live rate${ccy.updatedAt ? ' · ' + ccy.updatedAt.toLocaleTimeString('en', { hour: '2-digit', minute: '2-digit' }) : ''}` : 'Loading rate…')}
           onClick={() => openCurrencyPicker(ccy.list, ccy.code, ccy.setCode)}
-          right={<span style={{ fontSize:13, fontWeight:700, color:TEXT, padding:'6px 10px', border:`1px solid ${BDR}`, borderRadius:8, background:SURF2 }}>{ccy.code === 'USD' ? 'None' : ccy.code} ▾</span>}
+          right={<span style={{ fontSize:13, fontWeight:700, color:TEXT, padding:'6px 10px', border:`1px solid ${BDR}`, borderRadius:8, background:SURF2 }}>{ccy.code === 'USD' ? 'None' : `${currencyFlag(ccy.code)} ${ccy.code}`} ▾</span>}
           noBorder
         />
       </CardBlock>

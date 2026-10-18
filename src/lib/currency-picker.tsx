@@ -1,7 +1,7 @@
 /** Searchable bottom sheet to choose the display currency. */
 import { createRoot } from 'react-dom/client'
 import { useState } from 'react'
-import type { DisplayCurrency } from './display-currency'
+import { currencyFlag, type DisplayCurrency } from './display-currency'
 
 const F = "'Inter', -apple-system, sans-serif"
 
@@ -23,7 +23,8 @@ function Sheet({ list, current, onPick, onClose }: { list: DisplayCurrency[]; cu
           {shown.map(c => (
             <button key={c.code} onClick={() => { onPick(c.code); onClose() }}
               style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '12px 6px', background: 'none', border: 'none', borderBottom: '1px solid var(--nan-bdr, rgba(255,255,255,0.08))', color: 'inherit', cursor: 'pointer', fontFamily: F, textAlign: 'left' }}>
-              <span style={{ width: 46, fontSize: 14, fontWeight: 800 }}>{c.code === 'USD' ? 'USD' : c.code}</span>
+              <span aria-hidden style={{ width: 30, fontSize: 22, lineHeight: 1, textAlign: 'center' }}>{currencyFlag(c.code)}</span>
+              <span style={{ width: 40, fontSize: 14, fontWeight: 800 }}>{c.code}</span>
               <span style={{ flex: 1, fontSize: 14, color: 'var(--nan-text2, rgba(255,255,255,0.7))' }}>{c.name}</span>
               {c.code === current && <span style={{ color: '#0866F5', fontWeight: 800 }}>✓</span>}
             </button>
