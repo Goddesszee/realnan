@@ -12,11 +12,12 @@ import {
   FileText, Plus, Download, Share2, Printer, Copy,
   Trash2, ChevronRight, X, Check, AlertCircle,
   ArrowRight, CheckCircle2, Clock, ExternalLink,
-  ChevronDown, Eye, Zap,
+  ChevronDown, Eye, Zap, MessageCircle,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { useAppStore, type Invoice, type InvoiceLineItem, type InvoiceStatus } from '../../store/appStore'
 import { downloadInvoicePdf, shareInvoice, printInvoice, invoicePaymentLink } from '../../lib/invoice-pdf'
+import { shareOnWhatsApp, invoiceWhatsAppText } from '../../lib/whatsapp'
 import { useAccount } from 'wagmi'
 import { TokenLogo } from '../ui/TokenLogo'
 
@@ -488,10 +489,10 @@ export function InvoicePage() {
                   {inv.amountDue > 0 && inv.amountDue < inv.total ? `${fmtAmt(inv.amountDue, inv.currency)} left · ` : ''}Due {fmtDate(inv.dueDate)}
                 </div>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 12, paddingTop: 12, borderTop: `1px solid ${BDR}` }}>
+              <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 8, marginTop: 12, paddingTop: 12, borderTop: `1px solid ${BDR}` }}>
                 <button onClick={() => copyLink(inv)} style={{ ...actionBtn, background: 'rgba(8,102,245,0.10)', borderColor: 'rgba(8,102,245,0.28)', color: BLUE }}><Copy size={14} /> Copy link</button>
                 <button onClick={() => shareInvoice(inv)} style={actionBtn}><Share2 size={14} /> Share</button>
-                <button onClick={() => downloadInvoicePdf(inv)} aria-label="Download PDF" style={{ ...actionBtn, padding: 0, width: 34, justifyContent: 'center' }}><Download size={14} /></button>
+                <button onClick={() => shareOnWhatsApp(invoiceWhatsAppText(inv, invoicePaymentLink(inv)))} aria-label="Send on WhatsApp" style={{ ...actionBtn, padding: 0, width: 34, justifyContent: 'center', color: '#128C7E' }}><MessageCircle size={14} /></button>
                 <div style={{ marginLeft: 'auto', display: 'flex', gap: 6 }}>
                   {delConfirm === inv.id ? (
                     <>
@@ -654,6 +655,13 @@ export function InvoicePage() {
             </button>
           )}
         </div>
+
+        {selected.status !== 'paid' && selected.status !== 'cancelled' && (
+          <button onClick={() => shareOnWhatsApp(invoiceWhatsAppText(selected, payLink))}
+            style={{ width: '100%', height: 48, marginBottom: 10, background: '#128C7E', color: '#fff', border: 'none', borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: F, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+            <MessageCircle size={16} /> Send on WhatsApp
+          </button>
+        )}
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: 8 }}>
           {[

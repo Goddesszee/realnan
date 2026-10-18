@@ -7,8 +7,9 @@ import {
   Plus, Search, ChevronRight, Copy, Share2,
   X, Check, Clock, CheckCircle2, XCircle, Eye,
   Link2, FileText,
-  AlertCircle, CalendarDays, DollarSign, User,
+  AlertCircle, CalendarDays, DollarSign, User, MessageCircle,
 } from 'lucide-react'
+import { shareOnWhatsApp } from '../../lib/whatsapp'
 import { toast } from 'sonner'
 import { useAppStore, PaymentRequest, PaymentRequestStatus } from '../../store/appStore'
 import { useNanTheme } from '../../hooks/useNanTheme'
@@ -676,6 +677,19 @@ function DetailView({
             <Share2 size={15} /> Share
           </button>
         </div>
+      )}
+
+      {req.status !== 'paid' && req.status !== 'cancelled' && req.status !== 'expired' && (
+        <button onClick={() => {
+          shareOnWhatsApp(`${req.recipientName ? req.recipientName + ', ' : ''}please pay ${req.amount.toFixed(2)} ${req.currency}${req.title ? ' for ' + req.title : ''}.\nPay securely here: ${payLink}`)
+          if (req.status === 'pending') updatePaymentRequest(req.id, { status: 'viewed' })
+        }} style={{
+          width: '100%', marginBottom: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+          padding: '14px', borderRadius: 13, background: '#128C7E', border: 'none', color: '#fff',
+          fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: F, WebkitTapHighlightColor: 'transparent',
+        }}>
+          <MessageCircle size={16} /> Send on WhatsApp
+        </button>
       )}
 
       {/* ── Preview link ── */}
