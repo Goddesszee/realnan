@@ -29,6 +29,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const route = (req.query.route ?? req.body?.route) as string | undefined
 
+  // ── GET naira-ramp?action=status ─────────────────────────────────────────
+  // Naira deposits and cash-outs go through a licensed partner. Until one is connected
+  // (NAIRA_RAMP_PROVIDER set and implemented), the app keeps the screens in "launching soon" mode.
+  if (route === 'naira-ramp') {
+    return res.status(200).json({ success: true, configured: false })
+  }
+
   // ── GET activity-feed ──────────────────────────────────────────────────────
   // Returns the last 200 stored activity records for a wallet address.
   // Records are written by /api/tx-track (community.ts) into per-wallet Redis lists.

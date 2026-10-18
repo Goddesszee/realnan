@@ -4,6 +4,8 @@ import { useAppStore } from './store/appStore'
 import { getCircleCreds, fetchPrimaryWallet } from './lib/circle-session'
 import { PaymentRequestPayPage } from './components/pages/PaymentRequestPayPage'
 import { PayByNamePage } from './components/pages/PayByNamePage'
+import { NairaRampPage } from './components/pages/NairaRampPage'
+import { nairaRampVisible } from './lib/naira-ramp'
 import { PayByInvoicePage } from './components/pages/PayByInvoicePage'
 import { InvoicePage } from './components/pages/InvoicePage'
 import { BatchPayrollPage } from './components/pages/BatchPayrollPage'
@@ -329,6 +331,9 @@ export default function App() {
         {activeView === 'bridge' && <Suspense fallback={<PageLoading />}><TradePage initialTab="bridge" /></Suspense>}
         {activeView === 'swap'   && <Suspense fallback={<PageLoading />}><TradePage initialTab="swap" /></Suspense>}
         {activeView === 'onramp' && <OnrampPage />}
+        {activeView === 'naira-in' && nairaRampVisible() && <NairaRampPage mode="in" />}
+        {activeView === 'naira-opay' && nairaRampVisible() && <NairaRampPage mode="in" initialMethod="opay" />}
+        {activeView === 'cashout' && nairaRampVisible() && <NairaRampPage mode="out" />}
         {activeView === 'faucet' && <FaucetPage />}
         {activeView === 'activity' && <ActivityPage />}
         {activeView === 'settings' && <SettingsPage />}

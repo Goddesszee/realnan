@@ -194,3 +194,17 @@ export function useDisplayCurrency() {
 
   return { code, setCode, approx, localNumber, list, ready: Boolean(perUsd), updatedAt: cache ? new Date(cache.at) : null }
 }
+
+/** Live units of `code` per 1 USD (e.g. NGN), or undefined while loading. Display/estimate only. */
+export function useFxRate(code: string): number | undefined {
+  const [cache, setCache] = useState<RateCache | null>(readCache)
+  useEffect(() => {
+    const sync = () => setCache(readCache())
+    listeners.add(sync)
+    let live = true
+    void ensureRates().then(c => { if (live && c) setCache(c) })
+    startPolling()
+    return () => { live = false; listeners.delete(sync); stopPolling() }
+  }, [])
+  return cache?.rates[code]
+}

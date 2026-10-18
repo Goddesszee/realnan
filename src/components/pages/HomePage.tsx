@@ -4,7 +4,7 @@ import { useAccount, useReadContract } from 'wagmi'
 import { ConnectKitButton } from 'connectkit'
 import { erc20Abi } from 'viem'
 import {
-  Eye, EyeOff, Plus, Send, ArrowLeftRight,
+  Eye, EyeOff, Plus, Send, ArrowLeftRight, Banknote,
   Activity as ActivityIcon,
   ArrowUpRight, ArrowDownLeft, ChevronRight,
   ArrowDownToLine, Sparkles, Bot,
@@ -19,6 +19,8 @@ import { TokenLogo } from '../ui/TokenLogo'
 import { useSyncMultiChainBalances } from '../../hooks/useMultiChainBalances'
 import { usePortfolioBalances } from '../../hooks/usePortfolioBalances'
 import { useFxRates } from '../../hooks/useFxRates'
+import { nairaRampVisible } from '../../lib/naira-ramp'
+import { showAddMoneySheet } from '../../lib/add-money-sheet'
 import { useDisplayCurrency, currencyFlag } from '../../lib/display-currency'
 import { TokenNetworkSheet } from './TokenNetworkSheet'
 import { useNanName } from '../../hooks/useNanName'
@@ -478,7 +480,7 @@ export function HomePage() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
           <NotificationBell color={C.t2} />
           <button
-            onClick={() => setActiveView('onramp')}
+            onClick={() => (nairaRampVisible() ? showAddMoneySheet(setActiveView) : setActiveView('onramp'))}
             style={{
               display: 'flex', alignItems: 'center', gap: 4,
               padding: '6px 10px', borderRadius: 20,
@@ -665,6 +667,7 @@ export function HomePage() {
         <ActionBtn Icon={Send}            label="Send"      primary onClick={() => setActiveView('send')}    C={C} />
         <ActionBtn Icon={ArrowDownToLine} label="Receive"           onClick={() => setActiveView('receive')} C={C} />
         <ActionBtn Icon={ArrowLeftRight}  label="Trade"             onClick={() => setActiveView('trade')}   C={C} />
+        {nairaRampVisible() && <ActionBtn Icon={Banknote} label="Cash out" onClick={() => setActiveView('cashout')} C={C} />}
         <ActionBtn Icon={Bot}             label="NAN AI"    ai      onClick={() => setActiveView('agent')}   C={C} />
       </div>
 
