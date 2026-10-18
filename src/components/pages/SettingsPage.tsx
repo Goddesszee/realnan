@@ -6,6 +6,7 @@ import { useAppStore } from '../../store/appStore'
 import { formatAddress } from '../../utils/format'
 import { requireChain } from '@/onchain-facts'
 import { Badge } from '../ui/Badge'
+import { DISPLAY_CURRENCIES, useDisplayCurrency } from '../../lib/display-currency'
 import { CONTACT_EMAIL, CONTACT_MAILTO, X_HANDLE, X_URL } from '../../lib/contact'
 
 const ARC  = 5042
@@ -81,6 +82,7 @@ export function SettingsPage() {
   const [daily, setDaily] = useState(String(agentPermissions.dailyLimit))
   const [perTx, setPerTx] = useState(String(agentPermissions.perTxLimit))
   const [saved, setSaved] = useState(false)
+  const ccy = useDisplayCurrency()
 
   const saveLimits = () => {
     setAgentPermissions({ dailyLimit:parseFloat(daily)||agentPermissions.dailyLimit, perTxLimit:parseFloat(perTx)||agentPermissions.perTxLimit })
@@ -119,6 +121,22 @@ export function SettingsPage() {
           label="Network"
           sub={chain.name}
           right={<Badge variant={chain.isTestnet ? 'default' : 'success'} size="sm">{chain.isTestnet ? 'Testnet' : 'Mainnet'}</Badge>}
+          noBorder
+        />
+      </CardBlock>
+
+      <SectionLabel>Display</SectionLabel>
+      <CardBlock>
+        <RowItem
+          icon={<Wallet />}
+          label="Show balance in"
+          sub={ccy.code === 'USD' ? 'US dollars only' : (ccy.ready ? 'Approximate, at today\'s rate' : 'Loading rate…')}
+          right={
+            <select value={ccy.code} onChange={e => ccy.setCode(e.target.value)} aria-label="Display currency"
+              style={{ maxWidth:150, padding:'6px 8px', border:`1px solid ${BDR}`, borderRadius:8, fontSize:13, fontFamily:F, color:TEXT, background:SURF2, outline:'none' }}>
+              {DISPLAY_CURRENCIES.map(c => <option key={c.code} value={c.code}>{c.code === 'USD' ? 'None' : c.code}</option>)}
+            </select>
+          }
           noBorder
         />
       </CardBlock>

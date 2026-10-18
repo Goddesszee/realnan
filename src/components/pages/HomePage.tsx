@@ -19,6 +19,7 @@ import { TokenLogo } from '../ui/TokenLogo'
 import { useSyncMultiChainBalances } from '../../hooks/useMultiChainBalances'
 import { usePortfolioBalances } from '../../hooks/usePortfolioBalances'
 import { useFxRates } from '../../hooks/useFxRates'
+import { useDisplayCurrency } from '../../lib/display-currency'
 import { TokenNetworkSheet } from './TokenNetworkSheet'
 import { useNanName } from '../../hooks/useNanName'
 import { RewardsSheet } from './RewardsSheet'
@@ -376,6 +377,7 @@ export function HomePage() {
   // ── Portfolio (multi-chain, multi-token) ──────────────────────────────────
   const portfolio = usePortfolioBalances(address)
   const { usdPerEur, rates, loading: fxLoading } = useFxRates()
+  const localCcy = useDisplayCurrency()
 
   // Show the real multi-chain total once loaded; $0.00 while loading (skeleton covers it).
   const displayTotal     = portfolio.totalUsd
@@ -524,6 +526,14 @@ export function HomePage() {
             </button>
           </div>
         )}
+
+        {/* Local-currency estimate (display only, chosen in Settings) */}
+        {!isLoadingBalance && !hidden && (() => {
+          const local = localCcy.approx(Number(String(displayTotal).replace(/[^0-9.-]/g, '')))
+          return local ? (
+            <div style={{ fontSize: 14, fontWeight: 600, color: C.t2, marginTop: 4, fontFamily: F }}>{local}</div>
+          ) : null
+        })()}
 
         {/* FX timestamp */}
         {!fxLoading && portfolio.fxUpdatedAt && (

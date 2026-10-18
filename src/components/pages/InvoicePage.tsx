@@ -17,6 +17,7 @@ import {
 import { toast } from 'sonner'
 import { useAppStore, type Invoice, type InvoiceLineItem, type InvoiceStatus } from '../../store/appStore'
 import { downloadInvoicePdf, shareInvoice, printInvoice, invoicePaymentLink } from '../../lib/invoice-pdf'
+import { useDisplayCurrency } from '../../lib/display-currency'
 import { showIncomeStatement } from '../../lib/income-statement'
 import { shareOnWhatsApp, invoiceChaseText, isInvoiceOverdue } from '../../lib/whatsapp'
 import { useAccount } from 'wagmi'
@@ -184,6 +185,7 @@ function emptyForm(defaultAddress = ''): DraftForm {
 
 // ── Main component ────────────────────────────────────────────────────────────
 export function InvoicePage() {
+  const localCcy = useDisplayCurrency()
   const { address: wagmiAddress } = useAccount()
   const { auth, profile, invoices, addInvoice, updateInvoice, removeInvoice, addContact } = useAppStore()
   const walletAddress = wagmiAddress ?? auth?.circleWalletAddress ?? auth?.walletAddress ?? ''
@@ -549,6 +551,9 @@ export function InvoicePage() {
                 <span style={{ fontSize: 'clamp(28px, 9vw, 36px)', fontWeight: 700, color: TEXT, letterSpacing: '-0.03em', lineHeight: 1.05, fontVariantNumeric: 'tabular-nums' }}>{amountStr}</span>
                 <span style={{ fontSize: 14, fontWeight: 600, color: T3 }}>{selected.currency}</span>
               </div>
+              {(selected.currency === 'USDC' || selected.currency === 'USD') && localCcy.approx(selected.total) && (
+                <div style={{ fontSize: 13, color: T3, marginTop: 2 }}>{localCcy.approx(selected.total)}</div>
+              )}
               {selected.amountDue > 0 && selected.amountDue < selected.total && (
                 <div style={{ fontSize: 13, color: '#F59E0B', marginTop: 4 }}>{fmtAmt(selected.amountDue, selected.currency)} remaining</div>
               )}
