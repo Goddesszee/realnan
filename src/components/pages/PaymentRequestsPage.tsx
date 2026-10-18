@@ -3,6 +3,7 @@
  * Three sub-views: list → create form → detail
  */
 import { printInvoice, paymentRequestAsInvoice } from '../../lib/invoice-pdf'
+import { shareLink as shareLinkTo } from '../../lib/share-sheet'
 import React, { useState, useMemo } from 'react'
 import {
   Plus, Search, ChevronRight, Copy, Share2, Printer,
@@ -578,11 +579,7 @@ function DetailView({
   }
 
   const shareLink = () => {
-    if (navigator.share) {
-      void navigator.share({ title: `Payment Request: ${req.title}`, url: payLink }).catch(() => {})
-    } else {
-      copyLink()
-    }
+    void shareLinkTo({ title: `Payment Request: ${req.title}`, text: `${req.recipientName ? req.recipientName + ', ' : ''}please pay ${req.amount.toFixed(2)} ${req.currency}${req.title ? ' for ' + req.title : ''}. Pay securely here:`, url: payLink })
     if (req.status === 'pending') updatePaymentRequest(req.id, { status: 'viewed' })
   }
 

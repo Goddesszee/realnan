@@ -4,6 +4,7 @@
  * Used by InvoicePage (download, print, share) and InvoicePayPage (preview).
  */
 import type { Invoice } from '../store/appStore'
+import { shareLink } from './share-sheet'
 
 function fmt(n: number, currency = 'USDC') {
   return `${n.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currency}`
@@ -266,18 +267,14 @@ export function downloadInvoicePdf(inv: Invoice) {
   setTimeout(() => URL.revokeObjectURL(url), 15000)
 }
 
-/** Share only the invoice link: whoever opens it lands straight on the invoice. */
-export async function shareInvoice(inv: Invoice): Promise<'shared' | 'copied' | 'cancelled'> {
+/** Share only the invoice link to other apps (WhatsApp, Telegram, email, ...). */
+export async function shareInvoice(inv: Invoice): Promise<void> {
   const isQuick = (inv as Invoice & { mode?: string }).mode === 'quick'
-  const title   = isQuick ? `Payment Request ${inv.number}` : `Invoice ${inv.number}`
-  const url     = invoicePaymentLink(inv)
-  const text    = `${inv.businessName || 'NAN'} sent you ${isQuick ? 'a payment request' : 'an invoice'} for ${fmt(inv.total, inv.currency)}.`
-  if (navigator.share) {
-    try { await navigator.share({ title, text, url }); return 'shared' }
-    catch (e) { if ((e as Error)?.name === 'AbortError') return 'cancelled' }
-  }
-  try { await navigator.clipboard.writeText(url) } catch { /* ignore */ }
-  return 'copied'
+  await shareLink({
+    title: isQuick ? `Payment Request ${inv.number}` : `Invoice ${inv.number}`,
+    text:  `${inv.businessName || 'NAN'} sent you ${isQuick ? 'a payment request' : 'an invoice'} for ${fmt(inv.total, inv.currency)}. Pay securely here:`,
+    url:   invoicePaymentLink(inv),
+  })
 }
 
 /** Print via a hidden iframe (works on phones where window.open + close is blocked). */
