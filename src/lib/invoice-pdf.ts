@@ -278,7 +278,7 @@ export async function shareInvoice(inv: Invoice): Promise<void> {
 }
 
 /** Print via a hidden iframe (works on phones where window.open + close is blocked). */
-function printHtml(html: string) {
+export function printHtml(html: string) {
   const frame = document.createElement('iframe')
   frame.setAttribute('aria-hidden', 'true')
   frame.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;opacity:0;'

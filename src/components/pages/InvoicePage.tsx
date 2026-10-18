@@ -17,7 +17,8 @@ import {
 import { toast } from 'sonner'
 import { useAppStore, type Invoice, type InvoiceLineItem, type InvoiceStatus } from '../../store/appStore'
 import { downloadInvoicePdf, shareInvoice, printInvoice, invoicePaymentLink } from '../../lib/invoice-pdf'
-import { shareOnWhatsApp, invoiceWhatsAppText } from '../../lib/whatsapp'
+import { showIncomeStatement } from '../../lib/income-statement'
+import { shareOnWhatsApp, invoiceChaseText, isInvoiceOverdue } from '../../lib/whatsapp'
 import { useAccount } from 'wagmi'
 import { TokenLogo } from '../ui/TokenLogo'
 
@@ -412,6 +413,7 @@ export function InvoicePage() {
                 <span><b style={{ color: stats.overdue > 0 ? RED : TEXT }}>{stats.overdue}</b> overdue</span>
                 <span><b style={{ color: TEXT }}>{fmt0(stats.revenue)}</b> collected</span>
               </div>
+              <button onClick={() => showIncomeStatement(invoices)} style={{ marginTop: 12, height: 34, padding: '0 12px', borderRadius: 10, border: `1px solid ${BDR}`, background: SURF2, color: T2, fontSize: 12, fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: 6, cursor: 'pointer', fontFamily: F }}><FileText size={14} /> Income statement</button>
             </div>
 
             <div role="tablist" aria-label="Filter" style={{ display: 'flex', gap: 8, overflowX: 'auto', margin: '0 -16px 14px', padding: '0 16px', scrollbarWidth: 'none' }}>
@@ -493,7 +495,7 @@ export function InvoicePage() {
                 <button onClick={() => copyLink(inv)} style={{ ...actionBtn, flex: 1, minWidth: 0, padding: '0 8px', justifyContent: 'center', background: 'rgba(8,102,245,0.10)', borderColor: 'rgba(8,102,245,0.28)', color: BLUE }}><Copy size={14} style={{ flexShrink: 0 }} /> {typeof window !== 'undefined' && window.innerWidth < 345 ? 'Copy' : 'Copy link'}</button>
                 <button onClick={() => doShare(inv)} style={{ ...actionBtn, flex: 1, minWidth: 0, padding: '0 8px', justifyContent: 'center' }}><Share2 size={14} style={{ flexShrink: 0 }} /> Share</button>
                 <button onClick={() => printInvoice(inv)} aria-label="Print" style={{ ...actionBtn, padding: 0, width: 34, flexShrink: 0, justifyContent: 'center' }}><Printer size={14} /></button>
-                <button onClick={() => shareOnWhatsApp(invoiceWhatsAppText(inv, invoicePaymentLink(inv)))} aria-label="Send on WhatsApp" style={{ ...actionBtn, padding: 0, width: 34, flexShrink: 0, justifyContent: 'center', color: '#128C7E' }}><MessageCircle size={14} /></button>
+                <button onClick={() => shareOnWhatsApp(invoiceChaseText(inv, invoicePaymentLink(inv)))} aria-label={isInvoiceOverdue(inv) ? 'Send reminder on WhatsApp' : 'Send on WhatsApp'} style={{ ...actionBtn, padding: 0, width: 34, flexShrink: 0, justifyContent: 'center', color: '#128C7E' }}><MessageCircle size={14} /></button>
                 <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
                   {delConfirm === inv.id ? (
                     <>
@@ -657,9 +659,9 @@ export function InvoicePage() {
         </div>
 
         {selected.status !== 'paid' && selected.status !== 'cancelled' && (
-          <button onClick={() => shareOnWhatsApp(invoiceWhatsAppText(selected, payLink))}
+          <button onClick={() => shareOnWhatsApp(invoiceChaseText(selected, payLink))}
             style={{ width: '100%', height: 48, marginBottom: 10, background: '#128C7E', color: '#fff', border: 'none', borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: F, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-            <MessageCircle size={16} /> Send on WhatsApp
+            <MessageCircle size={16} /> {isInvoiceOverdue(selected) ? 'Send reminder on WhatsApp' : 'Send on WhatsApp'}
           </button>
         )}
 
