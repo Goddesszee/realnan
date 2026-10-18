@@ -493,7 +493,7 @@ export function InvoicePage() {
                 </div>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 8, marginTop: 12, paddingTop: 12, borderTop: `1px solid ${BDR}` }}>
-                <button onClick={() => copyLink(inv)} style={{ ...actionBtn, background: 'rgba(8,102,245,0.10)', borderColor: 'rgba(8,102,245,0.28)', color: BLUE }}><Copy size={14} /> Copy</button>
+                <button onClick={() => copyLink(inv)} style={{ ...actionBtn, background: 'rgba(8,102,245,0.10)', borderColor: 'rgba(8,102,245,0.28)', color: BLUE }}><Copy size={14} /> Copy link</button>
                 <button onClick={() => doShare(inv)} style={actionBtn}><Share2 size={14} /> Share</button>
                 <button onClick={() => printInvoice(inv)} aria-label="Print" style={{ ...actionBtn, padding: 0, width: 34, justifyContent: 'center' }}><Printer size={14} /></button>
                 <button onClick={() => shareOnWhatsApp(invoiceWhatsAppText(inv, invoicePaymentLink(inv)))} aria-label="Send on WhatsApp" style={{ ...actionBtn, padding: 0, width: 34, justifyContent: 'center', color: '#128C7E' }}><MessageCircle size={14} /></button>
