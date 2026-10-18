@@ -4,6 +4,7 @@ import { useAppStore } from './store/appStore'
 import { getCircleCreds, fetchPrimaryWallet } from './lib/circle-session'
 import { PaymentRequestPayPage } from './components/pages/PaymentRequestPayPage'
 import { PayByNamePage } from './components/pages/PayByNamePage'
+import { LanguageFab } from './components/LanguageFab'
 import { NairaRampPage } from './components/pages/NairaRampPage'
 import { nairaRampVisible } from './lib/naira-ramp'
 import { PayByInvoicePage } from './components/pages/PayByInvoicePage'
@@ -285,31 +286,34 @@ export default function App() {
   }, [])
 
   // Public pay-link pages — no auth/shell needed, rendered before the main app
-  if (prParams?.nanpay) return <PayByNamePage handle={prParams.nanpay} />
-  if (prParams?.invoice) return <PayByInvoicePage invoiceId={prParams.invoice} />
+  if (prParams?.nanpay) return <><LanguageFab /><PayByNamePage handle={prParams.nanpay} /></>
+  if (prParams?.invoice) return <><LanguageFab /><PayByInvoicePage invoiceId={prParams.invoice} /></>
   if (prParams && (prParams.pr || prParams.pay)) {
     // Quick requests (inv- prefix) use the unified invoice pay page with request styling
     if (prParams.pr?.startsWith('inv-')) {
-      return <PayByInvoicePage invoiceId={prParams.pr} isRequest={true} />
+      return <><LanguageFab /><PayByInvoicePage invoiceId={prParams.pr} isRequest={true} /></>
     }
     // Legacy payment requests use the old PR pay page
     return (
-      <PaymentRequestPayPage
-        requestId={prParams.pr}
-        payAddress={prParams.pay}
-        amount={prParams.amount}
-        note={prParams.note}
-        currency={prParams.currency}
-      />
+      <>
+        <LanguageFab />
+        <PaymentRequestPayPage
+          requestId={prParams.pr}
+          payAddress={prParams.pay}
+          amount={prParams.amount}
+          note={prParams.note}
+          currency={prParams.currency}
+        />
+      </>
     )
   }
 
   if (!splashDone) return <SplashScreen onDone={() => setSplashDone(true)} />
 
   // Public pages — no shell
-  if (activeView === 'landing') return <LandingPage />
-  if (activeView === 'login') return <LoginPage />
-  if (activeView === 'onboarding') return <OnboardingPage />
+  if (activeView === 'landing') return <><LanguageFab /><LandingPage /></>
+  if (activeView === 'login') return <><LanguageFab /><LoginPage /></>
+  if (activeView === 'onboarding') return <><LanguageFab /><OnboardingPage /></>
   if (activeView === 'name') return <><WelcomeBalloon /><NamePage /></>
   if (activeView === 'admin') return <AdminDashboard />
   if (activeView === 'setup') return <MainnetSetupPage />

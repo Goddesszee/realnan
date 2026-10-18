@@ -31,6 +31,7 @@ import { ConnectKitProvider } from 'connectkit'
 import { Toaster } from 'sonner'
 import { config } from './config'
 import App from './App'
+import { initTranslator } from './lib/i18n'
 import './index.css'
 
 // Apply persisted theme before first render to avoid flash
@@ -69,3 +70,5 @@ createRoot(document.getElementById('root')!).render(
   </StrictMode>,
 )
 
+// Language support: does nothing while English is selected
+try { initTranslator() } catch { /* never block the app */ }
