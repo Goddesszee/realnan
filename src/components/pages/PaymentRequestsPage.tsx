@@ -2,9 +2,10 @@
  * PaymentRequestsPage — NAN Payment Requests management hub
  * Three sub-views: list → create form → detail
  */
+import { printInvoice, paymentRequestAsInvoice } from '../../lib/invoice-pdf'
 import React, { useState, useMemo } from 'react'
 import {
-  Plus, Search, ChevronRight, Copy, Share2,
+  Plus, Search, ChevronRight, Copy, Share2, Printer,
   X, Check, Clock, CheckCircle2, XCircle, Eye,
   Link2, FileText,
   AlertCircle, CalendarDays, DollarSign, User, MessageCircle,
@@ -578,11 +579,7 @@ function DetailView({
 
   const shareLink = () => {
     if (navigator.share) {
-      void navigator.share({
-        title: `Payment Request: ${req.title}`,
-        text: `${req.recipientName}, please pay ${req.amount} ${req.currency} — ${req.title}`,
-        url: payLink,
-      })
+      void navigator.share({ title: `Payment Request: ${req.title}`, url: payLink }).catch(() => {})
     } else {
       copyLink()
     }
@@ -653,6 +650,14 @@ function DetailView({
           </div>
         )}
       </div>
+
+      <button onClick={() => printInvoice(paymentRequestAsInvoice(req))} style={{
+        width: '100%', marginBottom: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+        padding: '13px', borderRadius: 13, background: C.surf, border: `1px solid ${C.bdr}`, color: C.text,
+        fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: F, WebkitTapHighlightColor: 'transparent',
+      }}>
+        <Printer size={15} /> Print
+      </button>
 
       {/* ── Primary actions ── */}
       {req.status !== 'paid' && req.status !== 'cancelled' && req.status !== 'expired' && (

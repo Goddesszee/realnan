@@ -266,29 +266,64 @@ export function downloadInvoicePdf(inv: Invoice) {
   setTimeout(() => URL.revokeObjectURL(url), 15000)
 }
 
-export async function shareInvoice(inv: Invoice) {
+/** Share only the invoice link: whoever opens it lands straight on the invoice. */
+export async function shareInvoice(inv: Invoice): Promise<'shared' | 'copied' | 'cancelled'> {
   const isQuick = (inv as Invoice & { mode?: string }).mode === 'quick'
-  const label   = isQuick ? 'PaymentRequest' : 'Invoice'
   const title   = isQuick ? `Payment Request ${inv.number}` : `Invoice ${inv.number}`
-  const html  = buildInvoiceHtml(inv)
-  const blob  = new Blob([html], { type: 'text/html' })
-  const file  = new File([blob], `NAN_${label}_${inv.number}.html`, { type: 'text/html' })
-  if (navigator.share && navigator.canShare?.({ files: [file] })) {
-    try { await navigator.share({ title, files: [file] }); return } catch { /* fall through */ }
+  const url     = invoicePaymentLink(inv)
+  const text    = `${inv.businessName || 'NAN'} sent you ${isQuick ? 'a payment request' : 'an invoice'} for ${fmt(inv.total, inv.currency)}.`
+  if (navigator.share) {
+    try { await navigator.share({ title, text, url }); return 'shared' }
+    catch (e) { if ((e as Error)?.name === 'AbortError') return 'cancelled' }
   }
-  const url = URL.createObjectURL(blob)
-  window.open(url, '_blank')
-  setTimeout(() => URL.revokeObjectURL(url), 30000)
+  try { await navigator.clipboard.writeText(url) } catch { /* ignore */ }
+  return 'copied'
+}
+
+/** Print via a hidden iframe (works on phones where window.open + close is blocked). */
+function printHtml(html: string) {
+  const frame = document.createElement('iframe')
+  frame.setAttribute('aria-hidden', 'true')
+  frame.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;opacity:0;'
+  frame.srcdoc = html
+  frame.onload = () => {
+    setTimeout(() => {
+      try { frame.contentWindow?.focus(); frame.contentWindow?.print() } catch { /* ignore */ }
+      setTimeout(() => frame.remove(), 60000)
+    }, 300)
+  }
+  document.body.appendChild(frame)
 }
 
 export function printInvoice(inv: Invoice) {
-  const html = buildInvoiceHtml(inv)
-  const win  = window.open('', '_blank')
-  if (!win) return
-  win.document.write(html)
-  win.document.close()
-  win.focus()
-  setTimeout(() => { win.print(); win.close() }, 400)
+  printHtml(buildInvoiceHtml(inv))
+}
+
+/** Shape a simple payment request like a quick invoice so it can share the same print layout. */
+export function paymentRequestAsInvoice(req: {
+  id: string; refNumber: string; title: string; description?: string; recipientName?: string; recipientContact?: string
+  amount: number; currency: string; note?: string; paymentInstructions?: string; dueDate?: string; createdAt: string
+  status: string; paidAmount?: number; creatorAddress?: string; creatorName?: string; creatorNanHandle?: string
+}): Invoice {
+  const status = req.status === 'paid' ? 'paid' : req.status === 'viewed' ? 'viewed'
+    : (req.status === 'cancelled' || req.status === 'expired') ? 'cancelled' : 'sent'
+  const paid = req.status === 'paid' ? (req.paidAmount ?? req.amount) : 0
+  const issue = req.createdAt || new Date().toISOString()
+  return {
+    id: req.id, number: req.refNumber, status,
+    businessName: req.creatorName || (req.creatorNanHandle ? `@${req.creatorNanHandle}` : 'NAN'),
+    customerName: req.recipientName || 'Customer',
+    customerEmail: req.recipientContact?.includes('@') ? req.recipientContact : undefined,
+    issueDate: issue, dueDate: req.dueDate || issue,
+    currency: req.currency,
+    notes: req.note || req.description,
+    paymentInstructions: req.paymentInstructions,
+    items: [{ id: '1', name: req.title || 'Payment request', quantity: 1, unitPrice: req.amount }],
+    subtotal: req.amount, discountTotal: 0, taxTotal: 0, total: req.amount,
+    payments: [], amountPaid: paid, amountDue: Math.max(0, req.amount - paid),
+    payToAddress: req.creatorAddress || undefined, payToNanHandle: req.creatorNanHandle || undefined,
+    mode: 'quick', createdAt: issue, updatedAt: issue,
+  } as Invoice
 }
 
 export function invoicePaymentLink(inv: Invoice): string {
