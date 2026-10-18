@@ -105,7 +105,6 @@ const inputBase: React.CSSProperties = {
 const btnPrimary: React.CSSProperties = {
   flex: 1, height: 50, background: BLUE, color: '#fff',
   border: 'none', borderRadius: 14, fontSize: 15, fontWeight: 700,
-  boxShadow: '0 10px 24px -12px rgba(8,102,245,0.9)',
   cursor: 'pointer', fontFamily: F, display: 'flex',
   alignItems: 'center', justifyContent: 'center', gap: 6,
 }
@@ -400,17 +399,16 @@ export function InvoicePage() {
         ]
         return (
           <>
-            <div style={{ position: 'relative', overflow: 'hidden', borderRadius: 22, padding: '20px 20px 18px', marginBottom: 16, background: 'linear-gradient(135deg,#0B5BE0 0%,#0866F5 55%,#3B8BFF 100%)', boxShadow: '0 20px 40px -22px rgba(8,102,245,0.8)' }}>
-              <div aria-hidden style={{ position: 'absolute', right: -40, top: -50, width: 190, height: 190, borderRadius: '50%', background: 'radial-gradient(closest-side, rgba(255,255,255,0.25), rgba(255,255,255,0))' }} />
-              <div style={{ position: 'relative', fontSize: 13, color: 'rgba(255,255,255,0.8)' }}>Waiting to be paid</div>
-              <div style={{ position: 'relative', marginTop: 4, display: 'flex', alignItems: 'baseline', gap: 7, flexWrap: 'wrap' }}>
-                <span style={{ fontSize: 'clamp(30px, 9vw, 38px)', fontWeight: 800, color: '#fff', letterSpacing: '-0.04em', lineHeight: 1.1, fontVariantNumeric: 'tabular-nums' }}>{fmt0(outstanding)}</span>
-                <span style={{ fontSize: 14, fontWeight: 700, color: 'rgba(255,255,255,0.75)' }}>USDC</span>
+            <div style={{ background: SURF, border: `1px solid ${BDR}`, borderRadius: 14, padding: '16px 16px 14px', marginBottom: 16 }}>
+              <div style={{ fontSize: 11, fontWeight: 600, color: T3, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Waiting to be paid</div>
+              <div style={{ marginTop: 6, display: 'flex', alignItems: 'baseline', gap: 7, flexWrap: 'wrap' }}>
+                <span style={{ fontSize: 'clamp(26px, 8vw, 32px)', fontWeight: 700, color: TEXT, letterSpacing: '-0.03em', lineHeight: 1.1, fontVariantNumeric: 'tabular-nums' }}>{fmt0(outstanding)}</span>
+                <span style={{ fontSize: 13, fontWeight: 600, color: T3 }}>USDC</span>
               </div>
-              <div style={{ position: 'relative', marginTop: 12, display: 'flex', gap: 18, flexWrap: 'wrap', fontSize: 13, color: 'rgba(255,255,255,0.85)' }}>
-                <span><b style={{ color: '#fff' }}>{stats.unpaid}</b> unpaid</span>
-                <span style={{ color: stats.overdue > 0 ? '#FFD2D2' : undefined }}><b style={{ color: stats.overdue > 0 ? '#FFD2D2' : '#fff' }}>{stats.overdue}</b> overdue</span>
-                <span><b style={{ color: '#fff' }}>{fmt0(stats.revenue)}</b> collected</span>
+              <div style={{ marginTop: 12, paddingTop: 12, borderTop: `1px solid ${BDR}`, display: 'flex', gap: 18, flexWrap: 'wrap', fontSize: 13, color: T2 }}>
+                <span><b style={{ color: TEXT }}>{stats.unpaid}</b> unpaid</span>
+                <span><b style={{ color: stats.overdue > 0 ? RED : TEXT }}>{stats.overdue}</b> overdue</span>
+                <span><b style={{ color: TEXT }}>{fmt0(stats.revenue)}</b> collected</span>
               </div>
             </div>
 
@@ -460,7 +458,7 @@ export function InvoicePage() {
           return (
             <div key={inv.id} style={{ background: SURF, border: `1px solid ${BDR}`, borderRadius: 18, padding: 14 }}>
               <button onClick={() => { setSelectedId(inv.id); setView('detail') }} style={{ width: '100%', background: 'none', border: 'none', cursor: 'pointer', padding: 0, textAlign: 'left', fontFamily: F, display: 'flex', alignItems: 'center', gap: 12 }}>
-                <div style={{ position: 'relative', width: 44, height: 44, borderRadius: '50%', flexShrink: 0, background: `linear-gradient(135deg, hsl(${hue} 70% 55%), hsl(${(hue + 45) % 360} 72% 44%))`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 17, fontWeight: 800 }}>
+                <div style={{ position: 'relative', width: 40, height: 40, borderRadius: 12, flexShrink: 0, background: SURF2, border: `1px solid ${BDR}`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: BLUE, fontSize: 16, fontWeight: 700 }}>
                   {who[0]?.toUpperCase() ?? '?'}
                   {isQuick && (
                     <span style={{ position: 'absolute', right: -3, bottom: -3, width: 19, height: 19, borderRadius: '50%', background: BLUE, border: `2px solid ${SURF}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -530,29 +528,28 @@ export function InvoicePage() {
           const hue = [...who].reduce((h, ch) => (h * 31 + ch.charCodeAt(0)) >>> 0, 7) % 360
           const amountStr = selected.total.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
           return (
-            <div style={{ position: 'relative', overflow: 'hidden', borderRadius: 24, padding: '20px 20px 18px', marginBottom: 14, background: 'linear-gradient(135deg,#0B5BE0 0%,#0866F5 55%,#3B8BFF 100%)', boxShadow: '0 20px 40px -24px rgba(8,102,245,0.9)' }}>
-              <div aria-hidden style={{ position: 'absolute', right: -40, top: -50, width: 200, height: 200, borderRadius: '50%', background: 'radial-gradient(closest-side, rgba(255,255,255,0.25), rgba(255,255,255,0))' }} />
-              <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 12 }}>
-                <div style={{ width: 44, height: 44, borderRadius: '50%', flexShrink: 0, background: `linear-gradient(135deg, hsl(${hue} 70% 55%), hsl(${(hue + 45) % 360} 72% 44%))`, border: '2px solid rgba(255,255,255,0.35)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 17, fontWeight: 800 }}>{who[0]?.toUpperCase() ?? '?'}</div>
+            <div style={{ background: SURF, border: `1px solid ${BDR}`, borderRadius: 14, padding: '16px 16px 14px', marginBottom: 14 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <div style={{ width: 40, height: 40, borderRadius: 12, flexShrink: 0, background: SURF2, border: `1px solid ${BDR}`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: BLUE, fontSize: 16, fontWeight: 700 }}>{who[0]?.toUpperCase() ?? '?'}</div>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.8)' }}>{isQuick ? 'Requesting from' : 'Bill to'}</div>
-                  <div style={{ fontSize: 16, fontWeight: 700, color: '#fff', overflowWrap: 'anywhere' }}>{selected.customerName}</div>
-                  {selected.customerEmail && <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.75)', overflowWrap: 'anywhere' }}>{selected.customerEmail}</div>}
+                  <div style={{ fontSize: 11, fontWeight: 600, color: T3, textTransform: 'uppercase', letterSpacing: '0.07em' }}>{isQuick ? 'Requesting from' : 'Bill to'}</div>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: TEXT, overflowWrap: 'anywhere' }}>{selected.customerName}</div>
+                  {selected.customerEmail && <div style={{ fontSize: 12, color: T3, overflowWrap: 'anywhere' }}>{selected.customerEmail}</div>}
                 </div>
-                <span style={{ flexShrink: 0, alignSelf: 'flex-start', display: 'inline-flex', alignItems: 'center', gap: 6, padding: '5px 11px', borderRadius: 999, background: 'rgba(255,255,255,0.18)', color: '#fff', fontSize: 12, fontWeight: 700 }}>
-                  <span style={{ width: 7, height: 7, borderRadius: '50%', background: selected.status === 'paid' ? '#7CF2A8' : selected.status === 'overdue' ? '#FF9A9A' : '#fff' }} />{meta.label}
+                <span style={{ flexShrink: 0, alignSelf: 'flex-start', display: 'inline-flex', alignItems: 'center', gap: 6, padding: '4px 10px', borderRadius: 999, background: SURF2, border: `1px solid ${BDR}`, color: T2, fontSize: 12, fontWeight: 600 }}>
+                  <span style={{ width: 7, height: 7, borderRadius: '50%', background: selected.status === 'paid' ? GREEN : selected.status === 'overdue' ? RED : BLUE }} />{meta.label}
                 </span>
               </div>
-              <div style={{ position: 'relative', marginTop: 22, display: 'flex', alignItems: 'baseline', gap: 8, flexWrap: 'wrap' }}>
-                <span style={{ fontSize: 'clamp(34px, 11vw, 46px)', fontWeight: 800, color: '#fff', letterSpacing: '-0.045em', lineHeight: 1.05, fontVariantNumeric: 'tabular-nums' }}>{amountStr}</span>
-                <span style={{ fontSize: 15, fontWeight: 700, color: 'rgba(255,255,255,0.75)' }}>{selected.currency}</span>
+              <div style={{ marginTop: 16, display: 'flex', alignItems: 'baseline', gap: 8, flexWrap: 'wrap' }}>
+                <span style={{ fontSize: 'clamp(28px, 9vw, 36px)', fontWeight: 700, color: TEXT, letterSpacing: '-0.03em', lineHeight: 1.05, fontVariantNumeric: 'tabular-nums' }}>{amountStr}</span>
+                <span style={{ fontSize: 14, fontWeight: 600, color: T3 }}>{selected.currency}</span>
               </div>
               {selected.amountDue > 0 && selected.amountDue < selected.total && (
-                <div style={{ position: 'relative', fontSize: 13, color: '#FFE3A3', marginTop: 4 }}>{fmtAmt(selected.amountDue, selected.currency)} remaining</div>
+                <div style={{ fontSize: 13, color: '#F59E0B', marginTop: 4 }}>{fmtAmt(selected.amountDue, selected.currency)} remaining</div>
               )}
-              <div style={{ position: 'relative', marginTop: 16, paddingTop: 14, borderTop: '2px dashed rgba(255,255,255,0.28)', display: 'flex', gap: 28 }}>
-                <div><div style={{ fontSize: 12, color: 'rgba(255,255,255,0.75)' }}>Issued</div><div style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginTop: 2 }}>{fmtDate(selected.issueDate)}</div></div>
-                <div><div style={{ fontSize: 12, color: 'rgba(255,255,255,0.75)' }}>Due</div><div style={{ fontSize: 14, fontWeight: 700, color: selected.status === 'overdue' ? '#FFD2D2' : '#fff', marginTop: 2 }}>{fmtDate(selected.dueDate)}</div></div>
+              <div style={{ marginTop: 14, paddingTop: 12, borderTop: `1px solid ${BDR}`, display: 'flex', gap: 28 }}>
+                <div><div style={{ fontSize: 12, color: T3 }}>Issued</div><div style={{ fontSize: 14, fontWeight: 600, color: TEXT, marginTop: 2 }}>{fmtDate(selected.issueDate)}</div></div>
+                <div><div style={{ fontSize: 12, color: T3 }}>Due</div><div style={{ fontSize: 14, fontWeight: 600, color: selected.status === 'overdue' ? RED : TEXT, marginTop: 2 }}>{fmtDate(selected.dueDate)}</div></div>
               </div>
             </div>
           )
@@ -692,28 +689,27 @@ export function InvoicePage() {
           <div style={{ fontSize: 15, fontWeight: 600, color: TEXT, marginBottom: 2 }}>What do you want to create?</div>
 
           {/* Quick request card */}
-          <button onClick={() => setNewMode('quick')} style={{ position: 'relative', overflow: 'hidden', background: 'linear-gradient(135deg,#0B5BE0 0%,#0866F5 55%,#3B8BFF 100%)', border: 'none', borderRadius: 22, padding: 20, textAlign: 'left', cursor: 'pointer', fontFamily: F, width: '100%', boxShadow: '0 20px 40px -24px rgba(8,102,245,0.9)' }}>
-            <div aria-hidden style={{ position: 'absolute', right: -40, top: -50, width: 180, height: 180, borderRadius: '50%', background: 'radial-gradient(closest-side, rgba(255,255,255,0.25), rgba(255,255,255,0))' }} />
-            <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 14 }}>
-              <div style={{ width: 50, height: 50, borderRadius: 16, background: 'rgba(255,255,255,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <Zap size={24} color="#fff" />
+          <button onClick={() => setNewMode('quick')} style={{ background: SURF, border: `1px solid ${BDR}`, borderRadius: 14, padding: 18, textAlign: 'left', cursor: 'pointer', fontFamily: F, width: '100%' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+              <div style={{ width: 44, height: 44, borderRadius: 12, background: SURF2, border: `1px solid ${BDR}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <Zap size={22} color={BLUE} />
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 17, fontWeight: 800, color: '#fff', marginBottom: 3, letterSpacing: '-0.02em' }}>Quick request</div>
-                <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.85)', lineHeight: 1.5 }}>An amount and a note. Ready in seconds — great for splitting bills or a quick ask.</div>
+                <div style={{ fontSize: 16, fontWeight: 700, color: TEXT, marginBottom: 3 }}>Quick request</div>
+                <div style={{ fontSize: 13, color: T2, lineHeight: 1.5 }}>An amount and a note. Ready in seconds — great for splitting bills or a quick ask.</div>
               </div>
-              <ChevronRight size={18} color="#fff" />
+              <ChevronRight size={18} color={T3} />
             </div>
           </button>
 
           {/* Full invoice card */}
-          <button onClick={() => setNewMode('full')} style={{ background: SURF, border: `1px solid ${BDR}`, borderRadius: 22, padding: 20, textAlign: 'left', cursor: 'pointer', fontFamily: F, width: '100%' }}>
+          <button onClick={() => setNewMode('full')} style={{ background: SURF, border: `1px solid ${BDR}`, borderRadius: 14, padding: 18, textAlign: 'left', cursor: 'pointer', fontFamily: F, width: '100%' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-              <div style={{ width: 50, height: 50, borderRadius: 16, background: SURF2, border: `1px solid ${BDR}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <FileText size={24} color={BLUE} />
+              <div style={{ width: 44, height: 44, borderRadius: 12, background: SURF2, border: `1px solid ${BDR}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <FileText size={22} color={BLUE} />
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 17, fontWeight: 800, color: TEXT, marginBottom: 3, letterSpacing: '-0.02em' }}>Full invoice</div>
+                <div style={{ fontSize: 16, fontWeight: 700, color: TEXT, marginBottom: 3 }}>Full invoice</div>
                 <div style={{ fontSize: 13, color: T2, lineHeight: 1.5 }}>Line items, tax, due terms and a PDF — for formal billing to clients and companies.</div>
               </div>
               <ChevronRight size={18} color={T3} />
@@ -728,13 +724,13 @@ export function InvoicePage() {
       <div style={{ fontFamily: F, width: '100%', paddingBottom: 96 }}>
         {renderHeader('Quick Request', () => setNewMode('choose'))}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          <style>{`.nan-amt::placeholder{color:rgba(255,255,255,0.45)} input.nan-amt{font-size:clamp(40px,13vw,56px) !important}`}</style>
-          <div style={{ position: 'relative', borderRadius: 24, padding: '22px 18px 20px', background: 'linear-gradient(135deg,#0B5BE0 0%,#0866F5 55%,#3B8BFF 100%)', boxShadow: '0 20px 40px -24px rgba(8,102,245,0.9)', textAlign: 'center' }}>
-            <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.85)' }}>How much are you requesting?</div>
+          <style>{`.nan-amt::placeholder{color:var(--nan-text3, rgba(255,255,255,0.4))} input.nan-amt{font-size:clamp(40px,13vw,56px) !important}`}</style>
+          <div style={{ background: SURF, border: `1px solid ${BDR}`, borderRadius: 14, padding: '20px 16px 18px', textAlign: 'center' }}>
+            <div style={{ fontSize: 13, color: T2 }}>How much are you requesting?</div>
             <input className="nan-amt" type="number" inputMode="decimal" min="0" step="0.01" value={form.quickAmount}
               onChange={e => setForm(f => ({ ...f, quickAmount: e.target.value }))} placeholder="0.00" aria-label="Amount"
-              style={{ width: '100%', boxSizing: 'border-box', background: 'transparent', border: 'none', outline: 'none', textAlign: 'center', color: '#fff', fontSize: 'clamp(40px, 13vw, 56px)', fontWeight: 800, letterSpacing: '-0.04em', fontFamily: F, margin: '8px 0 12px', fontVariantNumeric: 'tabular-nums' }} />
-            {errors.quickAmount && <div style={{ fontSize: 13, color: '#FFD2D2', marginBottom: 10 }}>{errors.quickAmount}</div>}
+              style={{ width: '100%', boxSizing: 'border-box', background: 'transparent', border: 'none', outline: 'none', textAlign: 'center', color: TEXT, fontSize: 'clamp(40px, 13vw, 56px)', fontWeight: 700, letterSpacing: '-0.04em', fontFamily: F, margin: '8px 0 12px', fontVariantNumeric: 'tabular-nums' }} />
+            {errors.quickAmount && <div style={{ fontSize: 13, color: RED, marginBottom: 10 }}>{errors.quickAmount}</div>}
             <div style={{ maxWidth: 200, margin: '0 auto', textAlign: 'left' }}>
               <CurrencyPicker value={form.currency} onChange={v => setForm(f => ({ ...f, currency: v }))} />
             </div>
