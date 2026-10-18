@@ -232,7 +232,7 @@ export function ProfilePage() {
 
         {/* NAN Pay Link — only shown when user has a NAN name */}
         {nanHandle && (() => {
-          const payLink = `https://nanarc.xyz/?nanpay=${nanHandle.replace(/^@/, '')}`
+          const payLink = `https://nanarc.xyz/@${nanHandle.replace(/^@/, '')}`
           const copyLink = () => {
             void navigator.clipboard.writeText(payLink).then(() => {
               setLinkCopied(true); setTimeout(() => setLinkCopied(false), 2500)

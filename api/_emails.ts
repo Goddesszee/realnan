@@ -189,6 +189,42 @@ export function invoiceClaimEmail(opts: {
   return { subject, html }
 }
 
+/** ── Payment receipt (to the payer, once the payment is confirmed onchain) ── */
+export function invoiceReceiptEmail(opts: {
+  invoiceNumber: string
+  businessName: string
+  amount: number
+  currency: string
+  txHash?: string
+}): { subject: string; html: string } {
+  const esc = (v: string) => v.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+  const business = esc(opts.businessName || 'the sender')
+  const number   = esc(opts.invoiceNumber)
+  const fmtAmt   = `${opts.amount.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${esc(opts.currency)}`
+  const subject  = `Receipt: ${fmtAmt} paid to ${opts.businessName || 'NAN'} (${opts.invoiceNumber})`
+  const tx = opts.txHash && /^0x[0-9a-fA-F]{64}$/.test(opts.txHash) ? opts.txHash : ''
+  const html = wrapper(`
+    <h1 style="margin:0 0 6px;font-size:22px;font-weight:800;color:${TEXT};letter-spacing:-0.03em;">Payment received</h1>
+    <p style="margin:0 0 20px;font-size:14px;color:${TEXT2};line-height:1.55;">
+      Your payment to <strong style="color:${TEXT};">${business}</strong> for ${number} was confirmed. Keep this email as your receipt.
+    </p>
+    <div style="margin:0 0 20px;padding:20px 24px;background:rgba(255,255,255,0.03);border-radius:14px;border:1px solid ${BORDER};">
+      <table width="100%" cellpadding="0" cellspacing="0">
+        <tr><td style="padding:6px 0;font-size:13px;color:${TEXT2};">Invoice</td>
+            <td style="padding:6px 0;font-size:13px;font-weight:700;color:${TEXT};text-align:right;">${number}</td></tr>
+        <tr><td style="padding:6px 0;font-size:13px;color:${TEXT2};">Paid to</td>
+            <td style="padding:6px 0;font-size:13px;font-weight:600;color:${TEXT};text-align:right;">${business}</td></tr>
+        <tr><td style="padding:6px 0;font-size:13px;color:${TEXT2};">Amount</td>
+            <td style="padding:6px 0;font-size:15px;font-weight:800;color:${NAN_BLUE};text-align:right;">${fmtAmt}</td></tr>
+        ${tx ? `<tr><td style="padding:6px 0;font-size:13px;color:${TEXT2};">Transaction</td>
+            <td style="padding:6px 0;font-size:12px;text-align:right;"><a href="https://explorer.arc.io/tx/${tx}" style="color:${NAN_BLUE};text-decoration:none;">${tx.slice(0, 10)}…${tx.slice(-6)}</a></td></tr>` : ''}
+      </table>
+    </div>
+    <p style="margin:0;font-size:12px;color:${TEXT2};line-height:1.55;">Sent by NAN, payments on Arc with Circle USDC.</p>
+  `)
+  return { subject, html }
+}
+
 /** ── Returning user sign-in email ──────────────────────────────────────── */
 export function returningUserEmail(email: string, code: string): { subject: string; html: string } {
   const subject = `${code} — Your NAN sign-in code`

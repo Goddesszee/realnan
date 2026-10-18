@@ -8,7 +8,7 @@
  */
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { getRedis } from './_redis.js'
-import { invoiceClaimEmail } from './_emails.js'
+import { invoiceClaimEmail, invoiceReceiptEmail } from './_emails.js'
 
 // ── Invoice-claim helpers (merged from api/invoice-claim.ts) ──────────────────
 const ARC_CHAIN_ID  = 5042
@@ -303,7 +303,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     interface ClaimInvoice {
       id: string; number: string; businessName: string; businessEmail?: string
-      customerName: string; amountDue: number; total: number; currency: string
+      customerName: string; customerEmail?: string; amountDue: number; total: number; currency: string
       payToAddress?: string; issuedDate?: string; createdAt?: string
       _owner?: string; _ownerEmail?: string; status?: string
     }
@@ -358,12 +358,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       await kv.ltrim(`notifs:${notifEmail}`, 0, 99)
     }
 
-    if (inv.businessEmail) {
+    // Tell the invoice owner: businessEmail first, otherwise the email they signed in with.
+    const ownerTo = inv.businessEmail || inv._ownerEmail
+    if (ownerTo && ownerTo.includes('@')) {
       const { subject, html } = invoiceClaimEmail({
         invoiceNumber: inv.number, customerName: customerDisplay,
         amount: inv.amountDue, currency, matched, txHash: resolvedTxHash, aiSummary, invoiceId,
       })
-      await sendClaimEmail(inv.businessEmail, subject, html)
+      await sendClaimEmail(ownerTo, subject, html)
+    }
+
+    // Receipt for the payer, only once the payment is confirmed onchain.
+    if (matched && inv.customerEmail && inv.customerEmail.includes('@') && inv.customerEmail !== ownerTo) {
+      const { subject, html } = invoiceReceiptEmail({
+        invoiceNumber: inv.number, businessName: inv.businessName,
+        amount: foundAmount ?? inv.total, currency, txHash: resolvedTxHash,
+      })
+      await sendClaimEmail(inv.customerEmail, subject, html)
     }
 
     return res.json({ success: true, claimId, matched, txHash: resolvedTxHash, aiSummary })

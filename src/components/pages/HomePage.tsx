@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { shareLink } from '../../lib/share-sheet'
 import { useAccount, useReadContract } from 'wagmi'
 import { ConnectKitButton } from 'connectkit'
 import { erc20Abi } from 'viem'
@@ -36,7 +37,7 @@ function PayLinkCard({
 }) {
   const [copied, setCopied] = React.useState(false)
   const handle   = nanHandle ? nanHandle.replace(/^@/, '') : ''
-  const payLink  = handle ? `https://nanarc.xyz/?nanpay=${handle}` : ''
+  const payLink  = handle ? `https://nanarc.xyz/@${handle}` : ''
 
   const copy = () => {
     if (!payLink) return
@@ -47,10 +48,7 @@ function PayLinkCard({
 
   const share = async () => {
     if (!payLink) return
-    if (navigator.share) {
-      try { await navigator.share({ title: `Pay @${handle} with NAN`, url: payLink }); return } catch { /* dismissed */ }
-    }
-    copy()
+    await shareLink({ title: `Pay @${handle} with NAN`, text: `Pay @${handle} on NAN, no account needed:`, url: payLink })
   }
 
   return (
@@ -104,7 +102,7 @@ function PayLinkCard({
               </div>
               <div style={{ minWidth: 0 }}>
                 <div style={{ fontSize: 14, fontWeight: 700, color: C.text }}>
-                  nanarc.xyz/?nanpay=<span style={{ color: C.blue }}>@{handle}</span>
+                  nanarc.xyz/<span style={{ color: C.blue }}>@{handle}</span>
                 </div>
                 <div style={{ fontSize: 11, color: C.t3, marginTop: 2 }}>
                   Share it — anyone can pay with card or crypto
