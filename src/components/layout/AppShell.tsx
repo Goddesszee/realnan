@@ -817,15 +817,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         display: (activeView === 'agent' || activeView === 'agent-wallet') ? 'none' : undefined,
         boxShadow: C.isDark ? 'none' : '0 -1px 0 rgba(0,0,0,0.06)',
       }}>
-        <div style={{ display: 'flex', maxWidth: 480, margin: '0 auto', padding: '6px 0 2px' }}>
+        <div style={{ display: 'flex', maxWidth: 480, margin: '0 auto' }}>
           {NAV_ITEMS.map(({ id, label, Icon }) => {
             const isActive = navActive(id)
             return (
               <button key={id} onClick={() => go(id)} aria-label={label} style={{
                 flex: 1, display: 'flex', flexDirection: 'column',
-                alignItems: 'center', justifyContent: 'center', gap: 4,
-                padding: '4px 2px 6px',
-                minHeight: 52, border: 'none', background: 'transparent',
+                alignItems: 'center', justifyContent: 'flex-end', gap: 4,
+                padding: '8px 2px 10px',
+                minHeight: 56, border: 'none', background: 'transparent',
                 cursor: 'pointer', transition: 'all 0.12s',
                 fontFamily: F, WebkitTapHighlightColor: 'transparent',
               }}>
@@ -843,9 +843,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           })}
           <button onClick={() => setDrawerOpen(v => !v)} aria-label="More" style={{
             flex: 1, display: 'flex', flexDirection: 'column',
-            alignItems: 'center', justifyContent: 'center', gap: 4,
-            padding: '4px 2px 6px',
-            minHeight: 52, border: 'none', background: 'transparent',
+            alignItems: 'center', justifyContent: 'flex-end', gap: 4,
+            padding: '8px 2px 10px',
+            minHeight: 56, border: 'none', background: 'transparent',
             cursor: 'pointer', transition: 'all 0.12s',
             fontFamily: F, WebkitTapHighlightColor: 'transparent',
           }}>
