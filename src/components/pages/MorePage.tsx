@@ -3,28 +3,45 @@
  * Replaces the slide-over drawer. Renders all secondary nav sections
  * as clean, tappable rows inside the normal page scroll area.
  */
-import { ChevronRight } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { ChevronRight, AtSign } from 'lucide-react'
 import { useNanTheme } from '../../hooks/useNanTheme'
 import { useAppStore } from '../../store/appStore'
 import { MOBILE_DRAWER_SECTIONS } from '../layout/AppShell'
 import { NanLogo } from '../NanLogo'
 
 const F = "'Inter', -apple-system, sans-serif"
+
+// Blinking dot indicator
+function BlinkDot() {
+  const [on, setOn] = useState(true)
+  useEffect(() => {
+    const t = setInterval(() => setOn(v => !v), 600)
+    return () => clearInterval(t)
+  }, [])
+  return (
+    <span style={{
+      display: 'inline-block', width: 7, height: 7, borderRadius: '50%',
+      background: '#F59E0B', marginRight: 5, flexShrink: 0,
+      opacity: on ? 1 : 0.15, transition: 'opacity 0.2s',
+      verticalAlign: 'middle',
+    }} />
+  )
+}
+
 export function MorePage() {
   const C = useNanTheme()
-  const { setActiveView, profile, auth, nanHandle } = useAppStore()
-
-  const name   = profile?.displayName || auth?.email?.split('@')[0] || 'Your account'
-  const handle = nanHandle ? `@${nanHandle}` : auth?.email ?? ''
+  const { setActiveView, nanHandle } = useAppStore()
 
   const go = (id: string) => setActiveView(id)
+  const hasName = Boolean(nanHandle)
 
   return (
     <div style={{ fontFamily: F, paddingBottom: 24 }}>
 
       {/* ── Profile row ── */}
       <button
-        onClick={() => go('profile')}
+        onClick={() => go(hasName ? 'profile' : 'nan-name')}
         style={{
           width: '100%', display: 'flex', alignItems: 'center', gap: 12,
           padding: '14px 0 14px', background: 'none', border: 'none',
@@ -37,10 +54,24 @@ export function MorePage() {
           <NanLogo height={44} />
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontSize: 15, fontWeight: 700, color: C.text, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{name}</div>
-          {handle && <div style={{ fontSize: 12, color: C.t2, marginTop: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{handle}</div>}
+          {hasName ? (
+            /* Has NAN name — show it prominently */
+            <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+              <AtSign size={14} color={C.blue} strokeWidth={2.5} />
+              <span style={{ fontSize: 16, fontWeight: 700, color: C.blue, letterSpacing: '-0.01em' }}>{nanHandle}</span>
+            </div>
+          ) : (
+            /* No NAN name — blinking CTA */
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', fontSize: 15, fontWeight: 700, color: '#F59E0B' }}>
+                <BlinkDot />
+                Get your NAN name
+              </div>
+              <div style={{ fontSize: 11, color: C.t3, marginTop: 2 }}>Tap to claim your @name</div>
+            </div>
+          )}
         </div>
-        <ChevronRight size={16} color={C.t3} style={{ flexShrink: 0 }} />
+        <ChevronRight size={16} color={hasName ? C.t3 : '#F59E0B'} style={{ flexShrink: 0 }} />
       </button>
 
       {/* ── Sections ── */}
