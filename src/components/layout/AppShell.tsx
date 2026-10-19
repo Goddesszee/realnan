@@ -289,7 +289,6 @@ function CommandPalette({ onClose, onGo }: { onClose: () => void; onGo: (action:
 // ── Nav items (mobile bottom bar) ─────────────────────────────────────────────
 const NAV_ITEMS = [
   { id: 'home',     label: 'Home',     Icon: Home },
-  { id: 'activity', label: 'Activity', Icon: Activity },
   { id: 'invoices', label: 'Invoices', Icon: FileText },
   { id: 'gateway',  label: 'Gateway',  Icon: Layers },
 ]
