@@ -47,6 +47,15 @@
   /* ── Typography ── */
   --nan-font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --nan-mono: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+
+  /* ── v3 no-dash aliases (used by legacy CSS classes + UI atom inline styles) ── */
+  --nan-bdr:       rgba(255,255,255,0.07);
+  --nan-bdr2:      rgba(255,255,255,0.12);
+  --nan-surface2:  #1D2029;
+  --nan-surface3:  #232731;
+  --nan-text2:     #A0A7B5;
+  --nan-text3:     #5A6175;
+  /* --nan-blue is already defined above */
 }
 
 /* ── Light mode ── */
@@ -71,6 +80,13 @@
   --nan-red-dim:   rgba(220,38,38,0.09);
   --nan-gold:      #D97706;
   --nan-gold-dim:  rgba(217,119,6,0.09);
+  /* v3 no-dash aliases for light mode */
+  --nan-bdr:       rgba(0,0,0,0.07);
+  --nan-bdr2:      rgba(0,0,0,0.13);
+  --nan-surface2:  #EEF1F7;
+  --nan-surface3:  #E5E9F2;
+  --nan-text2:     #4A5068;
+  --nan-text3:     #8A8FA8;
 }
 
 /* Light mode — force app shell chrome to use CSS vars */

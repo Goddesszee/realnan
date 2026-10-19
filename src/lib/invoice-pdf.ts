@@ -320,7 +320,7 @@ export function paymentRequestAsInvoice(req: {
     payments: [], amountPaid: paid, amountDue: Math.max(0, req.amount - paid),
     payToAddress: req.creatorAddress || undefined, payToNanHandle: req.creatorNanHandle || undefined,
     mode: 'quick', createdAt: issue, updatedAt: issue,
-  } as Invoice
+  }
 }
 
 export function invoicePaymentLink(inv: Invoice): string {

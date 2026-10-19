@@ -15,19 +15,50 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 const FONT = "'Inter', -apple-system, sans-serif"
 
 const sizeStyles: Record<Size, React.CSSProperties> = {
-  sm: { fontSize: 13, padding: '7px 12px', borderRadius: 8 },
-  md: { fontSize: 14, padding: '10px 16px', borderRadius: 10 },
-  lg: { fontSize: 15, padding: '13px 20px', borderRadius: 12 },
+  sm: { fontSize: 12,  padding: '7px 13px',  borderRadius: 8,  minHeight: 32 },
+  md: { fontSize: 14,  padding: '10px 18px', borderRadius: 10, minHeight: 40 },
+  lg: { fontSize: 15,  padding: '13px 22px', borderRadius: 12, minHeight: 48 },
 }
 
 function getVariantStyle(variant: Variant): React.CSSProperties {
   switch (variant) {
-    case 'primary':   return { background: '#0866F5', color: '#fff', border: 'none' }
-    case 'secondary': return { background: 'var(--nan-surface)', color: 'var(--nan-text)', border: '1px solid var(--nan-bdr)' }
-    case 'ghost':     return { background: 'transparent', color: 'var(--nan-text)', border: '1px solid var(--nan-bdr)' }
-    case 'soft':      return { background: 'rgba(8,102,245,0.10)', color: '#0866F5', border: '1px solid rgba(8,102,245,0.20)' }
-    case 'danger':    return { background: '#DC2626', color: '#fff', border: 'none' }
-    case 'success':   return { background: '#16A34A', color: '#fff', border: 'none' }
+    case 'primary':
+      return {
+        background: 'var(--nan-blue)',
+        color: '#fff',
+        border: 'none',
+        boxShadow: '0 2px 10px rgba(8,102,245,0.28)',
+      }
+    case 'secondary':
+      return {
+        background: 'var(--nan-surface-2)',
+        color: 'var(--nan-text)',
+        border: '1px solid var(--nan-border-2)',
+      }
+    case 'ghost':
+      return {
+        background: 'transparent',
+        color: 'var(--nan-text-2)',
+        border: '1px solid var(--nan-border)',
+      }
+    case 'soft':
+      return {
+        background: 'var(--nan-blue-dim)',
+        color: 'var(--nan-blue)',
+        border: '1px solid rgba(8,102,245,0.22)',
+      }
+    case 'danger':
+      return {
+        background: 'var(--nan-red-dim)',
+        color: 'var(--nan-red)',
+        border: '1px solid rgba(239,68,68,0.22)',
+      }
+    case 'success':
+      return {
+        background: 'var(--nan-green-dim)',
+        color: 'var(--nan-green)',
+        border: '1px solid rgba(16,185,129,0.22)',
+      }
   }
 }
 
@@ -40,19 +71,24 @@ export function Button({
       {...props}
       disabled={disabled || loading}
       style={{
-        display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+        display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7,
         fontFamily: FONT, fontWeight: 600, letterSpacing: '-0.01em',
         cursor: disabled || loading ? 'not-allowed' : 'pointer',
-        opacity: disabled || loading ? 0.45 : 1,
-        transition: 'opacity 0.15s, background 0.15s',
+        opacity: disabled || loading ? 0.42 : 1,
+        transition: 'opacity 0.15s, background 0.15s, transform 0.12s',
         width: fullWidth ? '100%' : undefined,
+        WebkitTapHighlightColor: 'transparent',
         ...sizeStyles[size],
         ...getVariantStyle(variant),
         ...style,
       }}
     >
       {loading ? (
-        <span style={{ display: 'inline-block', width: 16, height: 16, border: '2px solid currentColor', borderTopColor: 'transparent', borderRadius: '50%', animation: 'pw-spin 0.7s linear infinite' }} />
+        <span style={{
+          display: 'inline-block', width: 14, height: 14, flexShrink: 0,
+          border: '2px solid currentColor', borderTopColor: 'transparent',
+          borderRadius: '50%', animation: 'nan-spin 0.7s linear infinite',
+        }} />
       ) : icon}
       {children}
       {!loading && iconRight}

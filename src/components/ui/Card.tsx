@@ -1,26 +1,29 @@
 import React from 'react'
 
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: 'default' | 'balance' | 'glow' | 'flat'
+  variant?: 'default' | 'elevated' | 'blue' | 'flat'
   padding?: 'none' | 'sm' | 'md' | 'lg'
 }
 
-const paddings = { none: '', sm: 'p-4', md: 'p-5', lg: 'p-7' }
+const padMap = { none: 0, sm: 14, md: 20, lg: 28 }
 
 export function Card({ variant = 'default', padding = 'md', className = '', style, children, ...props }: CardProps) {
   const base: React.CSSProperties = {
-    borderRadius: 14,
-    background: variant === 'glow'
-      ? 'rgba(8,102,245,0.06)'
-      : 'var(--nan-surface)',
-    border: variant === 'glow'
-      ? '1px solid rgba(8,102,245,0.18)'
-      : '1px solid var(--nan-bdr)',
-    boxShadow: '0 2px 12px rgba(0,0,0,0.10)',
+    borderRadius: 'var(--nan-r-xl)',
+    background:
+      variant === 'blue'     ? 'var(--nan-blue-dim)'   :
+      variant === 'elevated' ? 'var(--nan-surface-2)'  :
+      variant === 'flat'     ? 'transparent'           :
+                               'var(--nan-surface)',
+    border:
+      variant === 'blue'  ? '1px solid rgba(8,102,245,0.22)' :
+      variant === 'flat'  ? 'none'                           :
+                            '1px solid var(--nan-border)',
+    padding: padding === 'none' ? undefined : padMap[padding],
     ...style,
   }
   return (
-    <div {...props} className={[paddings[padding], className].join(' ')} style={base}>
+    <div {...props} className={className} style={base}>
       {children}
     </div>
   )
@@ -28,10 +31,16 @@ export function Card({ variant = 'default', padding = 'md', className = '', styl
 
 export function CardTitle({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={['flex items-center gap-2 mb-4', className].join(' ')} style={{
-      fontFamily: 'Inter, sans-serif', fontSize: 11, fontWeight: 600,
-      letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--nan-text2)',
-    }}>
+    <div
+      className={className}
+      style={{
+        display: 'flex', alignItems: 'center', gap: 7, marginBottom: 14,
+        fontFamily: "'Inter', sans-serif",
+        fontSize: 11, fontWeight: 700,
+        letterSpacing: '0.08em', textTransform: 'uppercase',
+        color: 'var(--nan-text-3)',
+      }}
+    >
       {children}
     </div>
   )
@@ -41,12 +50,18 @@ export function CardRow({ label, value, mono = false, className = '' }: {
   label: string; value: React.ReactNode; mono?: boolean; className?: string
 }) {
   return (
-    <div className={['flex items-center justify-between py-2.5', className].join(' ')}
-      style={{ borderBottom: '1px solid var(--nan-bdr)' }}>
-      <span style={{ fontSize: 13, color: 'var(--nan-text2)', fontFamily: 'Inter, sans-serif' }}>{label}</span>
+    <div
+      className={className}
+      style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: '10px 0', borderBottom: '1px solid var(--nan-border)',
+      }}
+    >
+      <span style={{ fontSize: 13, color: 'var(--nan-text-2)', fontFamily: "'Inter', sans-serif" }}>{label}</span>
       <span style={{
         fontSize: 14, fontWeight: 600, color: 'var(--nan-text)',
-        fontFamily: mono ? 'monospace' : 'Inter, sans-serif',
+        fontFamily: mono ? "'JetBrains Mono','SF Mono',Menlo,monospace" : "'Inter', sans-serif",
+        fontVariantNumeric: mono ? 'tabular-nums' : undefined,
       }}>{value}</span>
     </div>
   )
