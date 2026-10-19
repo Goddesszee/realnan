@@ -277,17 +277,15 @@ export function AgentPage() {
   const { setActiveView } = useAppStore()
 
   return (
-    /* Chat fills the available viewport height inside AppShell's scrollable main */
+    /* Chat fills AppShell's flex container — no padding, no gaps */
     <div style={{
       fontFamily: F,
       display: 'flex',
       flexDirection: 'column',
-      height: 'calc(100dvh - 120px)', /* viewport minus bottom nav (~60px) + top padding (12px) × 2 */
-      minHeight: 400,
+      flex: 1,
+      minHeight: 0,
       overflow: 'hidden',
       position: 'relative',
-      borderRadius: 16,
-      border: `1px solid ${BDR}`,
     }}>
 
       {/* ── WhatsApp-style fixed conversation header ── */}

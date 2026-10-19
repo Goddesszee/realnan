@@ -733,15 +733,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <main style={{
         flex: 1,
         minHeight: 0,           /* critical: lets flex item shrink below content height */
-        overflowY: 'auto',
+        overflowY: activeView === 'agent' ? 'hidden' : 'auto',
         overflowX: 'hidden',
-        paddingTop: 12,
-        paddingLeft: 'max(16px,env(safe-area-inset-left))',
-        paddingRight: 'max(16px,env(safe-area-inset-right))',
-        paddingBottom: 'max(20px,env(safe-area-inset-bottom))',
+        paddingTop: activeView === 'agent' ? 0 : 12,
+        paddingLeft: activeView === 'agent' ? 0 : 'max(16px,env(safe-area-inset-left))',
+        paddingRight: activeView === 'agent' ? 0 : 'max(16px,env(safe-area-inset-right))',
+        paddingBottom: activeView === 'agent' ? 0 : 'max(20px,env(safe-area-inset-bottom))',
         scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch',
         msOverflowStyle: 'none',
-        display: 'block',
+        display: activeView === 'agent' ? 'flex' : 'block',
+        flexDirection: activeView === 'agent' ? 'column' : undefined,
         width: '100%',
         boxSizing: 'border-box',
       }}>
