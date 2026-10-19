@@ -761,8 +761,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               padding: '20px 16px 16px',
               borderBottom: `1px solid ${C.bdr}`,
             }}>
-              {/* Top row: close button */}
-              <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 14 }}>
+              {/* Top row: logo (admin tap) + close */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+                <button onClick={handleLogoTap} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', display: 'flex', alignItems: 'center', WebkitTapHighlightColor: 'transparent' }}>
+                  <NanLogo height={24} />
+                </button>
                 <button onClick={() => setDrawerOpen(false)} aria-label="Close menu" style={{
                   width: 28, height: 28, borderRadius: 8,
                   background: C.surf2, border: `1px solid ${C.bdr}`,
@@ -855,29 +858,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           ))}
         </div>
 
-        {/* ── Drawer footer ── */}
+        {/* ── Drawer footer — version hint ── */}
         <div style={{
-          flexShrink: 0,
+          flexShrink: 0, padding: '8px 16px 12px',
           borderTop: `1px solid ${C.bdr}`,
-          padding: '8px 8px 12px',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>
-          <button onClick={() => go('settings')} style={{
-            width: '100%', display: 'flex', alignItems: 'center', gap: 10,
-            padding: '8px 10px', borderRadius: 10,
-            border: 'none', background: 'transparent',
-            cursor: 'pointer', fontFamily: F,
-            WebkitTapHighlightColor: 'transparent', boxSizing: 'border-box',
-          }}>
-            <div style={{
-              width: 30, height: 30, borderRadius: 8, flexShrink: 0,
-              background: C.isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}>
-              <Settings size={15} color={C.t2} strokeWidth={1.8} />
-            </div>
-            <span style={{ flex: 1, fontSize: 13, fontWeight: 500, color: C.text }}>Settings</span>
-            <ChevronRight size={14} color={C.t3} />
-          </button>
+          <span style={{ fontSize: 11, color: C.t3 }}>NAN · Arc · Circle</span>
         </div>
       </div>
 
