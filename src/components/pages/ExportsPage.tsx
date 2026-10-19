@@ -479,8 +479,8 @@ export function ExportsPage() {
     /* ── Top header ── */
     .page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;gap:12px;flex-wrap:wrap;}
     .logo-block{display:flex;align-items:center;gap:10px;}
-    .logo-icon{width:44px;height:44px;border-radius:10px;background:#0866F5;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-    .logo-text{font-size:22px;font-weight:700;color:#0866F5;letter-spacing:-0.02em;}
+    .logo-icon{width:44px;height:44px;border-radius:10px;background:#3B82F6;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .logo-text{font-size:22px;font-weight:700;color:#3B82F6;letter-spacing:-0.02em;}
     .page-title{font-size:11px;color:#888;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;margin-top:2px;}
     .stmt-range{font-size:11px;color:#555;font-weight:600;text-align:right;padding-top:6px;}
     /* ── Account + printed block ── */
@@ -511,7 +511,7 @@ export function ExportsPage() {
     /* ── Footer ── */
     .footer{margin-top:32px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:10px;border-top:1px solid #ddd;padding-top:14px;}
     .footer-brand{display:flex;align-items:center;gap:8px;}
-    .footer-icon{width:26px;height:26px;border-radius:6px;background:#0866F5;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .footer-icon{width:26px;height:26px;border-radius:6px;background:#3B82F6;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
     .footer-name{font-size:12px;font-weight:700;color:#111;}
     .footer-sub{font-size:10px;color:#888;}
     .footer-right{text-align:right;font-size:10px;color:#888;line-height:1.7;}

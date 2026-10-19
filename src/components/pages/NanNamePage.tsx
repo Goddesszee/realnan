@@ -98,7 +98,7 @@ function BalloonCelebration({ handle, onDone }: { handle: string; onDone: () => 
       {/* Hero card */}
       <div
         style={{
-          background: 'linear-gradient(135deg, #0866F5 0%, #0044CC 100%)',
+          background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)',
           borderRadius: 28, padding: '36px 40px', textAlign: 'center',
           boxShadow: '0 24px 80px rgba(59,130,246,0.45)',
           maxWidth: 320, width: '90%',

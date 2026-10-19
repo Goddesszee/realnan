@@ -142,8 +142,8 @@ function QRScanModal({ onScan, onClose }: { onScan: (addr: string) => void; onCl
                 position: 'absolute', width: 28, height: 28,
                 top: pos.startsWith('t') ? 16 : undefined, bottom: pos.startsWith('b') ? 16 : undefined,
                 left: pos.endsWith('l') ? 16 : undefined, right: pos.endsWith('r') ? 16 : undefined,
-                borderTop: pos.startsWith('t') ? '3px solid #0866F5' : 'none', borderBottom: pos.startsWith('b') ? '3px solid #0866F5' : 'none',
-                borderLeft: pos.endsWith('l') ? '3px solid #0866F5' : 'none', borderRight: pos.endsWith('r') ? '3px solid #0866F5' : 'none',
+                borderTop: pos.startsWith('t') ? '3px solid #3B82F6' : 'none', borderBottom: pos.startsWith('b') ? '3px solid #3B82F6' : 'none',
+                borderLeft: pos.endsWith('l') ? '3px solid #3B82F6' : 'none', borderRight: pos.endsWith('r') ? '3px solid #3B82F6' : 'none',
               }} />
             ))}
             <div style={{ position: 'absolute', bottom: 12, left: 0, right: 0, textAlign: 'center', color: 'rgba(255,255,255,0.8)', fontSize: 12 }}>{hint}</div>
@@ -408,7 +408,7 @@ export function WalletPage({ initialSubView = 'main' }: { initialSubView?: Walle
           </button>
         </div>
         <div className="mt-3 flex items-center gap-2 text-xs text-nan2">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB]" />
+          <span className="w-1.5 h-1.5 rounded-full bg-[#3B82F6]" />
           Connected to {chain.name}
           <a
             href={`${chain.explorerBase}/address/${address}`}
@@ -824,7 +824,7 @@ function SendFlow({
           background: 'var(--nan-surface)', border: '1px solid var(--nan-bdr)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>
-          <div style={{ width: 28, height: 28, border: '2px solid #0866F5', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+          <div style={{ width: 28, height: 28, border: '2px solid #3B82F6', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
         </div>
         <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--nan-text)', margin: 0 }}>
           {isCircleUser
@@ -952,7 +952,7 @@ function SendFlow({
                 />
                 {nameResolving && (
                   <div style={{ position: 'absolute', right: 50, top: '50%', transform: 'translateY(-50%)' }}>
-                    <div style={{ width: 16, height: 16, border: '2px solid #0866F5', borderTopColor: 'transparent', borderRadius: '50%', animation: 'nan-spin 0.7s linear infinite' }} />
+                    <div style={{ width: 16, height: 16, border: '2px solid #3B82F6', borderTopColor: 'transparent', borderRadius: '50%', animation: 'nan-spin 0.7s linear infinite' }} />
                   </div>
                 )}
                 {resolvedName && !nameResolving && (
@@ -1161,7 +1161,7 @@ function SendFlow({
             />
             {nameResolving && (
               <div style={{ position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)' }}>
-                <div style={{ width: 16, height: 16, border: '2px solid #0866F5', borderTopColor: 'transparent', borderRadius: '50%', animation: 'nan-spin 0.7s linear infinite' }} />
+                <div style={{ width: 16, height: 16, border: '2px solid #3B82F6', borderTopColor: 'transparent', borderRadius: '50%', animation: 'nan-spin 0.7s linear infinite' }} />
               </div>
             )}
             {resolvedName && !nameResolving && (

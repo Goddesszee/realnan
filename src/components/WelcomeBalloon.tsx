@@ -206,7 +206,7 @@ export function WelcomeBalloon() {
           onClick={e => { e.stopPropagation(); dismiss() }}
           style={{
             width: '100%', padding: '15px',
-            background: 'linear-gradient(135deg, #0866F5 0%, #0044CC 100%)',
+            background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)',
             border: 'none', borderRadius: 16,
             color: '#fff', fontSize: 16, fontWeight: 800,
             cursor: 'pointer', fontFamily: F,

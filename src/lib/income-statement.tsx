@@ -62,7 +62,7 @@ h1{font-size:22px;margin:0 0 4px}table{width:100%;border-collapse:collapse;margi
 th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#6B7280;border-bottom:1px solid #E5E7EB;padding:8px 6px}
 td{padding:9px 6px;border-bottom:1px solid #F3F4F6}.box{margin-top:18px;padding:16px 18px;background:#F3F6FF;border-radius:12px}
 .note{margin-top:26px;font-size:11px;color:#6B7280;line-height:1.6}@media print{body{padding:0}}</style></head><body>
-<div style="font-size:12px;font-weight:800;color:#0866F5;letter-spacing:.08em">NAN · INCOME STATEMENT</div>
+<div style="font-size:12px;font-weight:800;color:#3B82F6;letter-spacing:.08em">NAN · INCOME STATEMENT</div>
 <h1>${business}</h1><div style="font-size:13px;color:#6B7280">Period: ${esc(label)} · Generated ${esc(day(new Date()))}</div>
 <div class="box"><div style="font-size:11px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Total received</div>${totalHtml}
 <div style="font-size:12px;color:#6B7280;margin-top:6px">${rows.length} payment${rows.length === 1 ? '' : 's'}</div></div>

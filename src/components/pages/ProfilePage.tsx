@@ -252,7 +252,7 @@ export function ProfilePage() {
           }
           return (
             <div style={{ background: C.surf, border: `1px solid ${C.bdr}`, borderRadius: 14, padding: '14px 16px', marginTop: 10, overflow: 'hidden', position: 'relative' }}>
-              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: 'linear-gradient(90deg, #0866F5, #7B61FF)' }} />
+              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: C.blue }} />
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
                 <div style={{ width: 34, height: 34, borderRadius: 10, background: 'rgba(59,130,246,0.10)', border: '1px solid rgba(59,130,246,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                   <Link2 size={16} color={C.blue} />

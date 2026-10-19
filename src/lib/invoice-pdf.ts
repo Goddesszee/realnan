@@ -17,7 +17,7 @@ function fmtDate(iso: string) {
 
 const STATUS_STYLES: Record<string, { bg: string; color: string }> = {
   draft:          { bg: '#F3F4F6', color: '#374151' },
-  sent:           { bg: '#EFF6FF', color: '#1D4ED8' },
+  sent:           { bg: '#EFF6FF', color: '#2563EB' },
   viewed:         { bg: '#F0FDF4', color: '#15803D' },
   partially_paid: { bg: '#FFFBEB', color: '#B45309' },
   paid:           { bg: '#DCFCE7', color: '#15803D' },
@@ -93,7 +93,7 @@ export function buildInvoiceHtml(inv: Invoice): string {
 <div class="page">
 
   <!-- ① Header -->
-  <div style="background:#0866F5;padding:28px 32px 24px;">
+  <div style="background:#3B82F6;padding:28px 32px 24px;">
     <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:16px;">
       <!-- Logo + business -->
       <div>
@@ -190,8 +190,8 @@ export function buildInvoiceHtml(inv: Invoice): string {
         <span style="font-size:13px;font-weight:600;color:#15803D;">−${fmt(inv.amountPaid, inv.currency)}</span>
       </div>
       <div style="display:flex;justify-content:space-between;padding:10px 0;background:#EFF6FF;margin-top:2px;border-radius:6px;padding:10px 12px;">
-        <span style="font-size:14px;font-weight:700;color:#1D4ED8;">Balance Due</span>
-        <span style="font-size:14px;font-weight:800;color:#1D4ED8;">${fmt(inv.amountDue, inv.currency)}</span>
+        <span style="font-size:14px;font-weight:700;color:#2563EB;">Balance Due</span>
+        <span style="font-size:14px;font-weight:800;color:#2563EB;">${fmt(inv.amountDue, inv.currency)}</span>
       </div>` : ''}
     </div>
   </div>
@@ -224,10 +224,10 @@ export function buildInvoiceHtml(inv: Invoice): string {
       ${inv.paymentInstructions ? `<div style="font-size:13px;color:#374151;line-height:1.6;white-space:pre-wrap;margin-bottom:8px;">${inv.paymentInstructions}</div>` : ''}
       ${inv.payToAddress ? `
       <div style="font-size:11px;color:#6B7280;margin-bottom:4px;">Pay to (USDC · Arc):</div>
-      <div style="font-size:11px;font-family:monospace;color:#1D4ED8;word-break:break-all;">${inv.payToAddress}</div>` : ''}
+      <div style="font-size:11px;font-family:monospace;color:#2563EB;word-break:break-all;">${inv.payToAddress}</div>` : ''}
       ${inv.amountDue > 0 ? `
       <div class="no-print" style="margin-top:12px;">
-        <a href="${payLink}" style="display:inline-block;background:#0866F5;color:#fff;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">Pay ${fmt(inv.amountDue, inv.currency)} →</a>
+        <a href="${payLink}" style="display:inline-block;background:#3B82F6;color:#fff;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">Pay ${fmt(inv.amountDue, inv.currency)} →</a>
       </div>` : ''}
     </div>` : ''}
   </div>` : ''}
@@ -235,7 +235,7 @@ export function buildInvoiceHtml(inv: Invoice): string {
   <!-- ⑦ Footer -->
   <div style="padding:16px 32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;background:#F9FAFB;">
     <div style="display:flex;align-items:center;gap:8px;">
-      <div style="width:22px;height:22px;border-radius:6px;background:#0866F5;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+      <div style="width:22px;height:22px;border-radius:6px;background:#3B82F6;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 324 480" width="9" height="13">
           <path d="M255,0 L84,167 L71,163 L0,97 L0,378 L246,132 L255,110 Z" fill="#fff"/>
           <path d="M69,480 L240,313 L253,317 L324,383 L324,102 L78,348 L69,370 Z" fill="#fff"/>
