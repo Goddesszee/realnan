@@ -3,23 +3,44 @@
  * Replaces the slide-over drawer. Renders all secondary nav sections
  * as clean, tappable rows inside the normal page scroll area.
  */
+import { useRef, useState } from 'react'
 import { ChevronRight } from 'lucide-react'
 import { useNanTheme } from '../../hooks/useNanTheme'
 import { useAppStore } from '../../store/appStore'
 import { MOBILE_DRAWER_SECTIONS } from '../layout/AppShell'
+import { NanLogo } from '../NanLogo'
 
 const F = "'Inter', -apple-system, sans-serif"
+const ADMIN_ADDRESS = (import.meta.env.VITE_ADMIN_ADDRESS as string ?? '').toLowerCase()
 
 export function MorePage() {
   const C = useNanTheme()
   const { setActiveView, profile, auth, nanHandle } = useAppStore()
 
-  const name    = profile?.displayName || auth?.email?.split('@')[0] || 'Your account'
-  const handle  = nanHandle ? `@${nanHandle}` : auth?.email ?? ''
-  const avatar  = profile?.avatarUrl
-  const initials = name.slice(0, 2).toUpperCase()
+  const name   = profile?.displayName || auth?.email?.split('@')[0] || 'Your account'
+  const handle = nanHandle ? `@${nanHandle}` : auth?.email ?? ''
 
   const go = (id: string) => setActiveView(id)
+
+  // 5-tap logo → admin (mirrors AppShell logic)
+  const walletAddress = auth?.walletAddress ?? auth?.circleWalletAddress ?? ''
+  const isAdmin = ADMIN_ADDRESS === '' ? true : (!!walletAddress && walletAddress.toLowerCase() === ADMIN_ADDRESS)
+  const tapCount = useRef(0)
+  const tapTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const [adminToast, setAdminToast] = useState(false)
+  const handleLogoTap = () => {
+    if (!isAdmin) return
+    tapCount.current += 1
+    if (tapTimer.current) clearTimeout(tapTimer.current)
+    if (tapCount.current >= 5) {
+      tapCount.current = 0
+      setActiveView('admin')
+      setAdminToast(true)
+      setTimeout(() => setAdminToast(false), 2000)
+      return
+    }
+    tapTimer.current = setTimeout(() => { tapCount.current = 0 }, 1500)
+  }
 
   return (
     <div style={{ fontFamily: F, paddingBottom: 24 }}>
@@ -35,17 +56,8 @@ export function MorePage() {
           WebkitTapHighlightColor: 'transparent',
         }}
       >
-        <div style={{
-          width: 44, height: 44, borderRadius: 22, flexShrink: 0,
-          background: C.isDark ? 'rgba(37,99,235,0.12)' : 'rgba(37,99,235,0.08)',
-          border: `2px solid ${C.bdr}`,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          overflow: 'hidden',
-        }}>
-          {avatar
-            ? <img src={avatar} alt={name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            : <span style={{ fontSize: 16, fontWeight: 700, color: C.blue }}>{initials}</span>
-          }
+        <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center' }}>
+          <NanLogo height={44} />
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontSize: 15, fontWeight: 700, color: C.text, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{name}</div>
@@ -53,6 +65,10 @@ export function MorePage() {
         </div>
         <ChevronRight size={16} color={C.t3} style={{ flexShrink: 0 }} />
       </button>
+
+      {adminToast && (
+        <div style={{ position: 'fixed', top: 16, left: '50%', transform: 'translateX(-50%)', background: '#2563EB', color: '#fff', padding: '7px 18px', borderRadius: 20, fontSize: 12, fontWeight: 600, zIndex: 300, pointerEvents: 'none' }}>Admin unlocked</div>
+      )}
 
       {/* ── Sections ── */}
       {MOBILE_DRAWER_SECTIONS.map((section, si) => (
@@ -105,6 +121,18 @@ export function MorePage() {
           </div>
         </div>
       ))}
+
+      {/* ── NAN logo footer — tap 5× to unlock admin ── */}
+      <div
+        onClick={handleLogoTap}
+        style={{
+          marginTop: 32, display: 'flex', justifyContent: 'center', alignItems: 'center',
+          paddingBottom: 8, cursor: 'pointer', WebkitTapHighlightColor: 'transparent',
+          opacity: 0.45,
+        }}
+      >
+        <NanLogo height={32} showText />
+      </div>
     </div>
   )
 }

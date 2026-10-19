@@ -108,3 +108,8 @@
 {"level":"error","message":"[vite] failed to connect to websocket (Error: WebSocket closed without opened.). ","timestamp":1791186367075}
 {"level":"error","message":"Unhandled promise rejection: Error: WebSocket closed without opened.\n    at WebSocket.<anonymous> (https://is4uo0t0rgqwpetode9p1.preview.studio.arc.io/@vite/client:454:22)","timestamp":1791186367150,"stack":"Error: WebSocket closed without opened.\n    at WebSocket.<anonymous> (https://is4uo0t0rgqwpetode9p1.preview.studio.arc.io/@vite/client:454:22)"}
 {"level":"error","message":"Unhandled promise rejection: Error: WebSocket closed without opened.\n    at WebSocket.<anonymous> (https://is4uo0t0rgqwpetode9p1.preview.studio.arc.io/@vite/client:454:22)","timestamp":1791186367151,"stack":"Error: WebSocket closed without opened.\n    at WebSocket.<anonymous> (https://is4uo0t0rgqwpetode9p1.preview.studio.arc.io/@vite/client:454:22)"}
+{"level":"debug","message":"[vite] invalidate /src/components/layout/AppShell.tsx: Could not Fast Refresh (\"MOBILE_DRAWER_SECTIONS\" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports","timestamp":1792437907842}
+{"level":"debug","message":"[vite] hot updated: /src/components/layout/AppShell.tsx","timestamp":1792437907842}
+{"level":"debug","message":"(previous line repeated 2× more)","timestamp":1792437909939}
+{"level":"debug","message":"[vite] hot updated: /src/App.tsx","timestamp":1792437909939}
+{"level":"debug","message":"[vite] hot updated: /src/components/pages/MorePage.tsx","timestamp":1792437909940}

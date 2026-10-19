@@ -606,9 +606,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               width: SIDEBAR_W, flexShrink: 0,
               display: 'flex', alignItems: 'center',
               paddingLeft: 20, paddingRight: 12,
-              cursor: 'default',
+              cursor: 'pointer',
               borderRight: `1px solid ${C.bdr}`,
               height: '100%',
+              WebkitTapHighlightColor: 'transparent',
             }}
           >
             <NanLogo height={26} />
@@ -731,6 +732,28 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       )}
 
       {paletteOpen && <CommandPalette onClose={() => setPaletteOpen(false)} onGo={go} />}
+
+      {/* Mobile topbar with NAN logo — tap 5× to open admin */}
+      <header style={{
+        flexShrink: 0,
+        height: 52,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingLeft: 'max(16px,env(safe-area-inset-left))',
+        paddingRight: 'max(16px,env(safe-area-inset-right))',
+        background: C.isDark ? '#08090B' : '#FFFFFF',
+        borderBottom: `1px solid ${C.bdr}`,
+        zIndex: 10,
+      }}>
+        <div
+          onClick={handleLogoTap}
+          style={{ cursor: 'pointer', WebkitTapHighlightColor: 'transparent', display: 'flex', alignItems: 'center' }}
+        >
+          <NanLogo height={28} showText />
+        </div>
+        <NotificationBell />
+      </header>
 
       {/* Wrong-chain banner — only shown on mobile when wagmi wallet is on wrong network */}
       <WrongChainBanner />
