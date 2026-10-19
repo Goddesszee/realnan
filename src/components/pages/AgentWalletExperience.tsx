@@ -188,6 +188,7 @@ function EmailScreen({ onBack, onSend, C }: {
   const [email, setEmail]     = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError]     = useState('')
+  const [focused, setFocused] = useState(false)
 
   const submit = async () => {
     if (!email.trim()) return
@@ -201,56 +202,98 @@ function EmailScreen({ onBack, onSend, C }: {
     }
   }
 
-  return (
-    <div style={{ fontFamily: F }}>
-      <BackButton onBack={onBack} C={C} />
-      <h2 style={{ fontSize: 22, fontWeight: 700, letterSpacing: '-0.025em', marginBottom: 6, color: C.text }}>
-        Enter your email
-      </h2>
-      <p style={{ fontSize: 14, color: C.t2, marginBottom: 22, lineHeight: 1.55 }}>
-        We'll send a verification code to set up your Agent Wallet.
-      </p>
+  const canSubmit = !loading && !!email.trim()
 
-      <div style={{ position: 'relative', marginBottom: 12 }}>
-        <Mail size={15} color={C.t3} style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
+  return (
+    <div style={{ fontFamily: F, display: 'flex', flexDirection: 'column', minHeight: '100%' }}>
+
+      {/* Back */}
+      <button onClick={onBack} style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', cursor: 'pointer', padding: '4px 0', marginBottom: 28, WebkitTapHighlightColor: 'transparent' }}>
+        <ArrowLeft size={17} color={C.t2} strokeWidth={2} />
+        <span style={{ fontSize: 13, color: C.t2, fontWeight: 500 }}>Back</span>
+      </button>
+
+      {/* Hero icon */}
+      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 28 }}>
+        <div style={{ position: 'relative' }}>
+          <div style={{ width: 80, height: 80, borderRadius: 24, background: 'linear-gradient(135deg, rgba(37,99,235,0.15) 0%, rgba(8,102,245,0.08) 100%)', border: '1px solid rgba(37,99,235,0.22)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Mail size={34} color={BLUE} strokeWidth={1.5} />
+          </div>
+          {/* Glow ring */}
+          <div style={{ position: 'absolute', inset: -8, borderRadius: 32, background: 'radial-gradient(circle, rgba(37,99,235,0.12) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        </div>
+      </div>
+
+      {/* Heading */}
+      <div style={{ textAlign: 'center', marginBottom: 32 }}>
+        <h2 style={{ fontSize: 24, fontWeight: 800, letterSpacing: '-0.03em', margin: '0 0 8px', color: C.text }}>
+          Set up your Agent Wallet
+        </h2>
+        <p style={{ fontSize: 14, color: C.t2, lineHeight: 1.6, margin: 0 }}>
+          Enter your email to receive a verification code.<br />
+          Your agent will have a dedicated USDC wallet on Arc.
+        </p>
+      </div>
+
+      {/* Input */}
+      <div style={{ position: 'relative', marginBottom: error ? 8 : 16 }}>
+        <div style={{ position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', zIndex: 1 }}>
+          <Mail size={16} color={focused ? BLUE : C.t3} strokeWidth={1.8} style={{ transition: 'color 0.2s' }} />
+        </div>
         <input
           type="email"
           placeholder="you@example.com"
           value={email}
-          onChange={e => setEmail(e.target.value)}
+          onChange={e => { setEmail(e.target.value); setError('') }}
           onKeyDown={e => e.key === 'Enter' && void submit()}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
           autoFocus
           style={{
-            width: '100%', padding: '13px 16px 13px 40px',
-            border: `1px solid ${C.bdr}`,
-            borderRadius: 12, fontSize: 16, fontFamily: F,
+            width: '100%', padding: '15px 16px 15px 46px',
+            border: `1.5px solid ${error ? '#EF4444' : focused ? BLUE : C.bdr}`,
+            borderRadius: 14, fontSize: 16, fontFamily: F,
             color: C.text, background: C.surf, outline: 'none',
-            boxSizing: 'border-box',
+            boxSizing: 'border-box', transition: 'border-color 0.2s',
+            boxShadow: focused ? `0 0 0 3px rgba(37,99,235,0.12)` : 'none',
           }}
         />
       </div>
 
-      {error && <p style={{ fontSize: 13, color: RED, marginBottom: 8, lineHeight: 1.5 }}>{error}</p>}
+      {error && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: '#EF4444', marginBottom: 14, padding: '8px 12px', background: 'rgba(239,68,68,0.07)', borderRadius: 9, border: '1px solid rgba(239,68,68,0.18)' }}>
+          <AlertTriangle size={13} color="#EF4444" strokeWidth={2} />
+          {error}
+        </div>
+      )}
 
+      {/* CTA */}
       <button
         onClick={() => void submit()}
-        disabled={loading || !email.trim()}
+        disabled={!canSubmit}
         style={{
-          width: '100%', padding: '13px 20px',
-          background: loading || !email.trim() ? C.surf : BLUE,
-          color: loading || !email.trim() ? C.t3 : '#fff',
-          border: loading || !email.trim() ? `1px solid ${C.bdr}` : 'none',
-          borderRadius: 12, fontSize: 15, fontWeight: 600,
-          cursor: loading || !email.trim() ? 'not-allowed' : 'pointer',
-          fontFamily: F, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-          boxShadow: loading || !email.trim() ? 'none' : '0 4px 16px rgba(37,99,235,0.28)',
-          WebkitTapHighlightColor: 'transparent',
+          width: '100%', height: 54,
+          background: canSubmit ? BLUE : C.surf2,
+          color: canSubmit ? '#fff' : C.t3,
+          border: canSubmit ? 'none' : `1px solid ${C.bdr}`,
+          borderRadius: 16, fontSize: 15, fontWeight: 700,
+          cursor: canSubmit ? 'pointer' : 'not-allowed',
+          fontFamily: F,
+          boxShadow: canSubmit ? '0 6px 22px rgba(8,102,245,0.32)' : 'none',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+          WebkitTapHighlightColor: 'transparent', transition: 'all 0.2s',
         }}
       >
         {loading
-          ? <><Loader size={15} style={{ animation: 'aw-spin 1s linear infinite' }} /> Sending…</>
-          : <><ArrowRight size={15} /> Continue</>}
+          ? <><svg width="17" height="17" viewBox="0 0 17 17" style={{ animation: 'aw-spin 0.9s linear infinite' }}><circle cx="8.5" cy="8.5" r="6.5" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="2" /><path d="M8.5 2 A6.5 6.5 0 0 1 15 8.5" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" /></svg> Sending code…</>
+          : <>Continue <ArrowRight size={16} strokeWidth={2.5} /></>}
       </button>
+
+      {/* Trust note */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, marginTop: 20, opacity: 0.6 }}>
+        <Shield size={12} color={C.t3} strokeWidth={1.8} />
+        <span style={{ fontSize: 11, color: C.t3 }}>Secured by Circle · separate from your main wallet</span>
+      </div>
     </div>
   )
 }
@@ -1090,7 +1133,7 @@ const PRIMARY_TABS: { id: DashTab; label: string }[] = [
 ]
 
 function DashboardScreen({ C, onDisconnect }: { C: ReturnType<typeof useNanTheme>; onDisconnect: () => void }) {
-  const { agentWallet, setAgentWallet, agentSpendLog, activity, recurringTasks, setActiveView, auth } = useAppStore()
+  const { agentWallet, setAgentWallet, agentSpendLog, activity, recurringTasks, setActiveView, previousView, auth } = useAppStore()
   // Detect if agent wallet shares the same address as the main NAN wallet
   // (affects users who set up the agent wallet before the refId='agent' fix)
   const mainAddr = (auth?.circleWalletAddress ?? auth?.walletAddress ?? '').toLowerCase()
@@ -1180,8 +1223,8 @@ function DashboardScreen({ C, onDisconnect }: { C: ReturnType<typeof useNanTheme
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <button
-            onClick={() => setActiveView('agent')}
-            aria-label="Back to Agent"
+            onClick={() => setActiveView(previousView && previousView !== 'agent-wallet' ? previousView : 'home')}
+            aria-label="Back"
             style={{ width: 34, height: 34, borderRadius: 9, background: C.surf, border: `1px solid ${C.bdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0, WebkitTapHighlightColor: 'transparent', padding: 0 }}
           >
             <ArrowLeft size={16} color={C.t2} strokeWidth={2.2} />
