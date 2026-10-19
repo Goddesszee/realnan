@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useAppStore } from '../../store/appStore'
 
 const F    = "'Inter', -apple-system, BlinkMacSystemFont, sans-serif"
-const BLUE = '#0866F5'
+const BLUE = 'var(--nan-blue)'
 const BG   = '#FFFFFF'
 const TEXT = '#1A1A2E'
 const T2   = '#6B7280'
@@ -247,7 +247,7 @@ export function LandingPage() {
               border: 'none', borderRadius: 14,
               fontSize: 16, fontWeight: 700,
               cursor: 'pointer', fontFamily: F,
-              boxShadow: '0 6px 24px rgba(8,102,245,0.35)',
+              boxShadow: '0 6px 24px rgba(59,130,246,0.30)',
             }}
           >
             Sign up

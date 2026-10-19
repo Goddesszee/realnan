@@ -13,10 +13,10 @@ import { downloadReceipt, shareReceipt } from '../../lib/receipt'
 
 const F    = "'Inter', -apple-system, sans-serif"
 const MONO = "'JetBrains Mono', Menlo, monospace"
-const BLUE  = '#0866F5'
-const GREEN = '#10B981'
-const RED   = '#EF4444'
-const GOLD  = '#F59E0B'
+const BLUE  = 'var(--nan-blue)'
+const GREEN = 'var(--nan-green)'
+const RED   = 'var(--nan-red)'
+const GOLD  = 'var(--nan-gold)'
 
 function explorerUrl(txHash: string, chain?: string): string {
   const key  = (chain ?? 'arc').toLowerCase()
@@ -122,7 +122,7 @@ function ReceiptModal({ item, onClose, ownAddress }: { item: ActivityItem; onClo
       {/* Sheet */}
       <div style={{
         position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 210,
-        background: C.isDark ? '#0D1017' : '#FFFFFF',
+        background: C.surf,
         borderRadius: '20px 20px 0 0',
         border: `1px solid ${C.bdr}`,
         boxShadow: '0 -16px 64px rgba(0,0,0,0.4)',
@@ -170,8 +170,8 @@ function ReceiptModal({ item, onClose, ownAddress }: { item: ActivityItem; onClo
             <a href={txUrl} target="_blank" rel="noreferrer" style={{
               display: 'flex', alignItems: 'center', gap: 6, marginTop: 12,
               padding: '10px 14px', borderRadius: 10,
-              background: 'rgba(8,102,245,0.07)', border: '1px solid rgba(8,102,245,0.18)',
-              color: '#0866F5', fontSize: 12, fontWeight: 600, textDecoration: 'none',
+              background: 'rgba(8,102,245,0.07)', border: '1px solid rgba(59,130,246,0.15)',
+              color: 'var(--nan-blue)', fontSize: 12, fontWeight: 600, textDecoration: 'none',
             }}>
               <ExternalLink size={13} /> View on Explorer
             </a>
@@ -183,9 +183,9 @@ function ReceiptModal({ item, onClose, ownAddress }: { item: ActivityItem; onClo
           <button onClick={handleDownload} style={{
             flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7,
             padding: '13px', borderRadius: 12,
-            background: '#0866F5', border: 'none', color: '#fff',
+            background: 'var(--nan-blue)', border: 'none', color: '#fff',
             fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: "'Inter', sans-serif",
-            boxShadow: '0 4px 16px rgba(8,102,245,0.3)',
+            boxShadow: '0 4px 16px rgba(59,130,246,0.28)',
           }}>
             <Download size={15} /> Download
           </button>
@@ -448,7 +448,7 @@ export function ActivityPage() {
                                 fontSize: 11, color: BLUE, fontFamily: MONO,
                                 display: 'flex', alignItems: 'center', gap: 3,
                                 textDecoration: 'none', fontWeight: 600,
-                                background: 'rgba(8,102,245,0.08)',
+                                background: 'rgba(59,130,246,0.08)',
                                 padding: '3px 7px', borderRadius: 6,
                               }}
                             >

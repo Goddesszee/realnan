@@ -16,19 +16,19 @@ interface SearchResult {
 }
 
 const STATIC_RESULTS: SearchResult[] = [
-  { id: 'send',        title: 'Send USDC',           subtitle: 'Transfer to any wallet address',         category: 'Payments',    icon: ArrowRight,     iconColor: '#0866F5', action: 'send' },
+  { id: 'send',        title: 'Send USDC',           subtitle: 'Transfer to any wallet address',         category: 'Payments',    icon: ArrowRight,     iconColor: 'var(--nan-blue)', action: 'send' },
   { id: 'receive',     title: 'Receive USDC',         subtitle: 'Share your address to receive funds',    category: 'Payments',    icon: ArrowRight,     iconColor: '#10B981', action: 'receive' },
   { id: 'swap',        title: 'Swap tokens',          subtitle: 'Exchange USDC for other tokens',         category: 'Finance',     icon: Repeat,         iconColor: '#F59E0B', action: 'swap' },
-  { id: 'bridge',      title: 'Bridge USDC',          subtitle: 'Move USDC across blockchains',           category: 'Finance',     icon: ArrowLeftRight, iconColor: '#0866F5', action: 'bridge' },
-  { id: 'buy',         title: 'Buy USDC',             subtitle: 'Purchase USDC with card or bank',        category: 'Finance',     icon: ShoppingBag,    iconColor: '#0866F5', action: 'onramp' },
-  { id: 'agent',       title: 'AI Agents',            subtitle: 'Create and manage autonomous agents',    category: 'Agents',      icon: Bot,            iconColor: '#0866F5', action: 'agent' },
+  { id: 'bridge',      title: 'Bridge USDC',          subtitle: 'Move USDC across blockchains',           category: 'Finance',     icon: ArrowLeftRight, iconColor: 'var(--nan-blue)', action: 'bridge' },
+  { id: 'buy',         title: 'Buy USDC',             subtitle: 'Purchase USDC with card or bank',        category: 'Finance',     icon: ShoppingBag,    iconColor: 'var(--nan-blue)', action: 'onramp' },
+  { id: 'agent',       title: 'AI Agents',            subtitle: 'Create and manage autonomous agents',    category: 'Agents',      icon: Bot,            iconColor: 'var(--nan-blue)', action: 'agent' },
   { id: 'faq',         title: 'FAQ',                  subtitle: 'Find answers to common questions',       category: 'Help',        icon: HelpCircle,     iconColor: '#F59E0B', action: 'faq' },
-  { id: 'support',     title: 'Customer Support',     subtitle: 'Open a support ticket',                  category: 'Help',        icon: MessageSquare,  iconColor: '#0866F5', action: 'support' },
-  { id: 'about',       title: 'About NAN',            subtitle: 'Learn about the NAN platform',           category: 'Info',        icon: Info,           iconColor: '#0866F5', action: 'about' },
+  { id: 'support',     title: 'Customer Support',     subtitle: 'Open a support ticket',                  category: 'Help',        icon: MessageSquare,  iconColor: 'var(--nan-blue)', action: 'support' },
+  { id: 'about',       title: 'About NAN',            subtitle: 'Learn about the NAN platform',           category: 'Info',        icon: Info,           iconColor: 'var(--nan-blue)', action: 'about' },
   { id: 'feedback',    title: 'Leave Feedback',       subtitle: 'Rate your experience',                   category: 'Help',        icon: Star,           iconColor: '#F59E0B', action: 'feedback' },
   { id: 'suggestions', title: 'Suggestion Box',       subtitle: 'Share ideas to improve NAN',             category: 'Help',        icon: Lightbulb,      iconColor: '#10B981', action: 'suggestions' },
-  { id: 'favorites',   title: 'Saved Items',          subtitle: 'View your bookmarked content',           category: 'Account',     icon: Bookmark,       iconColor: '#0866F5', action: 'favorites' },
-  { id: 'activity',    title: 'Transaction History',  subtitle: 'All past payments and activity',         category: 'Account',     icon: Clock,          iconColor: '#0866F5', action: 'activity' },
+  { id: 'favorites',   title: 'Saved Items',          subtitle: 'View your bookmarked content',           category: 'Account',     icon: Bookmark,       iconColor: 'var(--nan-blue)', action: 'favorites' },
+  { id: 'activity',    title: 'Transaction History',  subtitle: 'All past payments and activity',         category: 'Account',     icon: Clock,          iconColor: 'var(--nan-blue)', action: 'activity' },
 ]
 
 export function SearchPage() {
@@ -95,7 +95,7 @@ export function SearchPage() {
         <div style={{ marginBottom: 20 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
             <span style={{ fontSize: 11, fontWeight: 700, color: C.t3, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Recent searches</span>
-            <button onClick={clearSearches} style={{ fontSize: 12, color: '#0866F5', background: 'none', border: 'none', cursor: 'pointer', fontFamily: F, fontWeight: 600 }}>Clear</button>
+            <button onClick={clearSearches} style={{ fontSize: 12, color: 'var(--nan-blue)', background: 'none', border: 'none', cursor: 'pointer', fontFamily: F, fontWeight: 600 }}>Clear</button>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             {recentSearches.map(r => (

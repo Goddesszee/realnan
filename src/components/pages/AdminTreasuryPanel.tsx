@@ -129,7 +129,7 @@ function ContractCard({ kind, address, label }: { kind: Kind; address: `0x${stri
       {!me ? (
         <ConnectKitButton />
       ) : (
-        <button onClick={() => { void withdraw() }} disabled={!!problem || busy} style={{ width: '100%', padding: '13px', borderRadius: 12, border: 'none', background: problem ? 'var(--nan-surface-2, #2a2f3a)' : '#0866F5', color: problem ? 'var(--nan-text2)' : '#fff', fontSize: 14, fontWeight: 700, fontFamily: SANS, cursor: problem ? 'not-allowed' : 'pointer' }}>
+        <button onClick={() => { void withdraw() }} disabled={!!problem || busy} style={{ width: '100%', padding: '13px', borderRadius: 12, border: 'none', background: problem ? 'var(--nan-surface-2, #2a2f3a)' : 'var(--nan-blue)', color: problem ? 'var(--nan-text2)' : '#fff', fontSize: 14, fontWeight: 700, fontFamily: SANS, cursor: problem ? 'not-allowed' : 'pointer' }}>
           {busy ? 'Waiting for wallet / confirmation…' : problem || `Withdraw ${amount} USDC`}
         </button>
       )}

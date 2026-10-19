@@ -23,12 +23,12 @@ const F     = "'Inter', -apple-system, sans-serif"
 const SURF  = 'var(--nan-surface)'
 const SURF2 = 'var(--nan-surface2)'
 const BDR   = 'var(--nan-bdr)'
-const BLUE  = '#0866F5'
+const BLUE  = 'var(--nan-blue)'
 const TEXT  = 'var(--nan-text)'
 const T2    = 'var(--nan-text2)'
 const T3    = 'var(--nan-text3)'
-const GREEN = '#22C55E'
-const RED   = '#EF4444'
+const GREEN = 'var(--nan-green)'
+const RED   = 'var(--nan-red)'
 const AMBER = '#F59E0B'
 const ARC   = 5042
 
@@ -235,7 +235,7 @@ export function BatchPayrollPage() {
 
       {/* Wrong chain */}
       {isWrongChain && (
-        <div style={{ background: 'rgba(8,102,245,0.06)', border: `1px solid rgba(8,102,245,0.15)`, borderRadius: 12, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+        <div style={{ background: 'rgba(59,130,246,0.06)', border: `1px solid rgba(59,130,246,0.12)`, borderRadius: 12, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
           <AlertCircle size={14} color={BLUE} />
           <span style={{ fontSize: 12, color: TEXT, flex: 1 }}>Switch to Arc to send payments.</span>
           <button onClick={() => switchChain({ chainId: ARC })} style={{ fontSize: 12, fontWeight: 600, color: '#fff', background: BLUE, border: 'none', borderRadius: 8, padding: '5px 12px', cursor: 'pointer', fontFamily: F }}>Switch</button>
@@ -260,7 +260,7 @@ export function BatchPayrollPage() {
           style={{
             border: `2px dashed ${dragOver ? BLUE : BDR}`,
             borderRadius: 16, padding: '40px 24px', textAlign: 'center',
-            background: dragOver ? 'rgba(8,102,245,0.04)' : SURF,
+            background: dragOver ? 'rgba(59,130,246,0.06)' : SURF,
             cursor: 'pointer', marginBottom: 16, transition: 'all 0.15s',
           }}
         >

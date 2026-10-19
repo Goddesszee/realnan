@@ -114,7 +114,7 @@ function RecordRow({ rec, last }: { rec: ExportRecord; last: boolean }) {
     }}>
       <div style={{
         width: 34, height: 34, borderRadius: 9, flexShrink: 0,
-        background: isIn ? 'rgba(16,185,129,0.08)' : rec.sign === '-' ? 'rgba(239,68,68,0.08)' : 'rgba(8,102,245,0.08)',
+        background: isIn ? 'rgba(16,185,129,0.08)' : rec.sign === '-' ? 'rgba(239,68,68,0.08)' : 'rgba(59,130,246,0.08)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>
         <RowIcon size={15} color={color} />
@@ -174,7 +174,7 @@ function Dropdown<T extends string>({
           <div onClick={() => setOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 50 }} />
           <div style={{
             position: 'absolute', top: 'calc(100% + 4px)', left: 0, right: 0, zIndex: 60,
-            background: C.isDark ? '#0D1017' : '#fff',
+            background: C.surf,
             border: `1px solid ${C.bdr}`, borderRadius: 10,
             boxShadow: '0 8px 32px rgba(0,0,0,0.25)',
             overflow: 'hidden',
@@ -185,17 +185,17 @@ function Dropdown<T extends string>({
                 onClick={() => { onChange(o.value); setOpen(false) }}
                 style={{
                   width: '100%', textAlign: 'left', padding: '10px 14px',
-                  background: o.value === value ? 'rgba(8,102,245,0.08)' : 'transparent',
+                  background: o.value === value ? 'rgba(59,130,246,0.08)' : 'transparent',
                   border: 'none',
                   borderBottom: i < options.length - 1 ? `1px solid ${C.bdr}` : 'none',
-                  color: o.value === value ? '#0866F5' : C.text,
+                  color: o.value === value ? 'var(--nan-blue)' : C.text,
                   fontSize: 13, fontWeight: o.value === value ? 700 : 500,
                   cursor: 'pointer', fontFamily: F,
                   display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                 }}
               >
                 {o.label}
-                {o.value === value && <CheckCircle2 size={13} color="#0866F5" />}
+                {o.value === value && <CheckCircle2 size={13} color="var(--nan-blue)" />}
               </button>
             ))}
           </div>
@@ -749,7 +749,7 @@ export function ExportsPage() {
             style={{
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
               padding: '11px 12px', borderRadius: 10,
-              background: downloaded === 'csv' ? '#10B981' : '#0866F5',
+              background: downloaded === 'csv' ? '#10B981' : 'var(--nan-blue)',
               border: 'none', color: '#fff',
               fontSize: 13, fontWeight: 700, cursor: filtered.length === 0 ? 'not-allowed' : 'pointer',
               opacity: filtered.length === 0 ? 0.5 : 1,

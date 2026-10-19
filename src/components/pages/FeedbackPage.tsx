@@ -58,7 +58,7 @@ export function FeedbackPage() {
         Your feedback helps us make NAN better for everyone.
       </div>
       <button onClick={() => setActiveView('home')}
-        style={{ padding: '12px 28px', borderRadius: 12, background: '#0866F5', color: '#fff', fontFamily: F, fontSize: 14, fontWeight: 600, border: 'none', cursor: 'pointer' }}>
+        style={{ padding: '12px 28px', borderRadius: 12, background: 'var(--nan-blue)', color: '#fff', fontFamily: F, fontSize: 14, fontWeight: 600, border: 'none', cursor: 'pointer' }}>
         Back to Home
       </button>
     </div>
@@ -102,7 +102,7 @@ export function FeedbackPage() {
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7 }}>
           {CATEGORIES.map(cat => (
             <button key={cat.id} onClick={() => setCategory(cat.id)}
-              style={{ padding: '6px 14px', borderRadius: 20, border: `1px solid ${category === cat.id ? '#0866F5' : C.bdr}`, background: category === cat.id ? 'rgba(8,102,245,0.10)' : C.surf2, color: category === cat.id ? '#0866F5' : C.t2, fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: F, transition: 'all 0.15s' }}>
+              style={{ padding: '6px 14px', borderRadius: 20, border: `1px solid ${category === cat.id ? 'var(--nan-blue)' : C.bdr}`, background: category === cat.id ? 'rgba(59,130,246,0.10)' : C.surf2, color: category === cat.id ? 'var(--nan-blue)' : C.t2, fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: F, transition: 'all 0.15s' }}>
               {cat.label}
             </button>
           ))}
@@ -127,14 +127,14 @@ export function FeedbackPage() {
       )}
 
       <button onClick={() => { void submit() }} disabled={submitting || !rating}
-        style={{ width: '100%', padding: '14px', borderRadius: 12, background: rating ? '#0866F5' : C.surf2, color: rating ? '#fff' : C.t3, border: `1px solid ${rating ? '#0866F5' : C.bdr}`, fontSize: 15, fontWeight: 600, cursor: rating ? 'pointer' : 'not-allowed', fontFamily: F, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, transition: 'all 0.15s', opacity: submitting ? 0.7 : 1 }}>
+        style={{ width: '100%', padding: '14px', borderRadius: 12, background: rating ? 'var(--nan-blue)' : C.surf2, color: rating ? '#fff' : C.t3, border: `1px solid ${rating ? 'var(--nan-blue)' : C.bdr}`, fontSize: 15, fontWeight: 600, cursor: rating ? 'pointer' : 'not-allowed', fontFamily: F, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, transition: 'all 0.15s', opacity: submitting ? 0.7 : 1 }}>
         <Send size={15} />
         {submitting ? 'Submitting…' : 'Submit Feedback'}
       </button>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 16, justifyContent: 'center' }}>
         <MessageSquare size={13} color={C.t3} />
-        <span style={{ fontSize: 12, color: C.t3 }}>Have a problem? <button onClick={() => setActiveView('support')} style={{ color: '#0866F5', background: 'none', border: 'none', cursor: 'pointer', fontFamily: F, fontSize: 12, fontWeight: 600, padding: 0 }}>Contact support</button></span>
+        <span style={{ fontSize: 12, color: C.t3 }}>Have a problem? <button onClick={() => setActiveView('support')} style={{ color: 'var(--nan-blue)', background: 'none', border: 'none', cursor: 'pointer', fontFamily: F, fontSize: 12, fontWeight: 600, padding: 0 }}>Contact support</button></span>
       </div>
     </div>
   )

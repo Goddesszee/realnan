@@ -14,7 +14,7 @@ import { toast } from 'sonner'
 
 const F = "'Inter', -apple-system, sans-serif"
 const MONO = "'JetBrains Mono', Menlo, monospace"
-const BLUE = '#0866F5'
+const BLUE = 'var(--nan-blue)'
 
 function ContactAvatar({ contact, size = 44 }: { contact: Contact; size?: number }) {
   if (contact.avatarUrl) {
@@ -24,7 +24,7 @@ function ContactAvatar({ contact, size = 44 }: { contact: Contact; size?: number
   return (
     <div style={{
       width: size, height: size, borderRadius: size / 3, flexShrink: 0,
-      background: 'rgba(8,102,245,0.12)', border: '1px solid rgba(8,102,245,0.2)',
+      background: 'rgba(59,130,246,0.10)', border: '1px solid rgba(8,102,245,0.2)',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       fontSize: size * 0.38, fontWeight: 700, color: BLUE, fontFamily: F,
     }}>

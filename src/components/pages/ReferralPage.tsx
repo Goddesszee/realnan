@@ -14,10 +14,10 @@ import { useNanTheme } from '../../hooks/useNanTheme'
 const F    = "'Inter', -apple-system, sans-serif"
 const MONO = "'JetBrains Mono', Menlo, monospace"
 
-const BLUE  = '#0866F5'
-const BDIM  = 'rgba(8,102,245,0.10)'
-const BBDR  = 'rgba(8,102,245,0.25)'
-const GREEN = '#10B981'
+const BLUE  = 'var(--nan-blue)'
+const BDIM  = 'rgba(59,130,246,0.10)'
+const BBDR  = 'rgba(59,130,246,0.22)'
+const GREEN = 'var(--nan-green)'
 
 function doCopy(text: string, onDone: () => void) {
   const fallback = () => {

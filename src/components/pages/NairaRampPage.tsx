@@ -13,7 +13,7 @@ const F     = "'Inter', -apple-system, sans-serif"
 const SURF  = 'var(--nan-surface)'
 const SURF2 = 'var(--nan-surface2)'
 const BDR   = 'var(--nan-bdr)'
-const BLUE  = '#0866F5'
+const BLUE  = 'var(--nan-blue)'
 const TEXT  = 'var(--nan-text)'
 const T2    = 'var(--nan-text2)'
 const T3    = 'var(--nan-text3)'
@@ -67,7 +67,7 @@ export function NairaRampPage({ mode, initialMethod = 'bank' }: { mode: 'in' | '
             const on = method === id
             return (
               <button key={id} onClick={() => setMethod(id)} aria-pressed={on}
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, height: 48, borderRadius: 12, cursor: 'pointer', fontFamily: F, fontSize: 14, fontWeight: 600, border: `1px solid ${on ? BLUE : BDR}`, background: on ? 'rgba(8,102,245,0.12)' : SURF, color: on ? BLUE : T2 }}>
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, height: 48, borderRadius: 12, cursor: 'pointer', fontFamily: F, fontSize: 14, fontWeight: 600, border: `1px solid ${on ? BLUE : BDR}`, background: on ? 'rgba(59,130,246,0.10)' : SURF, color: on ? BLUE : T2 }}>
                 <Icon size={16} /> {name}
               </button>
             )
@@ -117,7 +117,7 @@ export function NairaRampPage({ mode, initialMethod = 'bank' }: { mode: 'in' | '
         </Card>
       )}
 
-      <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start', padding: '12px 14px', borderRadius: 12, background: 'rgba(8,102,245,0.08)', border: '1px solid rgba(8,102,245,0.20)', marginBottom: 16 }}>
+      <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start', padding: '12px 14px', borderRadius: 12, background: 'rgba(59,130,246,0.08)', border: '1px solid rgba(59,130,246,0.18)', marginBottom: 16 }}>
         <Info size={16} color={BLUE} style={{ flexShrink: 0, marginTop: 2 }} />
         <div style={{ fontSize: 13, color: T2, lineHeight: 1.55 }}>
           {configured === false

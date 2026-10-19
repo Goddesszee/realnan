@@ -77,7 +77,7 @@ function PayLinkCard({
           >
             <div style={{
               width: 44, height: 44, borderRadius: 14, flexShrink: 0,
-              background: 'rgba(8,102,245,0.10)', border: '1px solid rgba(8,102,245,0.20)',
+              background: 'rgba(59,130,246,0.10)', border: '1px solid rgba(59,130,246,0.18)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>
               <AtSign size={20} color={C.blue} />
@@ -98,7 +98,7 @@ function PayLinkCard({
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
               <div style={{
                 width: 44, height: 44, borderRadius: 14, flexShrink: 0,
-                background: 'rgba(8,102,245,0.10)', border: '1px solid rgba(8,102,245,0.20)',
+                background: 'rgba(59,130,246,0.10)', border: '1px solid rgba(59,130,246,0.18)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>
                 <Link2 size={20} color={C.blue} />
@@ -137,7 +137,7 @@ function PayLinkCard({
 
             <button onClick={() => { void share() }} style={{
               width: '100%', padding: '11px', borderRadius: 10,
-              background: 'rgba(8,102,245,0.06)', border: '1px solid rgba(8,102,245,0.15)',
+              background: 'rgba(59,130,246,0.06)', border: '1px solid rgba(59,130,246,0.12)',
               color: C.blue, fontSize: 13, fontWeight: 700,
               cursor: 'pointer', fontFamily: F, letterSpacing: '-0.01em',
             }}>
@@ -487,7 +487,7 @@ export function HomePage() {
               background: C.blue, border: 'none',
               color: '#fff', fontSize: 11, fontWeight: 700,
               cursor: 'pointer', fontFamily: F,
-              boxShadow: '0 2px 8px rgba(8,102,245,0.30)',
+              boxShadow: '0 2px 8px rgba(59,130,246,0.28)',
               WebkitTapHighlightColor: 'transparent',
               letterSpacing: '-0.01em', whiteSpace: 'nowrap',
             }}
@@ -630,8 +630,8 @@ export function HomePage() {
           onClick={() => setRewardsOpen(true)}
           style={{
             width: CARD_W, flexShrink: 0,
-            background: 'linear-gradient(145deg, rgba(8,102,245,0.14) 0%, rgba(80,0,255,0.08) 100%)',
-            border: '1px solid rgba(8,102,245,0.25)',
+            background: 'linear-gradient(145deg, rgba(59,130,246,0.12) 0%, rgba(80,0,255,0.08) 100%)',
+            border: '1px solid rgba(59,130,246,0.22)',
             borderRadius: 16, padding: '14px 12px 12px',
             cursor: 'pointer', fontFamily: F,
             WebkitTapHighlightColor: 'transparent', textAlign: 'left',
@@ -678,8 +678,8 @@ export function HomePage() {
           onClick={() => setActiveView('agent-wallet')}
           style={{
             width: '100%', padding: '18px 20px', borderRadius: 18,
-            border: '1px solid rgba(8,102,245,0.22)',
-            background: 'linear-gradient(135deg, rgba(8,102,245,0.10) 0%, rgba(8,102,245,0.03) 100%)',
+            border: '1px solid rgba(59,130,246,0.20)',
+            background: 'linear-gradient(135deg, rgba(59,130,246,0.10) 0%, rgba(8,102,245,0.03) 100%)',
             cursor: 'pointer', fontFamily: F, WebkitTapHighlightColor: 'transparent',
             display: 'flex', alignItems: 'center', gap: 16,
           }}
@@ -687,7 +687,7 @@ export function HomePage() {
           <div style={{
             width: 48, height: 48, borderRadius: 15, flexShrink: 0,
             background: C.blue, display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: '0 4px 16px rgba(8,102,245,0.35)',
+            boxShadow: '0 4px 16px rgba(59,130,246,0.30)',
           }}>
             <Bot size={22} color="#fff" strokeWidth={1.8} />
           </div>

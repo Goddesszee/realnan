@@ -9,7 +9,6 @@ import { usePortfolioBalances } from '../../hooks/usePortfolioBalances'
 
 const F    = "'Inter', -apple-system, sans-serif"
 const MONO = "'JetBrains Mono', 'SF Mono', Menlo, monospace"
-const BLUE = '#0866F5'
 
 type PerfPeriod = '24H' | '7D' | '1M' | '3M' | '1Y'
 
@@ -46,7 +45,7 @@ function Sparkline({ points, color, height = 80 }: { points: number[]; color: st
 }
 
 // ── donut chart ───────────────────────────────────────────────────────────────
-function Donut({ value, label, color = BLUE }: { value: string; label: string; color?: string }) {
+function Donut({ value, label, color = '#3B82F6' }: { value: string; label: string; color?: string }) {
   const R = 70
   const cx = 90
   const cy = 90
@@ -138,7 +137,7 @@ export function DashboardPage() {
 
   // Holdings breakdown (USDC only for now, others at 0)
   const holdings = [
-    { label: 'USDC',    value: numVal,  color: BLUE,      pct: 100 },
+    { label: 'USDC',    value: numVal,  color: C.blue,    pct: 100 },
     { label: 'EURC',    value: 0,       color: '#0099CC', pct: 0 },
     { label: 'NGN',     value: 0,       color: '#00A651', pct: 0 },
   ]
@@ -161,9 +160,9 @@ export function DashboardPage() {
           style={{
             display: 'flex', alignItems: 'center', gap: 7,
             padding: '11px 22px', borderRadius: 50,
-            background: BLUE, border: 'none',
+            background: C.blue, border: 'none',
             color: '#fff', fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: F,
-            boxShadow: '0 4px 18px rgba(8,102,245,0.35)',
+            boxShadow: `0 4px 18px ${C.blueDim}`,
             letterSpacing: '-0.01em',
           }}
         >
@@ -205,9 +204,9 @@ export function DashboardPage() {
               style={{
                 display: 'flex', alignItems: 'center', gap: 6,
                 padding: '10px 22px', borderRadius: 10,
-                background: BLUE, border: 'none',
+                background: C.blue, border: 'none',
                 color: '#fff', fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: F,
-                boxShadow: '0 4px 16px rgba(8,102,245,0.35)',
+                boxShadow: `0 4px 16px ${C.blueDim}`,
               }}
             >
               <ArrowDownLeft size={15} /> Deposit
@@ -218,8 +217,8 @@ export function DashboardPage() {
                 display: 'flex', alignItems: 'center', gap: 6,
                 padding: '10px 22px', borderRadius: 10,
                 background: 'transparent',
-                border: `1.5px solid ${BLUE}`,
-                color: BLUE, fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: F,
+                border: `1.5px solid ${C.blue}`,
+                color: C.blue, fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: F,
               }}
             >
               <ArrowUpRight size={15} /> Withdraw
@@ -244,7 +243,7 @@ export function DashboardPage() {
                   style={{
                     padding: '4px 10px', borderRadius: 7, fontSize: 11, fontWeight: 700,
                     border: 'none', cursor: 'pointer', fontFamily: F,
-                    background: period === p ? BLUE : 'transparent',
+                    background: period === p ? C.blue : 'transparent',
                     color: period === p ? '#fff' : C.t3,
                     transition: 'all 0.15s',
                   }}
@@ -254,13 +253,13 @@ export function DashboardPage() {
               ))}
             </div>
           </div>
-          <Sparkline points={sparkPoints} color={BLUE} height={120} />
+          <Sparkline points={sparkPoints} color={C.blue} height={120} />
         </div>
 
         {/* Portfolio Holdings */}
         <div style={{ ...card, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <span style={{ fontSize: 15, fontWeight: 700, color: C.text, alignSelf: 'flex-start', marginBottom: 12 }}>Portfolio Holdings</span>
-          <Donut value={hidden ? '••••' : `$${formatted}`} label="Total" color={BLUE} />
+          <Donut value={hidden ? '••••' : `$${formatted}`} label="Total" color={C.blue} />
           {/* Legend */}
           <div style={{ width: '100%', marginTop: 12 }}>
             {holdings.map(h => (
@@ -284,7 +283,7 @@ export function DashboardPage() {
           <span style={{ fontSize: 15, fontWeight: 700, color: C.text }}>Recent Transactions</span>
           <button
             onClick={() => setActiveView('activity')}
-            style={{ fontSize: 12, color: BLUE, background: 'none', border: 'none', cursor: 'pointer', fontFamily: F, fontWeight: 600 }}
+            style={{ fontSize: 12, color: C.blue, background: 'none', border: 'none', cursor: 'pointer', fontFamily: F, fontWeight: 600 }}
           >
             View all →
           </button>
@@ -336,12 +335,12 @@ export function DashboardPage() {
           <div style={{ ...card, marginTop: 16 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <FileText size={15} color={BLUE} />
+                <FileText size={15} color={C.blue} />
                 <span style={{ fontSize: 15, fontWeight: 700, color: C.text }}>Payment Requests</span>
               </div>
               <button
                 onClick={() => setActiveView('payment-requests')}
-                style={{ fontSize: 12, color: BLUE, background: 'none', border: 'none', cursor: 'pointer', fontFamily: F, fontWeight: 600 }}
+                style={{ fontSize: 12, color: C.blue, background: 'none', border: 'none', cursor: 'pointer', fontFamily: F, fontWeight: 600 }}
               >
                 View all →
               </button>
@@ -437,7 +436,7 @@ export function DashboardPage() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
               <button onClick={copyAddress} style={{
                 width: '100%', height: 52, borderRadius: 100,
-                background: copied ? '#10B981' : BLUE,
+                background: copied ? '#10B981' : C.blue,
                 border: 'none', cursor: 'pointer',
                 fontSize: 15, fontWeight: 700, color: '#fff', fontFamily: F,
                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,

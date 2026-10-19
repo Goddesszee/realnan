@@ -14,7 +14,7 @@ const BDR   = 'var(--nan-bdr)'
 const TEXT  = 'var(--nan-text)'
 const T2    = 'var(--nan-text2)'
 const T3    = 'var(--nan-text3)'
-const BLUE  = '#0866F5'
+const BLUE  = 'var(--nan-blue)'
 
 const SAVED = 'nan_converter_pair'
 const QUICK = ['NGN', 'GHS', 'KES', 'ZAR', 'GBP', 'EUR', 'CAD', 'INR']

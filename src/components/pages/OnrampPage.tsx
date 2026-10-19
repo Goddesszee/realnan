@@ -10,7 +10,7 @@ const F     = "'Inter', -apple-system, sans-serif"
 const SURF  = 'var(--nan-surface)'
 const SURF2 = 'var(--nan-surface2)'
 const BDR   = 'var(--nan-bdr)'
-const BLUE  = '#0866F5'
+const BLUE  = 'var(--nan-blue)'
 const TEXT  = 'var(--nan-text)'
 const T2    = 'var(--nan-text2)'
 const T3    = 'var(--nan-text3)'
@@ -235,7 +235,7 @@ export function OnrampPage() {
       {/* ── Header ── */}
       <div style={{ padding: '20px 0 18px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 2 }}>
-          <div style={{ width: 38, height: 38, borderRadius: 12, background: BLUE, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 4px 12px rgba(8,102,245,0.30)' }}>
+          <div style={{ width: 38, height: 38, borderRadius: 12, background: BLUE, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 4px 12px rgba(59,130,246,0.28)' }}>
             <ShoppingCart size={18} color="#fff" strokeWidth={2} />
           </div>
           <div>
@@ -248,7 +248,7 @@ export function OnrampPage() {
 
       {/* ── Merchant pay banner ── */}
       {merchantDest && (
-        <div style={{ marginBottom: 16, padding: '14px 16px', background: 'rgba(8,102,245,0.08)', borderRadius: 14, border: '1px solid rgba(8,102,245,0.20)' }}>
+        <div style={{ marginBottom: 16, padding: '14px 16px', background: 'rgba(59,130,246,0.08)', borderRadius: 14, border: '1px solid rgba(59,130,246,0.18)' }}>
           <div style={{ fontSize: 10, fontWeight: 700, color: BLUE, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 6 }}>
             {prefillNote?.toLowerCase().includes('payment request') ? 'Paying payment request' : 'Paying invoice'}
           </div>
@@ -320,7 +320,7 @@ export function OnrampPage() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 8 }}>
               {PRESETS.map(a => (
                 <button key={a} onClick={() => setAmt(a)}
-                  style={{ height: 44, borderRadius: 10, background: amount === a ? BLUE : SURF2, color: amount === a ? '#fff' : T2, border: `1px solid ${amount === a ? BLUE : BDR}`, fontWeight: 700, fontSize: 14, cursor: 'pointer', fontFamily: F, transition: 'all 0.15s', boxShadow: amount === a ? '0 2px 10px rgba(8,102,245,0.25)' : 'none', WebkitTapHighlightColor: 'transparent' }}>
+                  style={{ height: 44, borderRadius: 10, background: amount === a ? BLUE : SURF2, color: amount === a ? '#fff' : T2, border: `1px solid ${amount === a ? BLUE : BDR}`, fontWeight: 700, fontSize: 14, cursor: 'pointer', fontFamily: F, transition: 'all 0.15s', boxShadow: amount === a ? '0 2px 10px rgba(59,130,246,0.22)' : 'none', WebkitTapHighlightColor: 'transparent' }}>
                   ${a}
                 </button>
               ))}
@@ -358,7 +358,7 @@ export function OnrampPage() {
           <button
             onClick={() => { void fetchSession() }}
             disabled={amount <= 0}
-            style={{ width: '100%', height: 54, borderRadius: 14, background: amount > 0 ? BLUE : SURF2, color: amount > 0 ? '#fff' : T2, border: 'none', cursor: amount > 0 ? 'pointer' : 'not-allowed', fontSize: 15, fontWeight: 800, fontFamily: F, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, transition: 'all 0.15s', boxShadow: amount > 0 ? '0 4px 16px rgba(8,102,245,0.30)' : 'none', letterSpacing: '-0.01em', WebkitTapHighlightColor: 'transparent' }}>
+            style={{ width: '100%', height: 54, borderRadius: 14, background: amount > 0 ? BLUE : SURF2, color: amount > 0 ? '#fff' : T2, border: 'none', cursor: amount > 0 ? 'pointer' : 'not-allowed', fontSize: 15, fontWeight: 800, fontFamily: F, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, transition: 'all 0.15s', boxShadow: amount > 0 ? '0 4px 16px rgba(59,130,246,0.28)' : 'none', letterSpacing: '-0.01em', WebkitTapHighlightColor: 'transparent' }}>
             {!isReady ? <><Mail size={16} /> Sign in &amp; pay with card</> : merchantDest ? `Pay $${amount} with card` : `Buy $${amount} of USDC`}
           </button>
         </>
@@ -367,7 +367,7 @@ export function OnrampPage() {
       {/* ── LOADING ── */}
       {state === 'loading' && (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '64px 0', gap: 16 }}>
-          <div style={{ width: 64, height: 64, borderRadius: 20, background: 'rgba(8,102,245,0.10)', border: '1px solid rgba(8,102,245,0.20)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ width: 64, height: 64, borderRadius: 20, background: 'rgba(59,130,246,0.10)', border: '1px solid rgba(59,130,246,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Loader2 size={28} color={BLUE} style={{ animation: 'spin 1s linear infinite' }} />
           </div>
           <div style={{ fontSize: 16, fontWeight: 700, color: TEXT, letterSpacing: '-0.02em' }}>Opening Circle Onramp…</div>
@@ -403,7 +403,7 @@ export function OnrampPage() {
           </button>
           {!widgetReady && (
             <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: SURF, zIndex: 5, gap: 14 }}>
-              <div style={{ width: 52, height: 52, borderRadius: 16, background: 'rgba(8,102,245,0.10)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ width: 52, height: 52, borderRadius: 16, background: 'rgba(59,130,246,0.10)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Loader2 size={24} color={BLUE} style={{ animation: 'spin 1s linear infinite' }} />
               </div>
               <div style={{ fontSize: 14, fontWeight: 700, color: TEXT }}>Loading Circle Onramp…</div>
@@ -465,7 +465,7 @@ export function OnrampPage() {
           )}
           <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
             <button onClick={reset}
-              style={{ padding: '12px 28px', borderRadius: 12, background: BLUE, color: '#fff', border: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 700, fontFamily: F, boxShadow: '0 4px 12px rgba(8,102,245,0.25)' }}>
+              style={{ padding: '12px 28px', borderRadius: 12, background: BLUE, color: '#fff', border: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 700, fontFamily: F, boxShadow: '0 4px 12px rgba(59,130,246,0.22)' }}>
               Buy more USDC
             </button>
             <button onClick={() => { void fetchSession() }}

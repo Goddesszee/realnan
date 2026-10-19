@@ -6,7 +6,7 @@ import { useAppStore } from '../../store/appStore'
 import { CircleEmailLogin } from '../CircleEmailLogin'
 
 const F     = "'Inter', -apple-system, sans-serif"
-const BLUE  = '#0866F5'
+const BLUE  = 'var(--nan-blue)'
 const TEXT  = 'var(--nan-text)'
 const TEXT2 = '#8A8F9E'
 const TEXT3 = '#50556A'

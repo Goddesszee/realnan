@@ -25,7 +25,7 @@ import { fetchPrimaryWallet } from '../lib/circle-session'
 import { ArrowLeft, ArrowRight, Loader, Mail } from 'lucide-react'
 
 const F     = "'Inter', -apple-system, sans-serif"
-const BLUE  = '#0866F5'
+const BLUE  = 'var(--nan-blue)'
 const TEXT  = 'var(--nan-text)'
 const TEXT2 = '#8A8F9E'
 const TEXT3 = '#50556A'
@@ -400,7 +400,7 @@ export function CircleEmailLogin({ onBack, onSuccess }: Props) {
             Tap the button below — a popup will open where you enter the code.
           </p>
 
-          <div style={{ background: 'rgba(8,102,245,0.08)', border: '1px solid rgba(8,102,245,0.2)',
+          <div style={{ background: 'rgba(59,130,246,0.08)', border: '1px solid rgba(8,102,245,0.2)',
             borderRadius: 10, padding: '12px 16px', marginBottom: 20, fontSize: 13, color: BLUE, lineHeight: 1.5 }}>
             Code sent — check inbox and spam folder.
           </div>

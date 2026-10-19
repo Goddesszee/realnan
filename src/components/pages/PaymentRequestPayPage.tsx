@@ -19,7 +19,7 @@ import { usePublicPage } from '../../hooks/usePublicPage'
 
 const F    = "'Inter', -apple-system, sans-serif"
 const MONO = "'JetBrains Mono', Menlo, monospace"
-const BLUE = '#0066FF'
+const BLUE = 'var(--nan-blue)'
 const BG   = '#0A0C10'
 const SURF = '#13151A'
 const SURF2= '#1C1F28'
@@ -207,7 +207,7 @@ function WalletPanel({
           border: 'none', color: '#fff', fontSize: 16, fontWeight: 700,
           cursor: isDisabled ? 'not-allowed' : 'pointer', fontFamily: F,
           display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-          boxShadow: isDisabled ? 'none' : '0 4px 20px rgba(8,102,245,0.30)',
+          boxShadow: isDisabled ? 'none' : '0 4px 20px rgba(59,130,246,0.28)',
           transition: 'all 0.15s',
         }}
       >
@@ -715,7 +715,7 @@ export function PaymentRequestPayPage({
               {req.creatorName || req.title || (req.creatorAddress ? `${req.creatorAddress.slice(0, 10)}…${req.creatorAddress.slice(-6)}` : 'NAN User')}
             </div>
             {(req as PaymentRequest & { creatorNanHandle?: string }).creatorNanHandle && (
-              <div style={{ fontSize: 13, color: '#0066FF', fontWeight: 700, marginTop: 2 }}>@{(req as PaymentRequest & { creatorNanHandle?: string }).creatorNanHandle}</div>
+              <div style={{ fontSize: 13, color: 'var(--nan-blue)', fontWeight: 700, marginTop: 2 }}>@{(req as PaymentRequest & { creatorNanHandle?: string }).creatorNanHandle}</div>
             )}
             {req.recipientName && req.recipientName !== req.creatorName && (
               <div style={{ fontSize: 13, color: '#8A8F9E', marginTop: 3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{req.recipientName}</div>

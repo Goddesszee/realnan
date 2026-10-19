@@ -8,7 +8,7 @@ interface LogoProps {
   color?: string
 }
 
-export function NanLogo({ size = 30, showText = true, color = '#0866F5' }: LogoProps) {
+export function NanLogo({ size = 30, showText = true, color = 'var(--nan-blue)' }: LogoProps) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
       <div style={{

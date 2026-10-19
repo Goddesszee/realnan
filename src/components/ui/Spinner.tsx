@@ -46,7 +46,7 @@ export function PageLoader() {
         background: 'var(--nan-blue)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         fontSize: 20, fontWeight: 800, color: '#fff',
-        boxShadow: '0 8px 24px rgba(8,102,245,0.35)',
+        boxShadow: '0 8px 24px rgba(59,130,246,0.30)',
         marginBottom: 4,
       }}>N</div>
       <Spinner size={22} />

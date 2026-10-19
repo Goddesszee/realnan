@@ -19,7 +19,7 @@ import { Mail, Wallet, ArrowLeft, ChevronRight } from 'lucide-react'
 import { CircleEmailLogin } from './CircleEmailLogin'
 
 const F = "'Inter', -apple-system, sans-serif"
-const BLUE = '#0866F5'
+const BLUE = 'var(--nan-blue)'
 
 type Mode = 'choose' | 'email'
 
@@ -39,7 +39,7 @@ export function InlineAuthPicker({ onWalletConnected, onCircleSuccess, onBack, d
   const text2    = dark ? 'rgba(255,255,255,0.55)'  : 'var(--nan-text2)'
   const surf     = dark ? 'rgba(255,255,255,0.06)'  : 'var(--nan-surface)'
   const bdr      = dark ? 'rgba(255,255,255,0.12)'  : 'var(--nan-bdr)'
-  const bdrHover = dark ? 'rgba(255,255,255,0.20)'  : 'rgba(8,102,245,0.3)'
+  const bdrHover = dark ? 'rgba(255,255,255,0.20)'  : 'rgba(59,130,246,0.28)'
 
   // When a wagmi wallet connects while the picker is open, fire the callback
   useEffect(() => {
@@ -97,7 +97,7 @@ export function InlineAuthPicker({ onWalletConnected, onCircleSuccess, onBack, d
           onClick={() => setMode('email')}
           style={{ width: '100%', minHeight: 60, background: surf, border: `1px solid ${bdrHover}`, borderRadius: 14, cursor: 'pointer', fontFamily: F, display: 'flex', alignItems: 'center', gap: 14, padding: '0 18px', textAlign: 'left' }}
         >
-          <div style={{ width: 38, height: 38, borderRadius: 10, background: 'rgba(8,102,245,0.15)', border: `1px solid rgba(8,102,245,0.3)`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <div style={{ width: 38, height: 38, borderRadius: 10, background: 'rgba(59,130,246,0.12)', border: `1px solid rgba(59,130,246,0.28)`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
             <Mail size={18} color={BLUE} />
           </div>
           <div style={{ flex: 1 }}>

@@ -16,7 +16,7 @@ export function Card({ variant = 'default', padding = 'md', className = '', styl
       variant === 'flat'     ? 'transparent'           :
                                'var(--nan-surface)',
     border:
-      variant === 'blue'  ? '1px solid rgba(8,102,245,0.22)' :
+      variant === 'blue'  ? '1px solid rgba(59,130,246,0.20)' :
       variant === 'flat'  ? 'none'                           :
                             '1px solid var(--nan-border)',
     padding: padding === 'none' ? undefined : padMap[padding],

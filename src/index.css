@@ -250,7 +250,7 @@ body::after{display:none;}
 .flbl{display:block;font-family:'Inter var','Inter',sans-serif;font-variant-numeric:tabular-nums;font-size:1rem;color:var(--text2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;}
 input{width:100%;background:#171A21;border:1px solid rgba(255,255,255,.1);border-radius:var(--radius-sm);color:var(--text);font-family:'Inter var','Inter',sans-serif;font-variant-numeric:tabular-nums;font-size:.95rem;padding:10px 13px;outline:none;transition:all .2s;-webkit-appearance:none;appearance:none;cursor:pointer;}
 select{width:100%;background:#171A21;border:1px solid #1a1a1a;border-radius:var(--radius-sm);color:var(--text);font-family:'Inter var','Inter',sans-serif;font-variant-numeric:tabular-nums;font-size:.95rem;padding:10px 13px;outline:none;transition:all .2s;-webkit-appearance:auto;appearance:auto;cursor:pointer;}
-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(8,102,245,0.18),0 0 0 1px rgba(8,102,245,0.5);}
+input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(59,130,246,0.15),0 0 0 1px rgba(59,130,246,0.45);}
 input::placeholder{color:var(--text3);opacity:.7;}
 input:disabled{opacity:.5;cursor:not-allowed;}
 .type-sel{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px;}
@@ -509,7 +509,7 @@ a:hover{color:var(--text);}
 @keyframes spin{to{transform:rotate(360deg);}}
 
 /* â”€â”€ Swap page specific â”€â”€ */
-.swap-box-wrap{background:rgba(255,255,255,0.02);border:1px solid rgba(8,102,245,0.18);border-radius:var(--radius);padding:4px;margin-bottom:14px;}
+.swap-box-wrap{background:rgba(255,255,255,0.02);border:1px solid rgba(59,130,246,0.15);border-radius:var(--radius);padding:4px;margin-bottom:14px;}
 .swap-inner{background:var(--surface);padding:14px 16px 10px;}
 .swap-inner.top{border-radius:14px 14px 4px 4px;}
 .swap-inner.bottom{border-radius:4px 4px 14px 14px;padding:10px 16px 14px;}
@@ -1436,7 +1436,7 @@ a:hover{color:var(--text);}
   .page > div > .swap-box,
   .page > div > [class*="card"]{
     background: rgba(255,255,255,0.04) !important;
-    border: 1px solid rgba(8,102,245,0.18) !important;
+    border: 1px solid rgba(59,130,246,0.15) !important;
     box-shadow: 0 8px 32px rgba(0,0,0,0.3) !important;
     border-radius: var(--radius) !important;
     padding: 14px !important;

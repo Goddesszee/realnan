@@ -17,8 +17,8 @@ import { useAppStore } from '../../store/appStore'
 
 const F    = "'Inter', -apple-system, sans-serif"
 const MONO = "'JetBrains Mono', 'SF Mono', Menlo, monospace"
-const BLUE = '#0866F5'
-const GREEN = '#10B981'
+const BLUE = 'var(--nan-blue)'
+const GREEN = 'var(--nan-green)'
 const AMBER = '#FF9500'
 
 // Tokens supported by Circle / LiFi on mainnet chains
@@ -203,7 +203,7 @@ export function AgentSwapTab({ C }: Props) {
       </div>
 
       {/* Balance */}
-      <div style={{ background: 'rgba(8,102,245,0.06)', border: '1px solid rgba(8,102,245,0.16)', borderRadius: 12, padding: '10px 14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ background: 'rgba(59,130,246,0.06)', border: '1px solid rgba(59,130,246,0.14)', borderRadius: 12, padding: '10px 14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <span style={{ fontSize: 12, color: C.t2 }}>Agent Wallet balance</span>
         <span style={{ fontSize: 13, fontWeight: 700, color: C.text, fontFamily: MONO }}>{balance.toFixed(4)} USDC</span>
       </div>

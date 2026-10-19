@@ -27,7 +27,7 @@ const FLOATERS = [
 ]
 
 const CONFETTI_COLORS = [
-  '#0866F5','#10B981','#FF6B35','#FFD600',
+  'var(--nan-blue)','#10B981','#FF6B35','#FFD600',
   '#E040FB','#00BCD4','#FF4081','#69F0AE',
 ]
 
@@ -119,7 +119,7 @@ export function WelcomeBalloon() {
       <div style={{
         position: 'relative', zIndex: 1,
         background: 'linear-gradient(155deg, #08102A 0%, #0D1A40 55%, #08102A 100%)',
-        border: '1.5px solid rgba(8,102,245,0.4)',
+        border: '1.5px solid rgba(59,130,246,0.35)',
         borderRadius: 32,
         padding: '48px 36px 36px',
         maxWidth: 340, width: '88%',
@@ -132,7 +132,7 @@ export function WelcomeBalloon() {
         {/* Animated glow border */}
         <div style={{
           position: 'absolute', inset: -1, borderRadius: 33,
-          background: 'linear-gradient(135deg, rgba(8,102,245,0.5), rgba(16,185,129,0.15), rgba(8,102,245,0.5))',
+          background: 'linear-gradient(135deg, rgba(59,130,246,0.45), rgba(16,185,129,0.15), rgba(59,130,246,0.45))',
           zIndex: -1,
           animation: 'wb-glow 2.5s ease-in-out infinite alternate',
         }} />
@@ -170,8 +170,8 @@ export function WelcomeBalloon() {
         {/* Name badge */}
         <div style={{
           display: 'inline-flex', alignItems: 'center', gap: 8,
-          background: 'rgba(8,102,245,0.18)',
-          border: '1px solid rgba(8,102,245,0.4)',
+          background: 'rgba(59,130,246,0.15)',
+          border: '1px solid rgba(59,130,246,0.35)',
           borderRadius: 50, padding: '9px 20px',
           marginBottom: 24,
         }}>

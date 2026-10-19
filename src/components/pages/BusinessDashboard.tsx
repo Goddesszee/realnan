@@ -14,7 +14,7 @@ import { useAccount } from 'wagmi'
 import { toast } from 'sonner'
 
 const F = "'Inter', -apple-system, sans-serif"
-const BLUE = '#0866F5'
+const BLUE = 'var(--nan-blue)'
 
 interface StatCardProps {
   label: string

@@ -33,7 +33,7 @@ function Sheet({ onClose }: { onClose: () => void }) {
                 <span style={{ display: 'block', fontSize: 15, fontWeight: 700 }}>{l.native}</span>
                 <span style={{ display: 'block', fontSize: 12, color: 'var(--nan-text3, rgba(255,255,255,0.55))' }}>{l.en}</span>
               </span>
-              {l.code === current && <span style={{ color: '#0866F5', fontWeight: 800 }}>✓</span>}
+              {l.code === current && <span style={{ color: 'var(--nan-blue)', fontWeight: 800 }}>✓</span>}
             </button>
           ))}
           {shown.length === 0 && <div style={{ padding: 18, fontSize: 14, color: 'var(--nan-text3, rgba(255,255,255,0.5))' }}>No language found.</div>}

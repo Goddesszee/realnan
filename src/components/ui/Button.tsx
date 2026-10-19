@@ -27,7 +27,7 @@ function getVariantStyle(variant: Variant): React.CSSProperties {
         background: 'var(--nan-blue)',
         color: '#fff',
         border: 'none',
-        boxShadow: '0 2px 10px rgba(8,102,245,0.28)',
+        boxShadow: '0 2px 10px rgba(59,130,246,0.25)',
       }
     case 'secondary':
       return {
@@ -45,7 +45,7 @@ function getVariantStyle(variant: Variant): React.CSSProperties {
       return {
         background: 'var(--nan-blue-dim)',
         color: 'var(--nan-blue)',
-        border: '1px solid rgba(8,102,245,0.22)',
+        border: '1px solid rgba(59,130,246,0.20)',
       }
     case 'danger':
       return {

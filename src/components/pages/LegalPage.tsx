@@ -60,7 +60,7 @@ export function TermsPage() {
         We may update these Terms. Continued use of the App after changes constitutes acceptance. We will notify users of material changes via the in-app notifications system.
       </Section>
       <Section title="12. Contact">
-        For questions about these Terms, contact us at <a href="mailto:support@nanarc.xyz" style={{ color: '#0866F5' }}>support@nanarc.xyz</a>.
+        For questions about these Terms, contact us at <a href="mailto:support@nanarc.xyz" style={{ color: 'var(--nan-blue)' }}>support@nanarc.xyz</a>.
       </Section>
     </div>
   )
@@ -103,7 +103,7 @@ export function PrivacyPage() {
         We do not sell your personal data. We share data only with the service providers listed in Section 3, or as required by law (e.g. in response to a valid legal process).
       </Section>
       <Section title="6. Your Rights">
-        You have the right to: access the data we hold about you; request correction or deletion; opt out of non-essential communications. To exercise these rights, contact <a href="mailto:support@nanarc.xyz" style={{ color: '#0866F5' }}>support@nanarc.xyz</a>.
+        You have the right to: access the data we hold about you; request correction or deletion; opt out of non-essential communications. To exercise these rights, contact <a href="mailto:support@nanarc.xyz" style={{ color: 'var(--nan-blue)' }}>support@nanarc.xyz</a>.
       </Section>
       <Section title="7. Security">
         We use industry-standard security measures. However, no system is completely secure. You are responsible for keeping your wallet credentials safe.
@@ -115,7 +115,7 @@ export function PrivacyPage() {
         We may update this Policy. We will notify users of material changes via in-app notifications. Continued use constitutes acceptance.
       </Section>
       <Section title="10. Contact">
-        Privacy questions: <a href="mailto:support@nanarc.xyz" style={{ color: '#0866F5' }}>support@nanarc.xyz</a>
+        Privacy questions: <a href="mailto:support@nanarc.xyz" style={{ color: 'var(--nan-blue)' }}>support@nanarc.xyz</a>
       </Section>
     </div>
   )

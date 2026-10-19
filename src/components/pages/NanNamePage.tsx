@@ -100,7 +100,7 @@ function BalloonCelebration({ handle, onDone }: { handle: string; onDone: () => 
         style={{
           background: 'linear-gradient(135deg, #0866F5 0%, #0044CC 100%)',
           borderRadius: 28, padding: '36px 40px', textAlign: 'center',
-          boxShadow: '0 24px 80px rgba(8,102,245,0.5)',
+          boxShadow: '0 24px 80px rgba(59,130,246,0.45)',
           maxWidth: 320, width: '90%',
           animation: 'nanPop 0.5s cubic-bezier(0.34,1.56,0.64,1)',
         }}
@@ -595,12 +595,12 @@ export function NanNamePage() {
         <div style={{ marginBottom: 20 }}>
           {/* Handle hero card */}
           <div style={{
-            background: 'linear-gradient(135deg, rgba(8,102,245,0.15) 0%, rgba(8,102,245,0.05) 100%)',
-            border: '1.5px solid rgba(8,102,245,0.3)',
+            background: 'linear-gradient(135deg, rgba(59,130,246,0.12) 0%, rgba(8,102,245,0.05) 100%)',
+            border: '1.5px solid rgba(59,130,246,0.28)',
             borderRadius: 22, padding: '28px 22px', marginBottom: 16,
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-              <div style={{ width: 56, height: 56, borderRadius: 18, background: '#0866F5', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 4px 20px rgba(8,102,245,0.4)' }}>
+              <div style={{ width: 56, height: 56, borderRadius: 18, background: 'var(--nan-blue)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 4px 20px rgba(59,130,246,0.35)' }}>
                 <AtSign size={24} color="#fff" />
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
@@ -661,7 +661,7 @@ export function NanNamePage() {
 
           {/* Handle input */}
           <div style={{ position: 'relative', marginBottom: 10 }}>
-            <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', fontSize: 16, fontWeight: 700, color: '#0866F5', pointerEvents: 'none', zIndex: 1 }}>@</span>
+            <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', fontSize: 16, fontWeight: 700, color: 'var(--nan-blue)', pointerEvents: 'none', zIndex: 1 }}>@</span>
             <input
               autoFocus
               value={newHandle}
@@ -672,7 +672,7 @@ export function NanNamePage() {
               disabled={isBusy}
               style={{
                 width: '100%', height: 52, paddingLeft: 30, paddingRight: 16,
-                background: C.surf2, border: `1.5px solid ${handleError ? '#EF4444' : newHandle ? '#0866F5' : C.bdr}`,
+                background: C.surf2, border: `1.5px solid ${handleError ? '#EF4444' : newHandle ? 'var(--nan-blue)' : C.bdr}`,
                 borderRadius: 12, color: C.text, fontSize: 16, fontWeight: 700, fontFamily: MONO,
                 outline: 'none', boxSizing: 'border-box', transition: 'border-color 0.15s',
                 opacity: isBusy ? 0.6 : 1,
@@ -692,12 +692,12 @@ export function NanNamePage() {
                 <button key={d.val} onClick={() => !isBusy && setDuration(d.val)}
                   style={{
                     flex: 1, borderRadius: 12, padding: '10px 8px', cursor: isBusy ? 'not-allowed' : 'pointer',
-                    background: duration === d.val ? 'rgba(8,102,245,0.10)' : C.surf2,
-                    border: `1.5px solid ${duration === d.val ? '#0866F5' : C.bdr}`,
+                    background: duration === d.val ? 'rgba(59,130,246,0.10)' : C.surf2,
+                    border: `1.5px solid ${duration === d.val ? 'var(--nan-blue)' : C.bdr}`,
                     transition: 'all 0.15s',
                   }}>
-                  <div style={{ fontSize: 13, fontWeight: 800, color: duration === d.val ? '#0866F5' : C.text }}>{d.label}</div>
-                  <div style={{ fontSize: 12, fontWeight: 700, color: duration === d.val ? '#0866F5' : C.t2, marginTop: 2 }}>{d.price}</div>
+                  <div style={{ fontSize: 13, fontWeight: 800, color: duration === d.val ? 'var(--nan-blue)' : C.text }}>{d.label}</div>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: duration === d.val ? 'var(--nan-blue)' : C.t2, marginTop: 2 }}>{d.price}</div>
                   <div style={{ fontSize: 10, color: C.t3, marginTop: 1 }}>{d.sub}</div>
                 </button>
               ))}
@@ -706,23 +706,23 @@ export function NanNamePage() {
 
           {/* Progress indicator */}
           {stepLabel && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(8,102,245,0.06)', border: '1px solid rgba(8,102,245,0.15)', borderRadius: 10, padding: '10px 14px', marginBottom: 14 }}>
-              <Loader2 size={14} color="#0866F5" style={{ animation: 'nan-spin 0.8s linear infinite', flexShrink: 0 }} />
-              <span style={{ fontSize: 13, color: '#0866F5', fontWeight: 600 }}>{stepLabel}</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(59,130,246,0.06)', border: '1px solid rgba(59,130,246,0.12)', borderRadius: 10, padding: '10px 14px', marginBottom: 14 }}>
+              <Loader2 size={14} color="var(--nan-blue)" style={{ animation: 'nan-spin 0.8s linear infinite', flexShrink: 0 }} />
+              <span style={{ fontSize: 13, color: 'var(--nan-blue)', fontWeight: 600 }}>{stepLabel}</span>
             </div>
           )}
 
           <button onClick={handleSubmit} disabled={isBusy || !newHandle.trim()}
             style={{
               width: '100%', height: 50, borderRadius: 13,
-              background: (isBusy || !newHandle.trim()) ? C.surf2 : '#0866F5',
+              background: (isBusy || !newHandle.trim()) ? C.surf2 : 'var(--nan-blue)',
               border: 'none',
               color: (isBusy || !newHandle.trim()) ? C.t3 : '#fff',
               fontSize: 15, fontWeight: 700,
               cursor: (isBusy || !newHandle.trim()) ? 'not-allowed' : 'pointer',
               fontFamily: F,
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-              boxShadow: (!isBusy && newHandle.trim()) ? '0 4px 18px rgba(8,102,245,0.35)' : 'none',
+              boxShadow: (!isBusy && newHandle.trim()) ? '0 4px 18px rgba(59,130,246,0.30)' : 'none',
               transition: 'all 0.15s',
             }}>
             {isBusy
@@ -754,7 +754,7 @@ export function NanNamePage() {
               />
             </div>
             <button onClick={() => { void doSearch() }} disabled={searching}
-              style={{ width: 44, height: 44, borderRadius: 12, background: '#0866F5', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              style={{ width: 44, height: 44, borderRadius: 12, background: 'var(--nan-blue)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               {searching ? <Loader2 size={16} color="#fff" style={{ animation: 'nan-spin 0.8s linear infinite' }} /> : <Search size={16} color="#fff" />}
             </button>
           </div>

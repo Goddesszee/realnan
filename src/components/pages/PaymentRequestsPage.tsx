@@ -20,15 +20,15 @@ import { syncPrCreate, syncPrUpdate, syncPrDelete } from '../../hooks/useBackend
 
 const F    = "'Inter', -apple-system, sans-serif"
 const MONO = "'JetBrains Mono', Menlo, monospace"
-const BLUE = '#0866F5'
-const GREEN = '#10B981'
-const RED   = '#EF4444'
-const GOLD  = '#F59E0B'
+const BLUE = 'var(--nan-blue)'
+const GREEN = 'var(--nan-green)'
+const RED   = 'var(--nan-red)'
+const GOLD  = 'var(--nan-gold)'
 
 // ── Status helpers ─────────────────────────────────────────────────────────────
 const STATUS_META: Record<PaymentRequestStatus, { label: string; color: string; bg: string; Icon: React.ElementType }> = {
   pending:   { label: 'Pending',   color: GOLD,  bg: 'rgba(245,158,11,0.10)',   Icon: Clock },
-  viewed:    { label: 'Viewed',    color: BLUE,  bg: 'rgba(8,102,245,0.08)',   Icon: Eye },
+  viewed:    { label: 'Viewed',    color: BLUE,  bg: 'rgba(59,130,246,0.08)',   Icon: Eye },
   paid:      { label: 'Paid',      color: GREEN, bg: 'rgba(16,185,129,0.10)',    Icon: CheckCircle2 },
   expired:   { label: 'Expired',   color: RED,   bg: 'rgba(239,68,68,0.08)',   Icon: XCircle },
   cancelled: { label: 'Cancelled', color: '#8A8FA8', bg: 'rgba(138,143,168,0.08)', Icon: XCircle },
@@ -179,7 +179,7 @@ function ListView({
             padding: '10px 16px', borderRadius: 12,
             background: BLUE, border: 'none', color: '#fff',
             fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: F,
-            boxShadow: '0 4px 16px rgba(8,102,245,0.3)', flexShrink: 0,
+            boxShadow: '0 4px 16px rgba(59,130,246,0.28)', flexShrink: 0,
             WebkitTapHighlightColor: 'transparent',
           }}
         >
@@ -268,7 +268,7 @@ function ListView({
               padding: '13px 24px', borderRadius: 12,
               background: BLUE, border: 'none', color: '#fff',
               fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: F,
-              boxShadow: '0 4px 16px rgba(8,102,245,0.28)',
+              boxShadow: '0 4px 16px rgba(59,130,246,0.25)',
               WebkitTapHighlightColor: 'transparent',
             }}>
               <Plus size={15} /> Create Request
@@ -538,7 +538,7 @@ function CreateForm({
             background: BLUE, border: 'none', color: '#fff',
             fontSize: 15, fontWeight: 700, cursor: submitting ? 'not-allowed' : 'pointer',
             fontFamily: F, opacity: submitting ? 0.7 : 1,
-            boxShadow: '0 4px 16px rgba(8,102,245,0.3)',
+            boxShadow: '0 4px 16px rgba(59,130,246,0.28)',
           }}
         >
           {submitting ? 'Creating…' : 'Create Payment Request'}
@@ -664,7 +664,7 @@ function DetailView({
             padding: '14px', borderRadius: 13,
             background: BLUE, border: 'none', color: '#fff',
             fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: F,
-            boxShadow: '0 4px 14px rgba(8,102,245,0.28)', WebkitTapHighlightColor: 'transparent',
+            boxShadow: '0 4px 14px rgba(59,130,246,0.25)', WebkitTapHighlightColor: 'transparent',
           }}>
             {copied ? <Check size={15} /> : <Copy size={15} />}
             {copied ? 'Copied!' : 'Copy Link'}

@@ -26,7 +26,7 @@ function Sheet({ list, current, onPick, onClose, title }: { title: string; list:
               <span aria-hidden style={{ width: 30, fontSize: 22, lineHeight: 1, textAlign: 'center' }}>{currencyFlag(c.code)}</span>
               <span style={{ width: 40, fontSize: 14, fontWeight: 800 }}>{c.code}</span>
               <span style={{ flex: 1, fontSize: 14, color: 'var(--nan-text2, rgba(255,255,255,0.7))' }}>{c.name}</span>
-              {c.code === current && <span style={{ color: '#0866F5', fontWeight: 800 }}>✓</span>}
+              {c.code === current && <span style={{ color: 'var(--nan-blue)', fontWeight: 800 }}>✓</span>}
             </button>
           ))}
           {shown.length === 0 && <div style={{ padding: 18, fontSize: 14, color: 'var(--nan-text3, rgba(255,255,255,0.5))' }}>No currency found.</div>}

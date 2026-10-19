@@ -32,7 +32,7 @@ import { usePublicPage } from '../../hooks/usePublicPage'
 // ── Constants ──────────────────────────────────────────────────────────────────
 const F    = "'Inter', -apple-system, sans-serif"
 const MONO = "'JetBrains Mono', Menlo, monospace"
-const BLUE = '#0066FF'
+const BLUE = 'var(--nan-blue)'
 const BG   = '#0A0C10'
 const SURF = '#13151A'
 const SURF2= '#1C1F28'
@@ -40,7 +40,7 @@ const BDR  = 'rgba(255,255,255,0.08)'
 const TEXT  = '#F2F3F5'
 const TEXT2 = '#8A8F9E'
 const TEXT3 = 'rgba(138,143,158,0.5)'
-const GREEN = '#10B981'
+const GREEN = 'var(--nan-green)'
 
 const ARC_ID        = 5042
 const USDC_ADDRESS  = '0x3600000000000000000000000000000000000000' as `0x${string}`

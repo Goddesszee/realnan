@@ -139,7 +139,7 @@ export function buildInvoiceHtml(inv: Invoice): string {
     </div>
     <div style="flex:1;min-width:140px;padding:20px 24px;">
       <div style="font-size:10px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">Amount Due</div>
-      <div style="font-size:20px;font-weight:800;color:${inv.amountDue > 0 ? '#0866F5' : '#15803D'};letter-spacing:-0.03em;">${fmt(inv.amountDue, inv.currency)}</div>
+      <div style="font-size:20px;font-weight:800;color:${inv.amountDue > 0 ? 'var(--nan-blue)' : '#15803D'};letter-spacing:-0.03em;">${fmt(inv.amountDue, inv.currency)}</div>
     </div>
   </div>
 

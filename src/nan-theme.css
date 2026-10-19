@@ -1,42 +1,40 @@
 /* ═══════════════════════════════════════════════════════
-   NAN DESIGN SYSTEM — v4.0
-   Brand: Electric Blue #0866F5 · Ink Black #0B0D12 · White #F5F7FB
-   Ratio: 60% dark / 30% white / 10% electric blue
+   NAN DESIGN SYSTEM — v5.0
+   Brand: Electric Blue #3B82F6 · Deep Navy #0B0F19 · White #F9FAFB
+   Premium, professional, clean. Blue for actions — nowhere else.
 ═══════════════════════════════════════════════════════ */
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 :root {
   /* ── Core backgrounds ── */
-  --nan-bg:        #0B0D12;
-  --nan-bg-2:      #0F1117;
-  --nan-surface:   #171A21;
-  --nan-surface-2: #1D2029;
-  --nan-surface-3: #232731;
+  --nan-bg:        #0B0F19;
+  --nan-bg-2:      #0F1520;
+  --nan-surface:   #111827;
+  --nan-surface-2: #1A2235;
+  --nan-surface-3: #202C42;
 
   /* ── Borders ── */
   --nan-border:    rgba(255,255,255,0.07);
-  --nan-border-2:  rgba(255,255,255,0.12);
+  --nan-border-2:  rgba(255,255,255,0.13);
 
-  /* ── Brand blue ── */
-  --nan-blue:      #0866F5;
-  --nan-blue-dim:  rgba(8,102,245,0.12);
-  --nan-blue-glow: rgba(8,102,245,0.22);
-  --nan-blue-hover:#0555D4;
+  /* ── Brand blue — single source of truth ── */
+  --nan-blue:       #3B82F6;
+  --nan-blue-dim:   rgba(59,130,246,0.10);
+  --nan-blue-glow:  rgba(59,130,246,0.22);
+  --nan-blue-hover: #2563EB;
 
   /* ── Text ── */
-  --nan-white:     #FFFFFF;
-  --nan-text:      #F5F7FB;
-  --nan-text-2:    #A0A7B5;
-  --nan-text-3:    #5A6175;
+  --nan-white:  #FFFFFF;
+  --nan-text:   #F9FAFB;
+  --nan-text-2: #9CA3AF;
+  --nan-text-3: #4B5563;
 
   /* ── Semantic ── */
-  --nan-green:     #10B981;
-  --nan-green-dim: rgba(16,185,129,0.10);
-  --nan-red:       #EF4444;
-  --nan-red-dim:   rgba(239,68,68,0.10);
-  --nan-gold:      #F59E0B;
-  --nan-gold-dim:  rgba(245,158,11,0.10);
+  --nan-green:      #10B981;
+  --nan-green-dim:  rgba(16,185,129,0.10);
+  --nan-red:        #EF4444;
+  --nan-red-dim:    rgba(239,68,68,0.10);
+  --nan-gold:       #F59E0B;
+  --nan-gold-dim:   rgba(245,158,11,0.10);
 
   /* ── Spacing / Radii ── */
   --nan-r-sm:  8px;
@@ -49,47 +47,46 @@
   --nan-mono: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
 
   /* ── v3 no-dash aliases (used by legacy CSS classes + UI atom inline styles) ── */
-  --nan-bdr:       rgba(255,255,255,0.07);
-  --nan-bdr2:      rgba(255,255,255,0.12);
-  --nan-surface2:  #1D2029;
-  --nan-surface3:  #232731;
-  --nan-text2:     #A0A7B5;
-  --nan-text3:     #5A6175;
-  /* --nan-blue is already defined above */
+  --nan-bdr:      rgba(255,255,255,0.07);
+  --nan-bdr2:     rgba(255,255,255,0.13);
+  --nan-surface2: #1A2235;
+  --nan-surface3: #202C42;
+  --nan-text2:    #9CA3AF;
+  --nan-text3:    #4B5563;
 }
 
 /* ── Light mode ── */
 [data-theme="light"] {
-  --nan-bg:        #F4F6FA;
-  --nan-bg-2:      #EEF1F7;
+  --nan-bg:        #F5F7FA;
+  --nan-bg-2:      #ECEEF2;
   --nan-surface:   #FFFFFF;
-  --nan-surface-2: #EEF1F7;
-  --nan-surface-3: #E5E9F2;
-  --nan-border:    rgba(0,0,0,0.07);
-  --nan-border-2:  rgba(0,0,0,0.13);
-  --nan-blue:      #0866F5;
-  --nan-blue-dim:  rgba(8,102,245,0.08);
-  --nan-blue-glow: rgba(8,102,245,0.16);
-  --nan-blue-hover:#0555D4;
-  --nan-text:      #0A0C14;
-  --nan-text-2:    #4A5068;
-  --nan-text-3:    #8A8FA8;
+  --nan-surface-2: #F0F2F5;
+  --nan-surface-3: #E5E8EF;
+  --nan-border:    rgba(0,0,0,0.08);
+  --nan-border-2:  rgba(0,0,0,0.14);
+  --nan-blue:       #2563EB;
+  --nan-blue-dim:   rgba(37,99,235,0.08);
+  --nan-blue-glow:  rgba(37,99,235,0.18);
+  --nan-blue-hover: #1D4ED8;
+  --nan-text:   #111827;
+  --nan-text-2: #4B5563;
+  --nan-text-3: #9CA3AF;
   --nan-green:     #059669;
   --nan-green-dim: rgba(5,150,105,0.09);
   --nan-red:       #DC2626;
   --nan-red-dim:   rgba(220,38,38,0.09);
   --nan-gold:      #D97706;
   --nan-gold-dim:  rgba(217,119,6,0.09);
-  /* v3 no-dash aliases for light mode */
-  --nan-bdr:       rgba(0,0,0,0.07);
-  --nan-bdr2:      rgba(0,0,0,0.13);
-  --nan-surface2:  #EEF1F7;
-  --nan-surface3:  #E5E9F2;
-  --nan-text2:     #4A5068;
-  --nan-text3:     #8A8FA8;
+  /* v3 no-dash aliases */
+  --nan-bdr:      rgba(0,0,0,0.08);
+  --nan-bdr2:     rgba(0,0,0,0.14);
+  --nan-surface2: #F0F2F5;
+  --nan-surface3: #E5E8EF;
+  --nan-text2:    #4B5563;
+  --nan-text3:    #9CA3AF;
 }
 
-/* Light mode — force app shell chrome to use CSS vars */
+/* ── Light mode — force app shell chrome ── */
 [data-theme="light"] #root > div,
 [data-theme="light"] header,
 [data-theme="light"] nav {
@@ -97,60 +94,44 @@
   color: var(--nan-text) !important;
   border-color: var(--nan-border) !important;
 }
-[data-theme="light"] main > div {
-  color: var(--nan-text);
-}
+[data-theme="light"] main > div { color: var(--nan-text); }
 
-/* Inline-style overrides for light mode */
-[data-theme="light"] [style*="background: rgb(8, 9, 11)"],
-[data-theme="light"] [style*="background: #08090B"],
-[data-theme="light"] [style*="background: #08090b"],
-[data-theme="light"] [style*="background:#08090B"],
-[data-theme="light"] [style*="background:#08090b"],
+/* Inline-style overrides for light mode — catches dark hex literals in JSX */
+[data-theme="light"] [style*="background: #0B0F19"],
+[data-theme="light"] [style*="background:#0B0F19"],
 [data-theme="light"] [style*="background: #0B0D12"],
 [data-theme="light"] [style*="background:#0B0D12"],
-[data-theme="light"] [style*="background: #0b0d12"],
-[data-theme="light"] [style*="background:#0b0d12"] { background: var(--nan-bg) !important; }
+[data-theme="light"] [style*="background: #08090B"],
+[data-theme="light"] [style*="background:#08090B"] { background: var(--nan-bg) !important; }
 
+[data-theme="light"] [style*="background: #111827"],
+[data-theme="light"] [style*="background:#111827"],
 [data-theme="light"] [style*="background: #171A21"],
 [data-theme="light"] [style*="background:#171A21"],
-[data-theme="light"] [style*="background: #111318"],
-[data-theme="light"] [style*="background:#111318"],
-[data-theme="light"] [style*="background: #111111"],
-[data-theme="light"] [style*="background:#111111"],
-[data-theme="light"] [style*="background: #13151A"],
-[data-theme="light"] [style*="background:#13151A"] { background: var(--nan-surface) !important; }
+[data-theme="light"] [style*="background: #0D1017"],
+[data-theme="light"] [style*="background:#0D1017"] { background: var(--nan-surface) !important; }
 
+[data-theme="light"] [style*="background: #1A2235"],
+[data-theme="light"] [style*="background:#1A2235"],
 [data-theme="light"] [style*="background: #1D2029"],
-[data-theme="light"] [style*="background:#1D2029"],
-[data-theme="light"] [style*="background: #181B22"],
-[data-theme="light"] [style*="background:#181B22"],
-[data-theme="light"] [style*="background: #1a1a1a"],
-[data-theme="light"] [style*="background:#1a1a1a"],
-[data-theme="light"] [style*="background: #1A1D24"],
-[data-theme="light"] [style*="background:#1A1D24"] { background: var(--nan-surface-2) !important; }
+[data-theme="light"] [style*="background:#1D2029"] { background: var(--nan-surface-2) !important; }
 
-/* Text overrides */
+/* Text color overrides */
+[data-theme="light"] [style*="color: #F9FAFB"],
+[data-theme="light"] [style*="color:#F9FAFB"],
 [data-theme="light"] [style*="color: #F5F7FB"],
 [data-theme="light"] [style*="color:#F5F7FB"],
-[data-theme="light"] [style*="color: #F2F3F5"],
-[data-theme="light"] [style*="color:#F2F3F5"],
 [data-theme="light"] [style*="color: #FFFFFF"],
 [data-theme="light"] [style*="color:#FFFFFF"],
 [data-theme="light"] [style*="color: white"] { color: var(--nan-text) !important; }
+[data-theme="light"] [style*="color: #9CA3AF"],
+[data-theme="light"] [style*="color:#9CA3AF"],
 [data-theme="light"] [style*="color: #A0A7B5"],
-[data-theme="light"] [style*="color:#A0A7B5"],
-[data-theme="light"] [style*="color: #8A8F9E"],
-[data-theme="light"] [style*="color:#8A8F9E"] { color: var(--nan-text-2) !important; }
+[data-theme="light"] [style*="color:#A0A7B5"] { color: var(--nan-text-2) !important; }
+[data-theme="light"] [style*="color: #4B5563"],
+[data-theme="light"] [style*="color:#4B5563"],
 [data-theme="light"] [style*="color: #5A6175"],
-[data-theme="light"] [style*="color:#5A6175"],
-[data-theme="light"] [style*="color: #50556A"],
-[data-theme="light"] [style*="color:#50556A"] { color: var(--nan-text-3) !important; }
-
-/* Border overrides */
-[data-theme="light"] [style*="border: 1px solid rgba(255,255,255,0.07)"],
-[data-theme="light"] [style*="borderTop: 1px solid rgba(255,255,255,0.07)"],
-[data-theme="light"] [style*="border-top: 1px solid rgba(255,255,255,0.07)"] { border-color: var(--nan-border) !important; }
+[data-theme="light"] [style*="color:#5A6175"] { color: var(--nan-text-3) !important; }
 
 /* Input fields */
 [data-theme="light"] input,
@@ -178,34 +159,16 @@ html, body, #root {
 }
 
 /* ── Typography scale ── */
-/* Display — hero numbers, large headings */
-.nan-display   {
-  font-size: 48px; font-weight: 800; line-height: 1.05;
-  letter-spacing: -0.035em; font-family: var(--nan-font);
-}
-/* H1 — page titles */
-.nan-h1        { font-size: 28px; font-weight: 700; line-height: 1.15; letter-spacing: -0.03em; }
-/* H2 — section headings */
-.nan-h2        { font-size: 20px; font-weight: 600; line-height: 1.2;  letter-spacing: -0.02em; }
-/* H3 — card headings */
-.nan-h3        { font-size: 16px; font-weight: 600; line-height: 1.3;  letter-spacing: -0.015em; }
-/* Body — primary readable text */
+.nan-display   { font-size: 48px; font-weight: 800; line-height: 1.05; letter-spacing: -0.035em; font-family: var(--nan-font); }
+.nan-h1        { font-size: 28px; font-weight: 700; line-height: 1.15; letter-spacing: -0.03em; color: var(--nan-text); }
+.nan-h2        { font-size: 20px; font-weight: 600; line-height: 1.2;  letter-spacing: -0.02em; color: var(--nan-text); }
+.nan-h3        { font-size: 16px; font-weight: 600; line-height: 1.3;  letter-spacing: -0.015em; color: var(--nan-text); }
 .nan-body      { font-size: 14px; font-weight: 400; line-height: 1.6; color: var(--nan-text); }
-/* Body small — secondary descriptive text */
 .nan-body-sm   { font-size: 13px; font-weight: 400; line-height: 1.55; color: var(--nan-text-2); }
-/* Label — form labels, section labels (uppercase) */
-.nan-label     { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--nan-text-2); }
-/* Caption — timestamps, hints, fine print */
+.nan-label     { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--nan-text-3); }
 .nan-caption   { font-size: 11px; font-weight: 400; color: var(--nan-text-3); line-height: 1.5; }
-/* Balance — financial amounts, dominant number display */
-.nan-balance   {
-  font-size: 42px; font-weight: 700; letter-spacing: -0.035em;
-  font-variant-numeric: tabular-nums; line-height: 1;
-  font-family: var(--nan-font);
-}
-/* Amount — secondary financial figures */
+.nan-balance   { font-size: 42px; font-weight: 700; letter-spacing: -0.035em; font-variant-numeric: tabular-nums; line-height: 1; font-family: var(--nan-font); }
 .nan-amount    { font-size: 22px; font-weight: 700; letter-spacing: -0.025em; font-variant-numeric: tabular-nums; }
-/* Mono — addresses, hashes, technical identifiers only */
 .nan-mono      { font-family: var(--nan-mono); font-variant-numeric: tabular-nums; }
 
 /* Color utilities */
@@ -260,17 +223,15 @@ html, body, #root {
 .nan-btn:disabled { opacity: 0.38; cursor: not-allowed; pointer-events: none; }
 .nan-btn:active:not(:disabled) { transform: scale(0.97); }
 
-/* Primary — electric blue, high contrast */
 .nan-btn-primary {
   background: var(--nan-blue); color: #fff;
-  box-shadow: 0 2px 12px rgba(8,102,245,0.30);
+  box-shadow: 0 2px 12px rgba(59,130,246,0.28);
 }
 .nan-btn-primary:hover:not(:disabled) {
   background: var(--nan-blue-hover);
-  box-shadow: 0 4px 20px rgba(8,102,245,0.40);
+  box-shadow: 0 4px 20px rgba(59,130,246,0.38);
 }
 
-/* Secondary — subtle surface, not competing with primary */
 .nan-btn-secondary {
   background: var(--nan-surface-2); color: var(--nan-text);
   border: 1px solid var(--nan-border-2);
@@ -280,7 +241,6 @@ html, body, #root {
   border-color: rgba(255,255,255,0.18);
 }
 
-/* Ghost — transparent, minimal */
 .nan-btn-ghost {
   background: transparent; color: var(--nan-text-2);
   border: 1px solid var(--nan-border);
@@ -290,14 +250,12 @@ html, body, #root {
   border-color: var(--nan-border-2);
 }
 
-/* Danger */
 .nan-btn-danger {
   background: rgba(239,68,68,0.10); color: var(--nan-red);
   border: 1px solid rgba(239,68,68,0.22);
 }
 .nan-btn-danger:hover:not(:disabled) { background: rgba(239,68,68,0.16); }
 
-/* Sizes */
 .nan-btn-sm  { font-size: 12px; padding: 7px 13px; border-radius: var(--nan-r-sm); }
 .nan-btn-lg  { font-size: 15px; padding: 14px 28px; border-radius: var(--nan-r-lg); }
 .nan-btn-xl  { font-size: 15px; padding: 16px 28px; border-radius: var(--nan-r-lg); width: 100%; font-weight: 700; }
@@ -322,16 +280,16 @@ html, body, #root {
 .nan-input::placeholder { color: var(--nan-text-3); }
 .nan-input:focus {
   border-color: var(--nan-blue);
-  box-shadow: 0 0 0 3px rgba(8,102,245,0.14);
+  box-shadow: 0 0 0 3px var(--nan-blue-dim);
 }
 .nan-input:disabled { opacity: 0.45; cursor: not-allowed; }
 .nan-input-lg { font-size: 15px; padding: 13px 16px; border-radius: var(--nan-r-lg); }
 .nan-label-field {
-  display: block; font-size: 11px; font-weight: 600; color: var(--nan-text-2);
+  display: block; font-size: 11px; font-weight: 600; color: var(--nan-text-3);
   letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 6px;
 }
 
-/* ── Divider rows (settings-style) ── */
+/* ── Divider rows ── */
 .nan-row {
   display: flex; align-items: center; justify-content: space-between;
   padding: 13px 0; border-bottom: 1px solid var(--nan-border);
@@ -363,7 +321,7 @@ html, body, #root {
 }
 .nan-tab.active-blue {
   background: var(--nan-blue-dim); color: var(--nan-blue);
-  font-weight: 700; border: 1px solid rgba(8,102,245,0.22);
+  font-weight: 700; border: 1px solid var(--nan-blue-glow);
 }
 
 /* ── Status badges ── */
@@ -371,13 +329,13 @@ html, body, #root {
   display: inline-flex; align-items: center; gap: 4px;
   font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 20px;
 }
-.nan-badge-blue    { background: var(--nan-blue-dim);    color: var(--nan-blue);    border: 1px solid rgba(8,102,245,0.22); }
-.nan-badge-green   { background: var(--nan-green-dim);   color: var(--nan-green);   border: 1px solid rgba(16,185,129,0.22); }
-.nan-badge-red     { background: var(--nan-red-dim);     color: var(--nan-red);     border: 1px solid rgba(239,68,68,0.22); }
-.nan-badge-gold    { background: var(--nan-gold-dim);    color: var(--nan-gold);    border: 1px solid rgba(245,158,11,0.22); }
-.nan-badge-default { background: var(--nan-surface-2);   color: var(--nan-text-2);  border: 1px solid var(--nan-border); }
+.nan-badge-blue    { background: var(--nan-blue-dim);  color: var(--nan-blue);  border: 1px solid var(--nan-blue-glow); }
+.nan-badge-green   { background: var(--nan-green-dim); color: var(--nan-green); border: 1px solid rgba(16,185,129,0.22); }
+.nan-badge-red     { background: var(--nan-red-dim);   color: var(--nan-red);   border: 1px solid rgba(239,68,68,0.22); }
+.nan-badge-gold    { background: var(--nan-gold-dim);  color: var(--nan-gold);  border: 1px solid rgba(245,158,11,0.22); }
+.nan-badge-default { background: var(--nan-surface-2); color: var(--nan-text-2); border: 1px solid var(--nan-border); }
 .nan-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-.nan-dot-blue  { background: var(--nan-blue); box-shadow: 0 0 6px rgba(8,102,245,0.6); }
+.nan-dot-blue  { background: var(--nan-blue); box-shadow: 0 0 6px var(--nan-blue-glow); }
 .nan-dot-green { background: var(--nan-green); }
 .nan-dot-red   { background: var(--nan-red); }
 
@@ -393,10 +351,10 @@ html, body, #root {
   width: 38px; height: 38px; border-radius: 10px;
   display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
-.nan-tx-icon-in  { background: var(--nan-green-dim);  border: 1px solid rgba(16,185,129,0.18); }
-.nan-tx-icon-out { background: var(--nan-red-dim);    border: 1px solid rgba(239,68,68,0.18); }
-.nan-tx-icon-swap{ background: var(--nan-blue-dim);   border: 1px solid rgba(8,102,245,0.20); }
-.nan-tx-icon-bot { background: rgba(8,102,245,0.08);  border: 1px solid rgba(8,102,245,0.15); }
+.nan-tx-icon-in   { background: var(--nan-green-dim);  border: 1px solid rgba(16,185,129,0.18); }
+.nan-tx-icon-out  { background: var(--nan-red-dim);    border: 1px solid rgba(239,68,68,0.18); }
+.nan-tx-icon-swap { background: var(--nan-blue-dim);   border: 1px solid var(--nan-blue-glow); }
+.nan-tx-icon-bot  { background: var(--nan-blue-dim);   border: 1px solid var(--nan-blue-glow); }
 .nan-tx-title    { font-size: 14px; font-weight: 600; color: var(--nan-text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .nan-tx-sub      { font-size: 11px; color: var(--nan-text-3); margin-top: 2px; }
 .nan-tx-amount   { font-size: 13px; font-weight: 700; font-family: var(--nan-mono); flex-shrink: 0; text-align: right; font-variant-numeric: tabular-nums; }
@@ -405,7 +363,7 @@ html, body, #root {
 
 /* ── Balance card ── */
 .nan-balance-card {
-  background: linear-gradient(145deg, #0F1117 0%, #171A21 55%, #0D1017 100%);
+  background: linear-gradient(145deg, var(--nan-bg-2) 0%, var(--nan-surface) 55%, var(--nan-bg-2) 100%);
   border: 1px solid var(--nan-border-2);
   border-radius: var(--nan-r-xl); padding: 22px 24px;
   position: relative; overflow: hidden;
@@ -413,7 +371,7 @@ html, body, #root {
 .nan-balance-card::after {
   content: ''; position: absolute; top: -40px; right: -40px;
   width: 200px; height: 200px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(8,102,245,0.16) 0%, transparent 65%);
+  background: radial-gradient(circle, var(--nan-blue-dim) 0%, transparent 65%);
   pointer-events: none;
 }
 
@@ -429,9 +387,8 @@ html, body, #root {
 .nan-nav-item.active {
   background: var(--nan-blue-dim); color: var(--nan-blue); font-weight: 600;
 }
-.nan-nav-item.active svg { color: var(--nan-blue); }
 
-/* ── Quick action buttons (home page) ── */
+/* ── Quick action buttons ── */
 .nan-action-btn {
   display: flex; flex-direction: column; align-items: center; gap: 6px;
   padding: 14px 8px; border-radius: var(--nan-r-lg);
@@ -439,31 +396,16 @@ html, body, #root {
   cursor: pointer; transition: all 0.15s; font-family: var(--nan-font);
   -webkit-tap-highlight-color: transparent;
 }
-.nan-action-btn:hover {
-  background: var(--nan-surface-2); border-color: var(--nan-border-2);
-  transform: translateY(-1px);
-}
-.nan-action-btn.primary-action {
-  background: var(--nan-blue-dim); border-color: rgba(8,102,245,0.24);
-}
-.nan-action-btn.primary-action:hover {
-  background: rgba(8,102,245,0.18);
-  box-shadow: 0 4px 16px rgba(8,102,245,0.18);
-}
+.nan-action-btn:hover { background: var(--nan-surface-2); border-color: var(--nan-border-2); transform: translateY(-1px); }
+.nan-action-btn.primary-action { background: var(--nan-blue-dim); border-color: var(--nan-blue-glow); }
+.nan-action-btn.primary-action:hover { background: rgba(59,130,246,0.16); }
 .nan-action-icon {
   width: 36px; height: 36px; border-radius: 10px;
   display: flex; align-items: center; justify-content: center;
   background: var(--nan-surface-2); border: 1px solid var(--nan-border);
-  transition: all 0.15s;
 }
-.nan-action-btn.primary-action .nan-action-icon {
-  background: var(--nan-blue); border-color: transparent;
-  box-shadow: 0 3px 10px rgba(8,102,245,0.35);
-}
-.nan-action-label {
-  font-size: 11px; font-weight: 600; color: var(--nan-text-2);
-  letter-spacing: 0.02em;
-}
+.nan-action-btn.primary-action .nan-action-icon { background: var(--nan-blue); border-color: transparent; }
+.nan-action-label { font-size: 11px; font-weight: 600; color: var(--nan-text-2); letter-spacing: 0.02em; }
 .nan-action-btn.primary-action .nan-action-label { color: var(--nan-blue); }
 
 /* ── Empty states ── */
@@ -499,11 +441,17 @@ html, body, #root {
 }
 @keyframes nan-shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
+/* ── Pulse animation (used for nudge elements) ── */
+@keyframes nan-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.6; }
+}
+
 /* ── Toast ── */
 .nan-toast {
   background: var(--nan-surface-2); border: 1px solid var(--nan-border-2);
   border-radius: var(--nan-r-lg); padding: 13px 16px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
   color: var(--nan-text); font-family: var(--nan-font); font-size: 13px;
 }
 
@@ -520,35 +468,14 @@ html, body, #root {
 }
 
 /* ── Info / status boxes ── */
-.nan-info-box {
-  background: var(--nan-blue-dim); border: 1px solid rgba(8,102,245,0.20);
-  border-radius: var(--nan-r-md); padding: 12px 14px;
-  font-size: 13px; color: var(--nan-text-2); line-height: 1.55;
-}
-.nan-warn-box {
-  background: var(--nan-gold-dim); border: 1px solid rgba(245,158,11,0.22);
-  border-radius: var(--nan-r-md); padding: 12px 14px;
-  font-size: 13px; color: var(--nan-gold); line-height: 1.55;
-}
-.nan-success-box {
-  background: var(--nan-green-dim); border: 1px solid rgba(16,185,129,0.22);
-  border-radius: var(--nan-r-md); padding: 16px 18px;
-}
-.nan-error-box {
-  background: var(--nan-red-dim); border: 1px solid rgba(239,68,68,0.22);
-  border-radius: var(--nan-r-md); padding: 12px 14px;
-  font-size: 13px; color: var(--nan-red);
-}
+.nan-info-box    { background: var(--nan-blue-dim);  border: 1px solid var(--nan-blue-glow);      border-radius: var(--nan-r-md); padding: 12px 14px; font-size: 13px; color: var(--nan-text-2); line-height: 1.55; }
+.nan-warn-box    { background: var(--nan-gold-dim);  border: 1px solid rgba(245,158,11,0.22);     border-radius: var(--nan-r-md); padding: 12px 14px; font-size: 13px; color: var(--nan-gold);   line-height: 1.55; }
+.nan-success-box { background: var(--nan-green-dim); border: 1px solid rgba(16,185,129,0.22);    border-radius: var(--nan-r-md); padding: 16px 18px; }
+.nan-error-box   { background: var(--nan-red-dim);   border: 1px solid rgba(239,68,68,0.22);     border-radius: var(--nan-r-md); padding: 12px 14px; font-size: 13px; color: var(--nan-red); }
 
 /* ── Section header ── */
-.nan-section-head {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 12px;
-}
-.nan-section-title {
-  font-size: 11px; font-weight: 700; color: var(--nan-text-3);
-  letter-spacing: 0.08em; text-transform: uppercase;
-}
+.nan-section-head  { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.nan-section-title { font-size: 11px; font-weight: 700; color: var(--nan-text-3); letter-spacing: 0.08em; text-transform: uppercase; }
 
 /* ── Progress bar ── */
 .nan-progress-track { height: 3px; background: var(--nan-surface-2); border-radius: 2px; overflow: hidden; }
@@ -562,10 +489,10 @@ html, body, #root {
   display: flex; align-items: center; justify-content: center;
   font-size: 12px; font-weight: 700; transition: all 0.2s;
 }
-.nan-step-dot.done   { background: var(--nan-blue-dim); color: var(--nan-blue); border: 1.5px solid rgba(8,102,245,0.28); }
-.nan-step-dot.active { background: var(--nan-blue); color: #fff; box-shadow: 0 2px 8px rgba(8,102,245,0.4); }
+.nan-step-dot.done   { background: var(--nan-blue-dim); color: var(--nan-blue); border: 1.5px solid var(--nan-blue-glow); }
+.nan-step-dot.active { background: var(--nan-blue); color: #fff; box-shadow: 0 2px 8px var(--nan-blue-dim); }
 .nan-step-dot.idle   { background: var(--nan-surface-2); color: var(--nan-text-3); border: 1.5px solid var(--nan-border); }
-.nan-step-label { font-size: 13px; font-weight: 600; color: var(--nan-text); }
+.nan-step-label      { font-size: 13px; font-weight: 600; color: var(--nan-text); }
 .nan-step-label.idle { color: var(--nan-text-3); }
 
 /* ── Toggle switch ── */
@@ -600,7 +527,7 @@ html, body, #root {
 /* ── Utility ── */
 .nan-divider { height: 1px; background: var(--nan-border); margin: 4px 0; }
 .nan-glass {
-  background: rgba(23,26,33,0.85);
+  background: rgba(17,24,39,0.88);
   backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--nan-border);
 }

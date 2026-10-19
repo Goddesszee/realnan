@@ -8,63 +8,70 @@
  * theme in Settings the store calls setTheme(), which updates
  * data-theme on <html>, which triggers a re-render here, which
  * propagates the new values down.
+ *
+ * NAN Brand Direction
+ * -------------------
+ * Premium, professional, clean. Electric blue (#3B82F6) as the sole
+ * accent. Deep navy backgrounds. Restrained use of color — only for
+ * meaningful signals (actions, status, highlights).
  */
 import { useSyncExternalStore } from 'react'
 
-
 export interface NanTheme {
-  bg:      string
-  surf:    string
-  surf2:   string
-  surf3:   string
-  bdr:     string
-  bdr2:    string
-  text:    string
-  t2:      string
-  t3:      string
-  blue:    string
-  blueDim: string
-  blueBd:  string
-  green:   string
-  red:     string
-  gold:    string
+  bg:      string   // page background
+  surf:    string   // card / panel surface
+  surf2:   string   // elevated surface (inputs, secondary cards)
+  surf3:   string   // highest elevation (tooltips, menus)
+  bdr:     string   // default border
+  bdr2:    string   // stronger border
+  text:    string   // primary text
+  t2:      string   // secondary text
+  t3:      string   // muted / placeholder text
+  blue:    string   // brand accent — electric blue
+  blueDim: string   // low-opacity blue tint for backgrounds
+  blueBd:  string   // blue border / outline
+  green:   string   // success
+  red:     string   // error / destructive
+  gold:    string   // warning / pending
   isDark:  boolean
 }
 
-// dark palette
+// ── DARK palette ─────────────────────────────────────────────────────────────
+// Deep navy + electric blue. Restrained — no purple, no neon.
 const DARK: NanTheme = {
-  bg:      '#0B0D12',
-  surf:    '#171A21',
-  surf2:   '#1D2029',
-  surf3:   '#232731',
+  bg:      '#0B0F19',
+  surf:    '#111827',
+  surf2:   '#1A2235',
+  surf3:   '#202C42',
   bdr:     'rgba(255,255,255,0.07)',
-  bdr2:    'rgba(255,255,255,0.12)',
-  text:    '#F5F7FB',
-  t2:      '#A0A7B5',
-  t3:      '#5A6175',
-  blue:    '#0866F5',
-  blueDim: 'rgba(8,102,245,0.12)',
-  blueBd:  'rgba(8,102,245,0.24)',
+  bdr2:    'rgba(255,255,255,0.13)',
+  text:    '#F9FAFB',
+  t2:      '#9CA3AF',
+  t3:      '#4B5563',
+  blue:    '#3B82F6',
+  blueDim: 'rgba(59,130,246,0.10)',
+  blueBd:  'rgba(59,130,246,0.28)',
   green:   '#10B981',
   red:     '#EF4444',
   gold:    '#F59E0B',
   isDark:  true,
 }
 
-// light palette
+// ── LIGHT palette ─────────────────────────────────────────────────────────────
+// Clean white + electric blue. High contrast, minimal shadows.
 const LIGHT: NanTheme = {
-  bg:      '#F4F6FA',
+  bg:      '#F5F7FA',
   surf:    '#FFFFFF',
-  surf2:   '#EEF1F7',
-  surf3:   '#E5E9F2',
-  bdr:     'rgba(0,0,0,0.07)',
-  bdr2:    'rgba(0,0,0,0.13)',
-  text:    '#0A0C14',
-  t2:      '#4A5068',
-  t3:      '#8A8FA8',
-  blue:    '#0866F5',
-  blueDim: 'rgba(8,102,245,0.08)',
-  blueBd:  'rgba(8,102,245,0.18)',
+  surf2:   '#F0F2F5',
+  surf3:   '#E5E8EF',
+  bdr:     'rgba(0,0,0,0.08)',
+  bdr2:    'rgba(0,0,0,0.14)',
+  text:    '#111827',
+  t2:      '#4B5563',
+  t3:      '#9CA3AF',
+  blue:    '#2563EB',
+  blueDim: 'rgba(37,99,235,0.08)',
+  blueBd:  'rgba(37,99,235,0.22)',
   green:   '#059669',
   red:     '#DC2626',
   gold:    '#D97706',

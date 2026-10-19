@@ -30,7 +30,7 @@ function Sheet({ opts, onClose }: { opts: ShareOptions; onClose: () => void }) {
     { label: 'X', color: '#111111', glyph: 'X', run: () => openExternal(`https://twitter.com/intent/tweet?text=${encodeURIComponent(opts.text)}&url=${encodeURIComponent(opts.url)}`) },
     { label: 'Email', color: '#EA4335', glyph: '@', run: () => openExternal(`mailto:?subject=${encodeURIComponent(opts.title)}&body=${encodeURIComponent(msg)}`) },
     { label: 'SMS', color: '#34A853', glyph: '✉', run: () => openExternal(`sms:?&body=${encodeURIComponent(msg)}`) },
-    { label: 'Copy link', color: '#0866F5', glyph: '⧉', run: () => { void copy(opts.url) } },
+    { label: 'Copy link', color: 'var(--nan-blue)', glyph: '⧉', run: () => { void copy(opts.url) } },
   ]
   return (
     <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 100000, background: 'rgba(0,0,0,0.55)', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', fontFamily: F }}>

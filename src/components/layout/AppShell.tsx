@@ -19,36 +19,36 @@ import { useNanName } from '../../hooks/useNanName'
 
 const F = "'Inter',-apple-system,sans-serif"
 const ADMIN_ADDRESS = (import.meta.env.VITE_ADMIN_ADDRESS as string ?? '').toLowerCase()
-const BLUE = '#0866F5'
 
 // ── Search result catalogue ────────────────────────────────────────────────────
 interface SearchResult {
   id: string; title: string; subtitle: string; category: string
   Icon: React.ElementType; iconColor: string; action: string
 }
+const NAN_BLUE = '#3B82F6'
 const ALL_RESULTS: SearchResult[] = [
-  { id:'send',        title:'Send USDC',           subtitle:'Transfer to any wallet',             category:'Payments',    Icon:ArrowRight,     iconColor:BLUE,      action:'send' },
+  { id:'send',        title:'Send USDC',           subtitle:'Transfer to any wallet',             category:'Payments',    Icon:ArrowRight,     iconColor:NAN_BLUE,      action:'send' },
   { id:'receive',     title:'Receive USDC',         subtitle:'Share your address',                 category:'Payments',    Icon:ArrowRight,     iconColor:'#10B981', action:'receive' },
   { id:'trade',       title:'Trade',                subtitle:'Swap or bridge USDC across chains',  category:'Finance',     Icon:ArrowLeftRight, iconColor:'#F59E0B', action:'trade' },
-  { id:'buy',         title:'Buy USDC',             subtitle:'Purchase with card or bank',         category:'Finance',     Icon:ShoppingBag,    iconColor:BLUE,      action:'onramp' },
-  { id:'gateway',     title:'Gateway',              subtitle:'Unified cross-chain balance',        category:'Finance',     Icon:Layers,         iconColor:BLUE,      action:'gateway' },
+  { id:'buy',         title:'Buy USDC',             subtitle:'Purchase with card or bank',         category:'Finance',     Icon:ShoppingBag,    iconColor:NAN_BLUE,      action:'onramp' },
+  { id:'gateway',     title:'Gateway',              subtitle:'Unified cross-chain balance',        category:'Finance',     Icon:Layers,         iconColor:NAN_BLUE,      action:'gateway' },
 
-  { id:'invoices',    title:'Invoices & Requests',  subtitle:'Quick requests and full invoices',    category:'Business',    Icon:FileText,       iconColor:BLUE,      action:'invoices' },
-  { id:'payroll',     title:'Batch Payroll',        subtitle:'Send USDC to multiple recipients',   category:'Business',    Icon:Users,          iconColor:BLUE,      action:'payroll' },
+  { id:'invoices',    title:'Invoices & Requests',  subtitle:'Quick requests and full invoices',    category:'Business',    Icon:FileText,       iconColor:NAN_BLUE,      action:'invoices' },
+  { id:'payroll',     title:'Batch Payroll',        subtitle:'Send USDC to multiple recipients',   category:'Business',    Icon:Users,          iconColor:NAN_BLUE,      action:'payroll' },
 
-  { id:'agent',        title:'AI Agents',            subtitle:'Autonomous service & payment agent', category:'Agents',      Icon:Bot,            iconColor:BLUE,      action:'agent' },
-  { id:'agent-wallet', title:'Agent Wallet',         subtitle:'Swap, bridge & recurring via agent', category:'Agents',      Icon:Wallet,         iconColor:BLUE,      action:'agent-wallet' },
-  { id:'activity',    title:'Activity',             subtitle:'Transaction history',                category:'Account',     Icon:Clock,          iconColor:BLUE,      action:'activity' },
-  { id:'exports',     title:'Exports & Accounting', subtitle:'Download CSV/JSON transaction records', category:'Account',     Icon:FileDown,       iconColor:BLUE,      action:'exports' },
-  { id:'dashboard',   title:'Dashboard',            subtitle:'Portfolio & performance',            category:'Account',     Icon:LayoutDashboard,iconColor:BLUE,      action:'dashboard' },
-  { id:'profile',     title:'Profile',              subtitle:'Name, avatar & preferences',         category:'Account',     Icon:User,           iconColor:BLUE,      action:'profile' },
-  { id:'settings',    title:'Settings',             subtitle:'Wallet & app settings',              category:'Account',     Icon:Settings,       iconColor:BLUE,      action:'settings' },
-  { id:'favorites',   title:'Saved Items',          subtitle:'Your bookmarked content',            category:'Account',     Icon:Bookmark,       iconColor:BLUE,      action:'favorites' },
+  { id:'agent',        title:'AI Agents',            subtitle:'Autonomous service & payment agent', category:'Agents',      Icon:Bot,            iconColor:NAN_BLUE,      action:'agent' },
+  { id:'agent-wallet', title:'Agent Wallet',         subtitle:'Swap, bridge & recurring via agent', category:'Agents',      Icon:Wallet,         iconColor:NAN_BLUE,      action:'agent-wallet' },
+  { id:'activity',    title:'Activity',             subtitle:'Transaction history',                category:'Account',     Icon:Clock,          iconColor:NAN_BLUE,      action:'activity' },
+  { id:'exports',     title:'Exports & Accounting', subtitle:'Download CSV/JSON transaction records', category:'Account',     Icon:FileDown,       iconColor:NAN_BLUE,      action:'exports' },
+  { id:'dashboard',   title:'Dashboard',            subtitle:'Portfolio & performance',            category:'Account',     Icon:LayoutDashboard,iconColor:NAN_BLUE,      action:'dashboard' },
+  { id:'profile',     title:'Profile',              subtitle:'Name, avatar & preferences',         category:'Account',     Icon:User,           iconColor:NAN_BLUE,      action:'profile' },
+  { id:'settings',    title:'Settings',             subtitle:'Wallet & app settings',              category:'Account',     Icon:Settings,       iconColor:NAN_BLUE,      action:'settings' },
+  { id:'favorites',   title:'Saved Items',          subtitle:'Your bookmarked content',            category:'Account',     Icon:Bookmark,       iconColor:NAN_BLUE,      action:'favorites' },
   { id:'faq',         title:'FAQ',                  subtitle:'Common questions answered',          category:'Help',        Icon:HelpCircle,     iconColor:'#F59E0B', action:'faq' },
-  { id:'support',     title:'Support',              subtitle:'Get help from our team',             category:'Help',        Icon:MessageSquare,  iconColor:BLUE,      action:'support' },
+  { id:'support',     title:'Support',              subtitle:'Get help from our team',             category:'Help',        Icon:MessageSquare,  iconColor:NAN_BLUE,      action:'support' },
   { id:'feedback',    title:'Feedback',             subtitle:'Rate your experience',               category:'Help',        Icon:Star,           iconColor:'#F59E0B', action:'feedback' },
   { id:'suggestions', title:'Suggestions',          subtitle:'Share ideas to improve NAN',         category:'Help',        Icon:Lightbulb,      iconColor:'#10B981', action:'suggestions' },
-  { id:'about',       title:'About NAN',            subtitle:'Platform info & contact',            category:'Info',        Icon:Info,           iconColor:BLUE,      action:'about' },
+  { id:'about',       title:'About NAN',            subtitle:'Platform info & contact',            category:'Info',        Icon:Info,           iconColor:NAN_BLUE,      action:'about' },
 ]
 
 // ── NAN Name badge (desktop topbar only) ──────────────────────────────────────
@@ -88,8 +88,8 @@ function NanNameBadge({ onClaim, C }: { onClaim: () => void; C: ReturnType<typeo
           display: 'flex', alignItems: 'center', gap: 6,
           padding: '6px 12px',
           borderRadius: 20,
-          border: `1px solid rgba(8,102,245,0.30)`,
-          background: 'rgba(8,102,245,0.08)',
+          border: `1px solid rgba(59,130,246,0.28)`,
+          background: 'rgba(59,130,246,0.08)',
           cursor: 'pointer',
           fontFamily: F,
           WebkitTapHighlightColor: 'transparent',
@@ -97,8 +97,8 @@ function NanNameBadge({ onClaim, C }: { onClaim: () => void; C: ReturnType<typeo
           flexShrink: 0,
         }}
       >
-        <AtSign size={12} color={BLUE} strokeWidth={2.5} />
-        <span style={{ fontSize: 13, fontWeight: 700, color: BLUE, letterSpacing: '-0.01em' }}>{name}</span>
+        <AtSign size={12} color={NAN_BLUE} strokeWidth={2.5} />
+        <span style={{ fontSize: 13, fontWeight: 700, color: NAN_BLUE, letterSpacing: '-0.01em' }}>{name}</span>
       </button>
     )
   }
@@ -181,7 +181,7 @@ function CommandPalette({ onClose, onGo }: { onClose: () => void; onGo: (action:
         position: 'fixed', top: '12%', left: '50%', transform: 'translateX(-50%)',
         width: 'min(580px, calc(100vw - 32px))',
         zIndex: 510,
-        background: C.isDark ? '#0D1017' : '#FFFFFF',
+        background: C.surf,
         border: `1px solid ${C.bdr}`,
         borderRadius: 16,
         boxShadow: C.isDark ? '0 24px 64px rgba(0,0,0,0.7)' : '0 24px 64px rgba(0,0,0,0.18)',
@@ -216,7 +216,7 @@ function CommandPalette({ onClose, onGo }: { onClose: () => void; onGo: (action:
             <div style={{ marginBottom: 8 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '4px 8px 6px' }}>
                 <span style={{ fontSize: 10, fontWeight: 700, color: C.t3, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Recent</span>
-                <button onClick={clearSearches} style={{ fontSize: 11, color: BLUE, background: 'none', border: 'none', cursor: 'pointer', fontFamily: F, fontWeight: 600 }}>Clear</button>
+                <button onClick={clearSearches} style={{ fontSize: 11, color: C.blue, background: 'none', border: 'none', cursor: 'pointer', fontFamily: F, fontWeight: 600 }}>Clear</button>
               </div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, padding: '0 4px 8px' }}>
                 {recentSearches.slice(0, 6).map(r => (
@@ -245,8 +245,8 @@ function CommandPalette({ onClose, onGo }: { onClose: () => void; onGo: (action:
                     style={{
                       width: '100%', display: 'flex', alignItems: 'center', gap: 12,
                       padding: '9px 10px', borderRadius: 10,
-                      border: `1px solid ${active ? 'rgba(8,102,245,0.3)' : 'transparent'}`,
-                      background: active ? 'rgba(8,102,245,0.08)' : 'transparent',
+                      border: `1px solid ${active ? 'rgba(59,130,246,0.28)' : 'transparent'}`,
+                      background: active ? 'rgba(59,130,246,0.08)' : 'transparent',
                       cursor: 'pointer', fontFamily: F, textAlign: 'left', transition: 'all 0.08s',
                     }}
                   >
@@ -367,7 +367,7 @@ function SideNavBtn({
       style={{
         width: '100%', display: 'flex', alignItems: 'center', gap: 11,
         padding: '9px 12px', borderRadius: 10,
-        border: `1px solid ${isActive ? 'rgba(8,102,245,0.3)' : 'transparent'}`,
+        border: `1px solid ${isActive ? 'rgba(59,130,246,0.28)' : 'transparent'}`,
         background: isActive ? 'rgba(8,102,245,0.1)' : 'transparent',
         cursor: 'pointer', transition: 'all 0.12s', fontFamily: F, marginBottom: 2,
         WebkitTapHighlightColor: 'transparent',
@@ -375,17 +375,17 @@ function SideNavBtn({
     >
       <div style={{
         width: 32, height: 32, borderRadius: 8, flexShrink: 0,
-        background: isActive ? 'rgba(8,102,245,0.18)' : C.surf2,
-        border: `1px solid ${isActive ? 'rgba(8,102,245,0.35)' : C.bdr}`,
+        background: isActive ? 'rgba(59,130,246,0.15)' : C.surf2,
+        border: `1px solid ${isActive ? 'rgba(59,130,246,0.30)' : C.bdr}`,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>
-        <Icon size={15} color={isActive ? BLUE : C.t2} />
+        <Icon size={15} color={isActive ? NAN_BLUE : C.t2} />
       </div>
       <div style={{ flex: 1, textAlign: 'left', minWidth: 0 }}>
-        <div style={{ fontSize: 13, fontWeight: 600, color: isActive ? BLUE : C.text, lineHeight: 1.2 }}>{label}</div>
+        <div style={{ fontSize: 13, fontWeight: 600, color: isActive ? NAN_BLUE : C.text, lineHeight: 1.2 }}>{label}</div>
         {showDesc && <div style={{ fontSize: 11, color: C.t3, marginTop: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{desc}</div>}
       </div>
-      <ChevronRight size={12} color={isActive ? 'rgba(8,102,245,0.5)' : C.t3} />
+      <ChevronRight size={12} color={isActive ? 'rgba(59,130,246,0.45)' : C.t3} />
     </button>
   )
 }
@@ -587,7 +587,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     return (
       <div style={{ position: 'fixed', inset: 0, display: 'flex', flexDirection: 'column', background: C.bg, fontFamily: F, overflow: 'hidden' }}>
         {adminToast && (
-          <div style={{ position: 'fixed', top: 16, left: '50%', transform: 'translateX(-50%)', background: BLUE, color: '#fff', padding: '7px 18px', borderRadius: 20, fontSize: 12, fontWeight: 600, zIndex: 300, pointerEvents: 'none' }}>Admin unlocked</div>
+          <div style={{ position: 'fixed', top: 16, left: '50%', transform: 'translateX(-50%)', background: C.blue, color: '#fff', padding: '7px 18px', borderRadius: 20, fontSize: 12, fontWeight: 600, zIndex: 300, pointerEvents: 'none' }}>Admin unlocked</div>
         )}
 
         {paletteOpen && <CommandPalette onClose={() => setPaletteOpen(false)} onGo={go} />}
@@ -738,7 +738,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       {/* Mobile side drawer */}
       <div style={{
         position: 'fixed', top: 0, right: 0, bottom: 0, width: 'min(272px, calc(100vw - 56px))', zIndex: 110,
-        background: C.isDark ? '#0D1017' : '#FFFFFF',
+        background: C.surf,
         borderLeft: `1px solid ${C.bdr}`,
         boxShadow: C.isDark ? '-16px 0 48px rgba(0,0,0,0.6)' : '-16px 0 48px rgba(0,0,0,0.12)',
         transform: drawerOpen ? 'translateX(0)' : 'translateX(100%)',
@@ -766,7 +766,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 const isActive = activeView === id
                 return (
                   <button key={`${id}-${label}`} onClick={() => go(id)} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 11, padding: '9px 10px', borderRadius: 10, border: `1px solid ${isActive ? C.blueBd : 'transparent'}`, background: isActive ? C.blueDim : 'transparent', cursor: 'pointer', transition: 'all 0.12s', fontFamily: F, marginBottom: 2, WebkitTapHighlightColor: 'transparent' }}>
-                    <div style={{ width: 32, height: 32, borderRadius: 8, flexShrink: 0, background: isActive ? 'rgba(8,102,245,0.18)' : C.surf2, border: `1px solid ${isActive ? C.blueBd : C.bdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div style={{ width: 32, height: 32, borderRadius: 8, flexShrink: 0, background: isActive ? 'rgba(59,130,246,0.15)' : C.surf2, border: `1px solid ${isActive ? C.blueBd : C.bdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <Icon size={15} color={isActive ? C.blue : C.t2} />
                     </div>
                     <div style={{ flex: 1, textAlign: 'left', minWidth: 0 }}>
@@ -845,6 +845,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <Menu size={18} color={drawerOpen ? C.blue : C.t3} strokeWidth={drawerOpen ? 2.2 : 1.7} />
             <span style={{ fontSize: 9, fontWeight: drawerOpen ? 700 : 400, color: drawerOpen ? C.blue : C.t3, lineHeight: 1 }}>More</span>
           </button>
+
         </div>
       </nav>
     </div>

@@ -44,8 +44,8 @@ function AdminPasswordGate({ onUnlock }: { onUnlock: () => void }) {
       }}>
         <style>{`@keyframes nan-shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}`}</style>
         <div style={{ textAlign: 'center', marginBottom: 24 }}>
-          <div style={{ width: 52, height: 52, borderRadius: 14, background: 'rgba(8,102,245,0.10)', border: '1px solid rgba(8,102,245,0.20)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px' }}>
-            <Shield size={22} color="#0866F5" />
+          <div style={{ width: 52, height: 52, borderRadius: 14, background: 'rgba(59,130,246,0.10)', border: '1px solid rgba(59,130,246,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px' }}>
+            <Shield size={22} color="var(--nan-blue)" />
           </div>
           <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--nan-text)', letterSpacing: '-0.02em' }}>Admin Access</div>
           <div style={{ fontSize: 13, color: 'var(--nan-text2)', marginTop: 4 }}>Enter the admin password to continue</div>
@@ -68,13 +68,13 @@ function AdminPasswordGate({ onUnlock }: { onUnlock: () => void }) {
         {error && <div style={{ fontSize: 12, color: '#EF4444', marginBottom: 12, fontWeight: 500 }}>{error}</div>}
         <button
           onClick={() => void attempt()} disabled={busy}
-          style={{ width: '100%', padding: '12px', borderRadius: 11, background: '#0866F5', color: '#fff', fontSize: 14, fontWeight: 600, border: 'none', cursor: 'pointer', fontFamily: "'Inter', sans-serif", marginBottom: 10 }}
+          style={{ width: '100%', padding: '12px', borderRadius: 11, background: 'var(--nan-blue)', color: '#fff', fontSize: 14, fontWeight: 600, border: 'none', cursor: 'pointer', fontFamily: "'Inter', sans-serif", marginBottom: 10 }}
         >
           {busy ? 'Checking…' : 'Unlock Dashboard'}
         </button>
         <button
           onClick={() => setActiveView('setup')}
-          style={{ width: '100%', padding: '10px', borderRadius: 11, background: 'rgba(8,102,245,0.08)', color: '#0866F5', fontSize: 13, fontWeight: 600, border: '1px solid rgba(8,102,245,0.2)', cursor: 'pointer', fontFamily: "'Inter', sans-serif", marginBottom: 8 }}
+          style={{ width: '100%', padding: '10px', borderRadius: 11, background: 'rgba(59,130,246,0.08)', color: 'var(--nan-blue)', fontSize: 13, fontWeight: 600, border: '1px solid rgba(8,102,245,0.2)', cursor: 'pointer', fontFamily: "'Inter', sans-serif", marginBottom: 8 }}
         >
           Mainnet Setup Wizard
         </button>
@@ -413,7 +413,7 @@ function AdminFeedbackPanel() {
           style={{ flex: 1, padding: '8px 12px', borderRadius: 9, background: S, border: `1px solid ${B}`, color: 'var(--nan-text)', fontSize: 13, fontFamily: SANS, outline: 'none' }} />
         {['all','unreviewed'].map(f => (
           <button key={f} onClick={() => setFilter(f as typeof filter)}
-            style={{ padding: '8px 14px', borderRadius: 9, border: `1px solid ${filter === f ? '#0866F5' : B}`, background: filter === f ? 'rgba(8,102,245,0.10)' : S, color: filter === f ? '#0866F5' : 'var(--nan-text2)', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: SANS, textTransform: 'capitalize' }}>
+            style={{ padding: '8px 14px', borderRadius: 9, border: `1px solid ${filter === f ? 'var(--nan-blue)' : B}`, background: filter === f ? 'rgba(59,130,246,0.10)' : S, color: filter === f ? 'var(--nan-blue)' : 'var(--nan-text2)', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: SANS, textTransform: 'capitalize' }}>
             {f}
           </button>
         ))}
@@ -436,7 +436,7 @@ function AdminFeedbackPanel() {
                 </div>
                 {!f.reviewed && (
                   <button onClick={() => { void markReviewed(f.id) }}
-                    style={{ fontSize: 11, fontWeight: 600, padding: '3px 10px', borderRadius: 20, background: 'rgba(8,102,245,0.08)', border: '1px solid rgba(8,102,245,0.20)', color: '#0866F5', cursor: 'pointer', fontFamily: SANS }}>
+                    style={{ fontSize: 11, fontWeight: 600, padding: '3px 10px', borderRadius: 20, background: 'rgba(59,130,246,0.08)', border: '1px solid rgba(59,130,246,0.18)', color: 'var(--nan-blue)', cursor: 'pointer', fontFamily: SANS }}>
                     Mark reviewed
                   </button>
                 )}
@@ -458,7 +458,7 @@ interface SuggestionEntry { id: string; userEmail: string; title: string; descri
 
 const SUG_STATUSES: SuggestionStatus[] = ['new','reviewing','planned','implemented','closed']
 const SUG_STATUS_COLORS: Record<SuggestionStatus, { bg: string; color: string }> = {
-  new:         { bg: 'rgba(8,102,245,0.08)',   color: '#0866F5' },
+  new:         { bg: 'rgba(59,130,246,0.08)',   color: 'var(--nan-blue)' },
   reviewing:   { bg: 'rgba(245,158,11,0.08)',   color: '#F59E0B' },
   planned:     { bg: 'rgba(16,185,129,0.08)',    color: '#10B981' },
   implemented: { bg: 'rgba(16,185,129,0.12)',    color: '#10B981' },
@@ -553,7 +553,7 @@ function AdminSuggestionsPanel() {
                       <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
                         {SUG_STATUSES.map(st => (
                           <button key={st} onClick={() => { void update(sug.id, st) }}
-                            style={{ padding: '4px 10px', borderRadius: 20, border: `1px solid ${sug.status === st ? '#0866F5' : B}`, background: sug.status === st ? 'rgba(8,102,245,0.12)' : S, color: sug.status === st ? '#0866F5' : 'var(--nan-text2)', fontSize: 11, fontWeight: 600, cursor: 'pointer', fontFamily: SANS, textTransform: 'capitalize' }}>
+                            style={{ padding: '4px 10px', borderRadius: 20, border: `1px solid ${sug.status === st ? 'var(--nan-blue)' : B}`, background: sug.status === st ? 'rgba(59,130,246,0.10)' : S, color: sug.status === st ? 'var(--nan-blue)' : 'var(--nan-text2)', fontSize: 11, fontWeight: 600, cursor: 'pointer', fontFamily: SANS, textTransform: 'capitalize' }}>
                             {st}
                           </button>
                         ))}
@@ -564,7 +564,7 @@ function AdminSuggestionsPanel() {
                       <textarea value={note} onChange={e => setNote(e.target.value)} rows={2} placeholder="Internal note…"
                         style={{ width: '100%', padding: '8px 10px', borderRadius: 9, background: S, border: `1px solid ${B}`, color: 'var(--nan-text)', fontSize: 13, fontFamily: SANS, resize: 'none', outline: 'none', boxSizing: 'border-box' }} />
                       <button onClick={() => { void update(sug.id, undefined, note) }} disabled={saving}
-                        style={{ marginTop: 6, display: 'flex', alignItems: 'center', gap: 5, padding: '6px 14px', borderRadius: 8, background: '#0866F5', color: '#fff', border: 'none', cursor: 'pointer', fontSize: 12, fontWeight: 600, fontFamily: SANS, opacity: saving ? 0.7 : 1 }}>
+                        style={{ marginTop: 6, display: 'flex', alignItems: 'center', gap: 5, padding: '6px 14px', borderRadius: 8, background: 'var(--nan-blue)', color: '#fff', border: 'none', cursor: 'pointer', fontSize: 12, fontWeight: 600, fontFamily: SANS, opacity: saving ? 0.7 : 1 }}>
                         <Save size={12} /> Save note
                       </button>
                     </div>
@@ -658,7 +658,7 @@ function AdminRewardsPanel() {
               </div>
               {(c.status === 'pending' || c.status === 'approved') && (
                 <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                  {c.status === 'pending' && <button disabled={busyId === c.id} onClick={() => { void update(c, 'approved') }} style={{ padding: '8px 14px', borderRadius: 9, border: 'none', background: '#0866F5', color: '#fff', fontSize: 12, fontWeight: 700, fontFamily: SANS, cursor: 'pointer' }}>Approve</button>}
+                  {c.status === 'pending' && <button disabled={busyId === c.id} onClick={() => { void update(c, 'approved') }} style={{ padding: '8px 14px', borderRadius: 9, border: 'none', background: 'var(--nan-blue)', color: '#fff', fontSize: 12, fontWeight: 700, fontFamily: SANS, cursor: 'pointer' }}>Approve</button>}
                   {c.status === 'approved' && <button disabled={busyId === c.id} onClick={() => { void update(c, 'paid') }} style={{ padding: '8px 14px', borderRadius: 9, border: 'none', background: '#10B981', color: '#fff', fontSize: 12, fontWeight: 700, fontFamily: SANS, cursor: 'pointer' }}>Mark paid</button>}
                   <button disabled={busyId === c.id} onClick={() => { void update(c, 'rejected') }} style={{ padding: '8px 14px', borderRadius: 9, border: `1px solid ${B}`, background: 'transparent', color: '#EF4444', fontSize: 12, fontWeight: 700, fontFamily: SANS, cursor: 'pointer' }}>Reject</button>
                 </div>
@@ -847,7 +847,7 @@ function AdminTxPanel() {
       {/* Volume summary cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginBottom: 20, marginTop: 16 }}>
         {[
-          { label: 'Total Volume', value: report ? `$${report.totalVolume.toFixed(2)}` : '$0.00', sub: `${report?.txCount ?? 0} transactions`, color: '#0866F5' },
+          { label: 'Total Volume', value: report ? `$${report.totalVolume.toFixed(2)}` : '$0.00', sub: `${report?.txCount ?? 0} transactions`, color: 'var(--nan-blue)' },
           { label: 'Main Wallet', value: report ? `$${report.mainVolume.toFixed(2)}` : '$0.00', sub: 'User transactions', color: '#10B981' },
           { label: 'Agent Wallet', value: report ? `$${report.agentVolume.toFixed(2)}` : '$0.00', sub: 'Agent spend', color: '#F59E0B' },
         ].map(card => (
@@ -880,7 +880,7 @@ function AdminTxPanel() {
           style={{ flex: 1, minWidth: 160, padding: '8px 12px', borderRadius: 9, background: S, border: `1px solid ${B}`, color: 'var(--nan-text)', fontSize: 13, fontFamily: SANS, outline: 'none' }} />
         {(['all', 'main', 'agent'] as const).map(w => (
           <button key={w} onClick={() => setWalletFilter(w)}
-            style={{ padding: '8px 12px', borderRadius: 9, border: `1px solid ${walletFilter === w ? '#0866F5' : B}`, background: walletFilter === w ? 'rgba(8,102,245,0.10)' : S, color: walletFilter === w ? '#0866F5' : 'var(--nan-text2)', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: SANS, textTransform: 'capitalize' }}>{w}</button>
+            style={{ padding: '8px 12px', borderRadius: 9, border: `1px solid ${walletFilter === w ? 'var(--nan-blue)' : B}`, background: walletFilter === w ? 'rgba(59,130,246,0.10)' : S, color: walletFilter === w ? 'var(--nan-blue)' : 'var(--nan-text2)', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: SANS, textTransform: 'capitalize' }}>{w}</button>
         ))}
         <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)}
           style={{ padding: '8px 10px', borderRadius: 9, background: S, border: `1px solid ${B}`, color: 'var(--nan-text)', fontSize: 12, fontFamily: SANS, cursor: 'pointer' }}>
@@ -905,7 +905,7 @@ function AdminTxPanel() {
           {visible.slice(0, 200).map((t, i) => (
             <div key={t.id} style={{ display: 'grid', gridTemplateColumns: '60px 1fr 80px 70px 90px', gap: 8, padding: '11px 16px', borderBottom: i < visible.length - 1 ? `1px solid ${B}` : 'none', alignItems: 'center' }}>
               <div>
-                <span style={{ fontSize: 10, fontWeight: 700, padding: '2px 7px', borderRadius: 20, background: t.walletType === 'agent' ? 'rgba(245,158,11,0.12)' : 'rgba(8,102,245,0.10)', color: t.walletType === 'agent' ? '#F59E0B' : '#0866F5' }}>
+                <span style={{ fontSize: 10, fontWeight: 700, padding: '2px 7px', borderRadius: 20, background: t.walletType === 'agent' ? 'rgba(245,158,11,0.12)' : 'rgba(59,130,246,0.10)', color: t.walletType === 'agent' ? '#F59E0B' : 'var(--nan-blue)' }}>
                   {t.walletType}
                 </span>
               </div>
@@ -964,7 +964,7 @@ function AdminFeesPanel() {
       {/* Estimated totals */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginBottom: 24 }}>
         {[
-          { label: 'Swap fees (est.)', value: `$${estSwapFee.toFixed(4)}`, sub: `${swapFeeBps / 100}% of $${swapVol.toFixed(2)} swap vol`, color: '#0866F5' },
+          { label: 'Swap fees (est.)', value: `$${estSwapFee.toFixed(4)}`, sub: `${swapFeeBps / 100}% of $${swapVol.toFixed(2)} swap vol`, color: 'var(--nan-blue)' },
           { label: 'Bridge fees (est.)', value: `$${estBridgeFee.toFixed(4)}`, sub: `${bridgeFeeP}% of $${bridgeVol.toFixed(2)} bridge vol`, color: '#10B981' },
           { label: 'NAN Name fees', value: `$${nameVol.toFixed(2)}`, sub: `${report?.byType?.['name_registration']?.count ?? 0} registrations`, color: '#F59E0B' },
         ].map(card => (
@@ -981,7 +981,7 @@ function AdminFeesPanel() {
           <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--nan-text)', marginBottom: 2 }}>Total estimated revenue</div>
           <div style={{ fontSize: 11, color: 'var(--nan-text2)' }}>Swap + bridge fees + name registrations</div>
         </div>
-        <div style={{ fontSize: 28, fontWeight: 900, color: '#0866F5', letterSpacing: '-0.03em' }}>${totalEst.toFixed(2)}</div>
+        <div style={{ fontSize: 28, fontWeight: 900, color: 'var(--nan-blue)', letterSpacing: '-0.03em' }}>${totalEst.toFixed(2)}</div>
       </div>
 
       {/* Fee wallet */}
@@ -992,7 +992,7 @@ function AdminFeesPanel() {
             <div style={{ fontFamily: 'monospace', fontSize: 13, color: 'var(--nan-text)', wordBreak: 'break-all', marginBottom: 10 }}>{feeWallet}</div>
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
               <button onClick={() => { void navigator.clipboard.writeText(feeWallet) }}
-                style={{ padding: '7px 14px', borderRadius: 9, background: 'rgba(8,102,245,0.10)', border: '1px solid rgba(8,102,245,0.25)', color: '#0866F5', fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: SANS }}>
+                style={{ padding: '7px 14px', borderRadius: 9, background: 'rgba(59,130,246,0.10)', border: '1px solid rgba(59,130,246,0.22)', color: 'var(--nan-blue)', fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: SANS }}>
                 Copy address
               </button>
               <a href={`${explorerBase}/${feeWallet}`} target="_blank" rel="noopener noreferrer"
@@ -1020,7 +1020,7 @@ function AdminFeesPanel() {
         </div>
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
           <button onClick={() => { void navigator.clipboard.writeText(nameRegistry) }}
-            style={{ padding: '7px 14px', borderRadius: 9, background: 'rgba(8,102,245,0.10)', border: '1px solid rgba(8,102,245,0.25)', color: '#0866F5', fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: SANS }}>
+            style={{ padding: '7px 14px', borderRadius: 9, background: 'rgba(59,130,246,0.10)', border: '1px solid rgba(59,130,246,0.22)', color: 'var(--nan-blue)', fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: SANS }}>
             Copy contract address
           </button>
           <a href={`${explorerBase}/${nameRegistry}`} target="_blank" rel="noopener noreferrer"

@@ -121,7 +121,7 @@ export function AdminOverviewPanel({ goTo }: { goTo: (tab: string) => void }) {
 
       <H>Volume</H>
       <Grid cols={150}>
-        <Stat title="Total volume" value={usd(d.volume.total)} sub={`${d.volume.txCount} transactions`} accent="#0866F5" />
+        <Stat title="Total volume" value={usd(d.volume.total)} sub={`${d.volume.txCount} transactions`} accent="var(--nan-blue)" />
         <Stat title="Main wallets" value={usd(d.volume.main)} accent="#10B981" />
         <Stat title="Agent wallets" value={usd(d.volume.agent)} accent="#F59E0B" />
       </Grid>
@@ -146,7 +146,7 @@ export function AdminOverviewPanel({ goTo }: { goTo: (tab: string) => void }) {
       <Grid cols={280}>
         <div style={card}>
           <div style={{ ...label, marginBottom: 10 }}>Volume · last 14 days</div>
-          <Bars data={s14.map(x => ({ label: x.date, value: x.volume }))} color="#0866F5" fmt={usd} />
+          <Bars data={s14.map(x => ({ label: x.date, value: x.volume }))} color="var(--nan-blue)" fmt={usd} />
           <div style={{ fontSize: 11, color: 'var(--nan-text3)', marginTop: 6 }}>{usd(s14.reduce((a, x) => a + x.volume, 0))} in period</div>
         </div>
         <div style={card}>

@@ -33,10 +33,10 @@ import { AgentRecurringTab } from './AgentRecurringTab'
 
 const F    = "'Inter', -apple-system, sans-serif"
 const MONO = "'JetBrains Mono', 'SF Mono', Menlo, monospace"
-const BLUE  = '#0866F5'
-const GREEN = '#10B981'
+const BLUE  = 'var(--nan-blue)'
+const GREEN = 'var(--nan-green)'
 const AMBER = '#FF9500'
-const RED   = '#EF4444'
+const RED   = 'var(--nan-red)'
 
 const CIRCLE_APP_ID = import.meta.env.VITE_CIRCLE_APP_ID as string | undefined
 const CIRCLE_API_CONFIGURED = !!import.meta.env.VITE_CIRCLE_APP_ID
@@ -110,11 +110,11 @@ function BackButton({ onBack, C }: { onBack: () => void; C: ReturnType<typeof us
 function WalletIllustration({ size = 80 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 80 80" fill="none" aria-hidden="true">
-      <circle cx="40" cy="40" r="40" fill="rgba(8,102,245,0.10)" />
-      <rect x="16" y="26" width="48" height="32" rx="8" fill="rgba(8,102,245,0.22)" stroke={BLUE} strokeWidth="1.5" />
-      <rect x="16" y="26" width="48" height="12" rx="8" fill="rgba(8,102,245,0.35)" />
+      <circle cx="40" cy="40" r="40" fill="rgba(59,130,246,0.10)" />
+      <rect x="16" y="26" width="48" height="32" rx="8" fill="rgba(59,130,246,0.20)" stroke={BLUE} strokeWidth="1.5" />
+      <rect x="16" y="26" width="48" height="12" rx="8" fill="rgba(59,130,246,0.30)" />
       <rect x="44" y="38" width="14" height="8" rx="4" fill={BLUE} opacity="0.85" />
-      <circle cx="58" cy="24" r="9" fill="rgba(8,102,245,0.15)" />
+      <circle cx="58" cy="24" r="9" fill="rgba(59,130,246,0.12)" />
       <path d="M58 19 L59.2 22.8 L63 24 L59.2 25.2 L58 29 L56.8 25.2 L53 24 L56.8 22.8 Z" fill={BLUE} opacity="0.9" />
     </svg>
   )
@@ -126,7 +126,7 @@ function FeatureCard({ Icon, title, body, C }: {
 }) {
   return (
     <div style={{ display: 'flex', gap: 12, padding: '14px 16px', background: C.surf, border: `1px solid ${C.bdr}`, borderRadius: 16 }}>
-      <div style={{ width: 38, height: 38, borderRadius: 11, flexShrink: 0, background: 'rgba(8,102,245,0.10)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ width: 38, height: 38, borderRadius: 11, flexShrink: 0, background: 'rgba(59,130,246,0.10)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <Icon size={17} color={BLUE} strokeWidth={1.8} />
       </div>
       <div>
@@ -243,7 +243,7 @@ function EmailScreen({ onBack, onSend, C }: {
           borderRadius: 12, fontSize: 15, fontWeight: 600,
           cursor: loading || !email.trim() ? 'not-allowed' : 'pointer',
           fontFamily: F, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-          boxShadow: loading || !email.trim() ? 'none' : '0 4px 16px rgba(8,102,245,0.3)',
+          boxShadow: loading || !email.trim() ? 'none' : '0 4px 16px rgba(59,130,246,0.28)',
           WebkitTapHighlightColor: 'transparent',
         }}
       >
@@ -281,13 +281,13 @@ function OtpSentScreen({ email, onVerify, onResend, onChangeEmail, C }: {
         Tap the button below — a popup will open where you enter the code.
       </p>
 
-      <div style={{ background: 'rgba(8,102,245,0.08)', border: '1px solid rgba(8,102,245,0.2)', borderRadius: 10, padding: '12px 16px', marginBottom: 20, fontSize: 13, color: BLUE, lineHeight: 1.5 }}>
+      <div style={{ background: 'rgba(59,130,246,0.08)', border: '1px solid rgba(8,102,245,0.2)', borderRadius: 10, padding: '12px 16px', marginBottom: 20, fontSize: 13, color: BLUE, lineHeight: 1.5 }}>
         Code sent — check your inbox and spam folder.
       </div>
 
       <button
         onClick={onVerify}
-        style={{ width: '100%', padding: '13px 20px', background: BLUE, color: '#fff', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 600, cursor: 'pointer', fontFamily: F, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, boxShadow: '0 4px 16px rgba(8,102,245,0.3)', WebkitTapHighlightColor: 'transparent' }}
+        style={{ width: '100%', padding: '13px 20px', background: BLUE, color: '#fff', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 600, cursor: 'pointer', fontFamily: F, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, boxShadow: '0 4px 16px rgba(59,130,246,0.28)', WebkitTapHighlightColor: 'transparent' }}
       >
         Enter verification code →
       </button>
@@ -391,7 +391,7 @@ function SetupScreen({ onCreate, C }: { onCreate: () => void; C: ReturnType<type
         </div>
       </div>
 
-      <div style={{ background: 'rgba(8,102,245,0.06)', border: '1px solid rgba(8,102,245,0.18)', borderRadius: 14, padding: '14px 16px', marginBottom: 28 }}>
+      <div style={{ background: 'rgba(59,130,246,0.06)', border: '1px solid rgba(59,130,246,0.15)', borderRadius: 14, padding: '14px 16px', marginBottom: 28 }}>
         <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
           <Wallet size={16} color={BLUE} style={{ flexShrink: 0, marginTop: 1 }} />
           <div>
@@ -427,7 +427,7 @@ function CreatingScreen({ C, statusMsg }: { C: ReturnType<typeof useNanTheme>; s
 
   return (
     <div style={{ fontFamily: F, display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: 32 }}>
-      <div style={{ width: 88, height: 88, borderRadius: 28, background: 'rgba(8,102,245,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 28, animation: 'aw-pulse 1.6s ease-in-out infinite' }}>
+      <div style={{ width: 88, height: 88, borderRadius: 28, background: 'rgba(59,130,246,0.10)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 28, animation: 'aw-pulse 1.6s ease-in-out infinite' }}>
         <Wallet size={38} color={BLUE} strokeWidth={1.5} />
       </div>
       <h2 style={{ fontSize: 20, fontWeight: 800, color: C.text, letterSpacing: '-0.02em', marginBottom: 6, textAlign: 'center' }}>
@@ -444,14 +444,14 @@ function CreatingScreen({ C, statusMsg }: { C: ReturnType<typeof useNanTheme>; s
             <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
               <div style={{
                 width: 28, height: 28, borderRadius: 9, flexShrink: 0,
-                background: done ? 'rgba(16,185,129,0.12)' : current ? 'rgba(8,102,245,0.12)' : C.surf2,
+                background: done ? 'rgba(16,185,129,0.12)' : current ? 'rgba(59,130,246,0.10)' : C.surf2,
                 border: `1.5px solid ${done ? GREEN : current ? BLUE : C.bdr}`,
                 display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.3s',
               }}>
                 {done
                   ? <Check size={13} color={GREEN} strokeWidth={2.5} />
                   : current
-                    ? <svg width="14" height="14" viewBox="0 0 14 14" style={{ animation: 'aw-spin 0.9s linear infinite' }}><circle cx="7" cy="7" r="5" fill="none" stroke="rgba(8,102,245,0.25)" strokeWidth="2" /><path d="M7 2 A5 5 0 0 1 12 7" fill="none" stroke={BLUE} strokeWidth="2" strokeLinecap="round" /></svg>
+                    ? <svg width="14" height="14" viewBox="0 0 14 14" style={{ animation: 'aw-spin 0.9s linear infinite' }}><circle cx="7" cy="7" r="5" fill="none" stroke="rgba(59,130,246,0.22)" strokeWidth="2" /><path d="M7 2 A5 5 0 0 1 12 7" fill="none" stroke={BLUE} strokeWidth="2" strokeLinecap="round" /></svg>
                     : <div style={{ width: 6, height: 6, borderRadius: '50%', background: C.t3 }} />}
               </div>
               <span style={{ fontSize: 13, fontWeight: done ? 600 : current ? 700 : 500, color: done ? C.t2 : current ? C.text : C.t3, transition: 'color 0.3s' }}>
@@ -493,7 +493,7 @@ function SuccessScreen({ address, walletId, onDashboard, C }: {
       </div>
 
       <div style={{ background: 'linear-gradient(135deg, #0055e0 0%, #0044bb 100%)', border: '1px solid rgba(0,68,187,0.6)', borderRadius: 22, padding: '20px 20px 16px', marginBottom: 20, position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: -30, right: -30, width: 120, height: 120, borderRadius: '50%', background: 'rgba(8,102,245,0.15)', filter: 'blur(40px)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: -30, right: -30, width: 120, height: 120, borderRadius: '50%', background: 'rgba(59,130,246,0.12)', filter: 'blur(40px)', pointerEvents: 'none' }} />
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
           <div>
             <div style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 3 }}>Agent Wallet</div>
@@ -737,7 +737,7 @@ function ManagePolicyModal({ onClose, C }: { onClose: () => void; C: ReturnType<
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(8,102,245,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(59,130,246,0.10)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Shield size={17} color={BLUE} strokeWidth={1.8} />
             </div>
             <div>
@@ -1187,7 +1187,7 @@ function DashboardScreen({ C, onDisconnect }: { C: ReturnType<typeof useNanTheme
             <ArrowLeft size={16} color={C.t2} strokeWidth={2.2} />
           </button>
 
-          <div style={{ width: 32, height: 32, borderRadius: 9, background: 'rgba(8,102,245,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <div style={{ width: 32, height: 32, borderRadius: 9, background: 'rgba(59,130,246,0.10)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
             <Wallet size={15} color={BLUE} strokeWidth={1.8} />
           </div>
 
@@ -1257,7 +1257,7 @@ function DashboardScreen({ C, onDisconnect }: { C: ReturnType<typeof useNanTheme
         const addrClr = 'rgba(255,255,255,0.45)'
         return (
           <div style={{ background: cardBg, border: `1px solid ${cardBdr}`, borderRadius: 20, padding: '20px 18px 16px', marginBottom: 12, position: 'relative', overflow: 'hidden', boxSizing: 'border-box' }}>
-            <div style={{ position: 'absolute', top: -50, right: -50, width: 160, height: 160, borderRadius: '50%', background: 'rgba(8,102,245,0.08)', filter: 'blur(50px)', pointerEvents: 'none' }} />
+            <div style={{ position: 'absolute', top: -50, right: -50, width: 160, height: 160, borderRadius: '50%', background: 'rgba(59,130,246,0.08)', filter: 'blur(50px)', pointerEvents: 'none' }} />
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 14 }}>
               <div>
@@ -1267,7 +1267,7 @@ function DashboardScreen({ C, onDisconnect }: { C: ReturnType<typeof useNanTheme
                 {refreshing ? (
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, height: 40 }}>
                     <svg width="16" height="16" viewBox="0 0 16 16" style={{ animation: 'aw-spin 0.9s linear infinite' }}>
-                      <circle cx="8" cy="8" r="6" fill="none" stroke="rgba(8,102,245,0.3)" strokeWidth="2" />
+                      <circle cx="8" cy="8" r="6" fill="none" stroke="rgba(59,130,246,0.28)" strokeWidth="2" />
                       <path d="M8 2 A6 6 0 0 1 14 8" fill="none" stroke={BLUE} strokeWidth="2" strokeLinecap="round" />
                     </svg>
                     <span style={{ fontSize: 13, color: sub }}>Refreshing…</span>
@@ -1320,12 +1320,12 @@ function DashboardScreen({ C, onDisconnect }: { C: ReturnType<typeof useNanTheme
         ] as { label: string; icon: React.ReactNode; view: Exclude<DrawerView, null> }[]).map(({ label, icon, view: v }) => (
           <button key={label} onClick={() => setDrawerView(v)} style={{
             display: 'flex', flexDirection: 'column' as const, alignItems: 'center', justifyContent: 'center', gap: 6,
-            padding: '14px 4px', background: drawerView === v ? 'rgba(8,102,245,0.12)' : C.surf,
+            padding: '14px 4px', background: drawerView === v ? 'rgba(59,130,246,0.10)' : C.surf,
             border: `1px solid ${drawerView === v ? BLUE : C.bdr}`, borderRadius: 14,
             cursor: 'pointer', fontFamily: F, WebkitTapHighlightColor: 'transparent', transition: 'all 0.12s',
             boxSizing: 'border-box' as const,
           }}>
-            <div style={{ width: 36, height: 36, borderRadius: 10, background: drawerView === v ? 'rgba(8,102,245,0.18)' : 'rgba(8,102,245,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ width: 36, height: 36, borderRadius: 10, background: drawerView === v ? 'rgba(59,130,246,0.15)' : 'rgba(59,130,246,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               {icon}
             </div>
             <span style={{ fontSize: 11, fontWeight: 600, color: drawerView === v ? BLUE : C.text }}>{label}</span>
@@ -1446,7 +1446,7 @@ function DashboardScreen({ C, onDisconnect }: { C: ReturnType<typeof useNanTheme
                         return (
                           <div key={row.key} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '11px 14px', borderBottom: isLast ? 'none' : `1px solid ${C.bdr}` }}>
                             {/* Icon */}
-                            <div style={{ width: 32, height: 32, borderRadius: 9, flexShrink: 0, background: 'rgba(8,102,245,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <div style={{ width: 32, height: 32, borderRadius: 9, flexShrink: 0, background: 'rgba(59,130,246,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                               <Coins size={13} color={BLUE} />
                             </div>
 
@@ -1549,7 +1549,7 @@ function DashboardScreen({ C, onDisconnect }: { C: ReturnType<typeof useNanTheme
                     const nextDate = t.nextRunAt ? new Date(t.nextRunAt).toLocaleDateString('en', { month: 'short', day: 'numeric' }) : '—'
                     return (
                       <div key={t.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 0', borderBottom: isLast ? 'none' : `1px solid ${C.bdr}` }}>
-                        <div style={{ width: 32, height: 32, borderRadius: 9, flexShrink: 0, background: 'rgba(8,102,245,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div style={{ width: 32, height: 32, borderRadius: 9, flexShrink: 0, background: 'rgba(59,130,246,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                           <Repeat size={13} color={BLUE} />
                         </div>
                         <div style={{ flex: 1, minWidth: 0 }}>
@@ -1581,7 +1581,7 @@ function DashboardScreen({ C, onDisconnect }: { C: ReturnType<typeof useNanTheme
           </div>
 
           {/* ── Automate via chat tip ─────────────────────────────────────────── */}
-          <div style={{ background: 'rgba(8,102,245,0.05)', border: '1px solid rgba(8,102,245,0.15)', borderRadius: 12, padding: '10px 14px', display: 'flex', alignItems: 'flex-start', gap: 8 }}>
+          <div style={{ background: 'rgba(8,102,245,0.05)', border: '1px solid rgba(59,130,246,0.12)', borderRadius: 12, padding: '10px 14px', display: 'flex', alignItems: 'flex-start', gap: 8 }}>
             <Zap size={13} color={BLUE} style={{ flexShrink: 0, marginTop: 1 }} />
             <span style={{ fontSize: 12, color: C.t2, lineHeight: 1.5 }}>Recurring Payments run automatically when you ask NAN in the chat. Use the main wallet for Bridge and Swap.</span>
           </div>
@@ -1972,7 +1972,7 @@ export function AgentWalletExperience({ backView = 'home' }: AgentWalletExperien
           to   { transform: rotate(360deg); }
         }
         @keyframes aw-pulse {
-          0%, 100% { box-shadow: 0 0 0 0 rgba(8,102,245,0.25); }
+          0%, 100% { box-shadow: 0 0 0 0 rgba(59,130,246,0.22); }
           50%       { box-shadow: 0 0 0 16px rgba(8,102,245,0); }
         }
         @keyframes drawer-up {
@@ -1988,7 +1988,7 @@ export function AgentWalletExperience({ backView = 'home' }: AgentWalletExperien
         )}
         {screen === 'dashboard' && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20, paddingTop: 4 }}>
-            <div style={{ width: 34, height: 34, borderRadius: 10, background: 'rgba(8,102,245,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ width: 34, height: 34, borderRadius: 10, background: 'rgba(59,130,246,0.10)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Wallet size={17} color={BLUE} strokeWidth={1.8} />
             </div>
             <span style={{ fontSize: 16, fontWeight: 800, color: C.text }}>Agent Wallet</span>

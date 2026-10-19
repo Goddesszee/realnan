@@ -11,7 +11,7 @@ const BG   = 'var(--nan-bg)'
 const SURF = 'var(--nan-surface)'
 const SURF2= 'var(--nan-surface2)'
 const BDR  = 'var(--nan-bdr)'
-const BLUE = '#0866F5'
+const BLUE = 'var(--nan-blue)'
 const TEXT = 'var(--nan-text)'
 const T2   = 'var(--nan-text2)'
 const T3   = 'var(--nan-text3)'
@@ -126,8 +126,8 @@ export function OnboardingPage() {
                   <button key={id} onClick={() => toggle(id)} style={{
                     display: 'flex', alignItems: 'center', gap: 14,
                     padding: '12px 14px', borderRadius: 12, cursor: 'pointer', textAlign: 'left',
-                    background: on ? 'rgba(8,102,245,0.10)' : SURF,
-                    border: `1px solid ${on ? 'rgba(8,102,245,0.25)' : BDR}`,
+                    background: on ? 'rgba(59,130,246,0.10)' : SURF,
+                    border: `1px solid ${on ? 'rgba(59,130,246,0.22)' : BDR}`,
                     transition: 'all 0.15s', fontFamily: F, color: TEXT,
                   }}>
                     <span style={{ fontSize: 18, flexShrink: 0, color: on ? BLUE : T2 }}>{icon}</span>

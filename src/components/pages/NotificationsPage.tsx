@@ -21,7 +21,7 @@ function NanAppIcon({ size = 44 }: { size?: number }) {
   const h = size * 0.5
   const w = h * (324 / 480)
   return (
-    <div style={{ width: size, height: size, borderRadius: size * 0.26, background: '#0866F5', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 1px 2px rgba(0,0,0,0.18)' }}>
+    <div style={{ width: size, height: size, borderRadius: size * 0.26, background: 'var(--nan-blue)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 1px 2px rgba(0,0,0,0.18)' }}>
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 324 480" width={w} height={h} style={{ display: 'block' }} aria-hidden>
         <path d="M255,0 L84,167 L71,163 L0,97 L0,378 L246,132 L255,110 Z" fill="#fff" />
         <path d="M69,480 L240,313 L253,317 L324,383 L324,102 L78,348 L69,370 Z" fill="#fff" />
@@ -96,8 +96,8 @@ export function NotificationsPage() {
                 display: 'flex', alignItems: 'flex-start', gap: 12, padding: '14px 16px',
                 borderRadius: 22,
                 background: 'var(--nan-surface)',
-                border: `1px solid ${n.read ? 'var(--nan-bdr)' : 'rgba(8,102,245,0.35)'}`,
-                boxShadow: n.read ? 'none' : '0 2px 14px rgba(8,102,245,0.10)',
+                border: `1px solid ${n.read ? 'var(--nan-bdr)' : 'rgba(59,130,246,0.30)'}`,
+                boxShadow: n.read ? 'none' : '0 2px 14px rgba(59,130,246,0.10)',
                 cursor: (n.ticketId || n.type === 'invoice_paid' || n.type === 'invoice_claimed') ? 'pointer' : 'default',
                 transition: 'background 0.15s',
               }}

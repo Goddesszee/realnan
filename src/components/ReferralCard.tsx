@@ -9,7 +9,7 @@ import { useNanTheme } from '../hooks/useNanTheme'
 import { toast } from 'sonner'
 
 const F = "'Inter', -apple-system, sans-serif"
-const BLUE = '#0866F5'
+const BLUE = 'var(--nan-blue)'
 
 export function ReferralCard() {
   const C = useNanTheme()
@@ -42,12 +42,12 @@ export function ReferralCard() {
 
   return (
     <div style={{
-      background: 'linear-gradient(135deg, rgba(8,102,245,0.10) 0%, rgba(8,102,245,0.03) 100%)',
-      border: '1px solid rgba(8,102,245,0.20)',
+      background: 'linear-gradient(135deg, rgba(59,130,246,0.10) 0%, rgba(8,102,245,0.03) 100%)',
+      border: '1px solid rgba(59,130,246,0.18)',
       borderRadius: 16, padding: '16px 18px', marginBottom: 16, fontFamily: F,
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-        <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(8,102,245,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+        <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(59,130,246,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
           <Gift size={18} color={BLUE} />
         </div>
         <div>
@@ -58,7 +58,7 @@ export function ReferralCard() {
         </div>
       </div>
 
-      <div style={{ background: C.surf2, border: `1px dashed rgba(8,102,245,0.30)`, borderRadius: 10, padding: '10px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+      <div style={{ background: C.surf2, border: `1px dashed rgba(59,130,246,0.28)`, borderRadius: 10, padding: '10px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
         <div>
           <div style={{ fontSize: 10, color: C.t3, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 2 }}>Your code</div>
           <div style={{ fontSize: 20, fontWeight: 900, color: BLUE, letterSpacing: '0.12em', fontFamily: "'JetBrains Mono', monospace" }}>{data.code}</div>

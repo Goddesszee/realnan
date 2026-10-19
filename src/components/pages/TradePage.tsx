@@ -190,7 +190,7 @@ function RecentActivity({ c }: { c: ReturnType<typeof useNanTheme> }) {
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <div style={{
                   width: 26, height: 26, borderRadius: 7, flexShrink: 0,
-                  background: a.type === 'swap' ? `rgba(8,102,245,0.10)` : `rgba(16,185,129,0.10)`,
+                  background: a.type === 'swap' ? `rgba(59,130,246,0.10)` : `rgba(16,185,129,0.10)`,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                 }}>
                   {a.type === 'swap'

@@ -15,7 +15,7 @@ const S = 'var(--nan-surf)', B = 'var(--nan-border)'
 const card: React.CSSProperties = { background: S, border: `1px solid ${B}`, borderRadius: 14, padding: '16px 18px', marginBottom: 20 }
 const lbl: React.CSSProperties = { fontSize: 11, fontWeight: 700, color: 'var(--nan-text3)', textTransform: 'uppercase', letterSpacing: '0.07em' }
 const input: React.CSSProperties = { width: '100%', padding: '10px 12px', borderRadius: 9, background: 'var(--nan-bg)', border: `1px solid ${B}`, color: 'var(--nan-text)', fontSize: 13, fontFamily: 'inherit', boxSizing: 'border-box' }
-const btn = (primary = false, disabled = false): React.CSSProperties => ({ padding: '10px 14px', borderRadius: 9, border: primary ? 'none' : `1px solid ${B}`, background: primary ? '#0866F5' : 'transparent', color: primary ? '#fff' : 'var(--nan-text2)', fontSize: 13, fontWeight: 700, cursor: disabled ? 'not-allowed' : 'pointer', opacity: disabled ? 0.5 : 1, fontFamily: 'inherit' })
+const btn = (primary = false, disabled = false): React.CSSProperties => ({ padding: '10px 14px', borderRadius: 9, border: primary ? 'none' : `1px solid ${B}`, background: primary ? 'var(--nan-blue)' : 'transparent', color: primary ? '#fff' : 'var(--nan-text2)', fontSize: 13, fontWeight: 700, cursor: disabled ? 'not-allowed' : 'pointer', opacity: disabled ? 0.5 : 1, fontFamily: 'inherit' })
 
 /**
  * Admin-only treasury card: shows the USDC held by the NAN name registry contract and lets the

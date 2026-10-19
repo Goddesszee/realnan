@@ -8,32 +8,32 @@ export default {
     extend: {
       fontFamily: {
         sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
-        mono: ['IBM Plex Mono', 'Menlo', 'monospace'],
+        mono: ['JetBrains Mono', 'Menlo', 'monospace'],
       },
       colors: {
         nan: {
-          // ── Core backgrounds (match nan-theme.css v4 + useNanTheme hook) ──
-          bg:        '#0B0D12',
-          'bg-2':    '#0F1117',
-          surface:   '#171A21',
-          'surface-2': '#1D2029',
-          'surface-3': '#232731',
-          // ── Brand blue — single source of truth: #0866F5 ──
-          blue:      '#0866F5',
-          'blue-hover': '#0555D4',
-          'blue-dim': 'rgba(8,102,245,0.12)',
-          'blue-glow': 'rgba(8,102,245,0.22)',
+          // ── Core backgrounds — mirror useNanTheme DARK + nan-theme.css v5 ──
+          bg:          '#0B0F19',
+          'bg-2':      '#0F1520',
+          surface:     '#111827',
+          'surface-2': '#1A2235',
+          'surface-3': '#202C42',
+          // ── Brand blue — single source of truth: #3B82F6 ──
+          blue:        '#3B82F6',
+          'blue-hover':'#2563EB',
+          'blue-dim':  'rgba(59,130,246,0.10)',
+          'blue-glow': 'rgba(59,130,246,0.22)',
           // ── Text ──
-          text:      '#F5F7FB',
-          'text-2':  '#A0A7B5',
-          'text-3':  '#5A6175',
+          text:        '#F9FAFB',
+          'text-2':    '#9CA3AF',
+          'text-3':    '#4B5563',
           // ── Semantic ──
-          green:     '#10B981',
+          green:       '#10B981',
           'green-dim': 'rgba(16,185,129,0.10)',
-          red:       '#EF4444',
-          'red-dim': 'rgba(239,68,68,0.10)',
-          gold:      '#F59E0B',
-          'gold-dim': 'rgba(245,158,11,0.10)',
+          red:         '#EF4444',
+          'red-dim':   'rgba(239,68,68,0.10)',
+          gold:        '#F59E0B',
+          'gold-dim':  'rgba(245,158,11,0.10)',
         },
       },
       borderRadius: {
@@ -44,10 +44,10 @@ export default {
         'nan-xl': '20px',
       },
       animation: {
-        'nan-up':    'nan-up 0.22s ease both',
-        'nan-fade':  'nan-fade 0.18s ease both',
-        'nan-pulse': 'nan-pulse 2s ease infinite',
-        'nan-spin':  'nan-spin 0.7s linear infinite',
+        'nan-up':      'nan-up 0.22s ease both',
+        'nan-fade':    'nan-fade 0.18s ease both',
+        'nan-pulse':   'nan-pulse 2s ease infinite',
+        'nan-spin':    'nan-spin 0.7s linear infinite',
         'nan-shimmer': 'nan-shimmer 1.4s ease infinite',
       },
       keyframes: {
@@ -58,9 +58,9 @@ export default {
         'nan-shimmer': { '0%': { backgroundPosition: '200% 0' }, '100%': { backgroundPosition: '-200% 0' } },
       },
       backgroundImage: {
-        'nan-glow': 'radial-gradient(ellipse 900px 500px at 22% -10%, rgba(8,102,245,0.14), transparent 60%), radial-gradient(ellipse 700px 500px at 85% 15%, rgba(8,102,245,0.07), transparent 60%)',
-        'nan-card': 'linear-gradient(145deg, #0F1117 0%, #171A21 55%, #0D1017 100%)',
-        'nan-cta':  'linear-gradient(135deg, rgba(8,102,245,0.14), rgba(8,102,245,0.04))',
+        'nan-glow': 'radial-gradient(ellipse 900px 500px at 22% -10%, rgba(59,130,246,0.12), transparent 60%), radial-gradient(ellipse 700px 500px at 85% 15%, rgba(59,130,246,0.06), transparent 60%)',
+        'nan-card': 'linear-gradient(145deg, #0F1520 0%, #111827 55%, #0B0F19 100%)',
+        'nan-cta':  'linear-gradient(135deg, rgba(59,130,246,0.12), rgba(59,130,246,0.04))',
       },
     },
   },

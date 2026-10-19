@@ -15,7 +15,7 @@ const CATEGORIES = [
 ]
 
 const STATUS_COLORS: Record<string, { bg: string; color: string; label: string }> = {
-  new:         { bg: 'rgba(8,102,245,0.08)',   color: '#0866F5', label: 'New' },
+  new:         { bg: 'rgba(59,130,246,0.08)',   color: 'var(--nan-blue)', label: 'New' },
   reviewing:   { bg: 'rgba(245,158,11,0.08)',   color: '#F59E0B', label: 'Reviewing' },
   planned:     { bg: 'rgba(16,185,129,0.08)',    color: '#10B981', label: 'Planned' },
   implemented: { bg: 'rgba(16,185,129,0.12)',    color: '#10B981', label: '✓ Implemented' },
@@ -83,7 +83,7 @@ export function SuggestionsPage() {
       </div>
       <div style={{ display: 'flex', gap: 8 }}>
         <button onClick={() => { setDone(false); setView('list'); setTitle(''); setDescription(''); setCategory('feature') }}
-          style={{ padding: '12px 20px', borderRadius: 12, background: '#0866F5', color: '#fff', fontFamily: F, fontSize: 14, fontWeight: 600, border: 'none', cursor: 'pointer' }}>
+          style={{ padding: '12px 20px', borderRadius: 12, background: 'var(--nan-blue)', color: '#fff', fontFamily: F, fontSize: 14, fontWeight: 600, border: 'none', cursor: 'pointer' }}>
           View my suggestions
         </button>
         <button onClick={() => setActiveView('home')}
@@ -112,7 +112,7 @@ export function SuggestionsPage() {
         </div>
         {view === 'list' && (
           <button onClick={() => setView('new')}
-            style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 14px', borderRadius: 10, background: '#0866F5', color: '#fff', border: 'none', cursor: 'pointer', fontFamily: F, fontSize: 13, fontWeight: 600 }}>
+            style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 14px', borderRadius: 10, background: 'var(--nan-blue)', color: '#fff', border: 'none', cursor: 'pointer', fontFamily: F, fontSize: 13, fontWeight: 600 }}>
             <Plus size={14} /> New
           </button>
         )}
@@ -121,9 +121,9 @@ export function SuggestionsPage() {
       {view === 'list' ? (
         <div>
           {/* Hero card */}
-          <div style={{ background: 'linear-gradient(135deg, rgba(8,102,245,0.10) 0%, rgba(8,102,245,0.04) 100%)', border: '1px solid rgba(8,102,245,0.15)', borderRadius: 16, padding: '20px', marginBottom: 16, display: 'flex', gap: 16, alignItems: 'center' }}>
-            <div style={{ width: 44, height: 44, borderRadius: 12, background: 'rgba(8,102,245,0.12)', border: '1px solid rgba(8,102,245,0.22)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-              <Lightbulb size={20} color="#0866F5" />
+          <div style={{ background: 'linear-gradient(135deg, rgba(59,130,246,0.10) 0%, rgba(59,130,246,0.06) 100%)', border: '1px solid rgba(59,130,246,0.12)', borderRadius: 16, padding: '20px', marginBottom: 16, display: 'flex', gap: 16, alignItems: 'center' }}>
+            <div style={{ width: 44, height: 44, borderRadius: 12, background: 'rgba(59,130,246,0.10)', border: '1px solid rgba(59,130,246,0.20)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <Lightbulb size={20} color="var(--nan-blue)" />
             </div>
             <div>
               <div style={{ fontSize: 15, fontWeight: 700, color: C.text }}>Help make NAN better</div>
@@ -139,7 +139,7 @@ export function SuggestionsPage() {
               <div style={{ fontSize: 15, fontWeight: 600, color: C.text, marginBottom: 6 }}>No suggestions yet</div>
               <div style={{ fontSize: 13, color: C.t3, marginBottom: 20 }}>Be the first to share an idea!</div>
               <button onClick={() => setView('new')}
-                style={{ padding: '10px 20px', borderRadius: 10, background: '#0866F5', color: '#fff', border: 'none', cursor: 'pointer', fontFamily: F, fontSize: 13, fontWeight: 600 }}>
+                style={{ padding: '10px 20px', borderRadius: 10, background: 'var(--nan-blue)', color: '#fff', border: 'none', cursor: 'pointer', fontFamily: F, fontSize: 13, fontWeight: 600 }}>
                 Submit a suggestion
               </button>
             </div>
@@ -173,9 +173,9 @@ export function SuggestionsPage() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
               {CATEGORIES.map(cat => (
                 <button key={cat.id} onClick={() => setCategory(cat.id)}
-                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 12px', borderRadius: 10, border: `1px solid ${category === cat.id ? '#0866F5' : C.bdr}`, background: category === cat.id ? 'rgba(8,102,245,0.08)' : C.surf2, cursor: 'pointer', fontFamily: F, textAlign: 'left' }}>
-                  <span style={{ fontSize: 13, fontWeight: 600, color: category === cat.id ? '#0866F5' : C.text }}>{cat.label}</span>
-                  {category === cat.id && <ChevronRight size={14} color="#0866F5" />}
+                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 12px', borderRadius: 10, border: `1px solid ${category === cat.id ? 'var(--nan-blue)' : C.bdr}`, background: category === cat.id ? 'rgba(59,130,246,0.08)' : C.surf2, cursor: 'pointer', fontFamily: F, textAlign: 'left' }}>
+                  <span style={{ fontSize: 13, fontWeight: 600, color: category === cat.id ? 'var(--nan-blue)' : C.text }}>{cat.label}</span>
+                  {category === cat.id && <ChevronRight size={14} color="var(--nan-blue)" />}
                 </button>
               ))}
             </div>
@@ -199,7 +199,7 @@ export function SuggestionsPage() {
           {error && <div style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.18)', borderRadius: 10, padding: '10px 14px', fontSize: 13, color: '#EF4444', marginBottom: 12 }}>{error}</div>}
 
           <button onClick={() => { void submit() }} disabled={submitting || !title.trim()}
-            style={{ width: '100%', padding: '14px', borderRadius: 12, background: title.trim() ? '#0866F5' : C.surf2, color: title.trim() ? '#fff' : C.t3, border: 'none', fontSize: 15, fontWeight: 600, cursor: title.trim() ? 'pointer' : 'not-allowed', fontFamily: F, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, opacity: submitting ? 0.7 : 1 }}>
+            style={{ width: '100%', padding: '14px', borderRadius: 12, background: title.trim() ? 'var(--nan-blue)' : C.surf2, color: title.trim() ? '#fff' : C.t3, border: 'none', fontSize: 15, fontWeight: 600, cursor: title.trim() ? 'pointer' : 'not-allowed', fontFamily: F, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, opacity: submitting ? 0.7 : 1 }}>
             <Send size={15} /> {submitting ? 'Submitting…' : 'Submit Suggestion'}
           </button>
         </div>
