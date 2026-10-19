@@ -1734,7 +1734,6 @@ function AgentChat({ onNavigate }: { onNavigate?: (page: string, query?: string)
         alignItems: 'center',
         gap: 8,
         padding: '8px 12px',
-        paddingBottom: 'max(12px, env(safe-area-inset-bottom))',
         background: SURF,
         borderTop: `1px solid ${BORDER}`,
       }}>
