@@ -18,11 +18,11 @@ export default {
           surface:     '#111827',
           'surface-2': '#1A2235',
           'surface-3': '#202C42',
-          // ── Brand blue — single source of truth: #3B82F6 ──
-          blue:        '#3B82F6',
+          // ── Brand blue — single source of truth: #2563EB ──
+          blue:        '#2563EB',
           'blue-hover':'#2563EB',
-          'blue-dim':  'rgba(59,130,246,0.10)',
-          'blue-glow': 'rgba(59,130,246,0.22)',
+          'blue-dim':  'rgba(37,99,235,0.10)',
+          'blue-glow': 'rgba(37,99,235,0.22)',
           // ── Text ──
           text:        '#F9FAFB',
           'text-2':    '#9CA3AF',
@@ -58,9 +58,9 @@ export default {
         'nan-shimmer': { '0%': { backgroundPosition: '200% 0' }, '100%': { backgroundPosition: '-200% 0' } },
       },
       backgroundImage: {
-        'nan-glow': 'radial-gradient(ellipse 900px 500px at 22% -10%, rgba(59,130,246,0.12), transparent 60%), radial-gradient(ellipse 700px 500px at 85% 15%, rgba(59,130,246,0.06), transparent 60%)',
+        'nan-glow': 'radial-gradient(ellipse 900px 500px at 22% -10%, rgba(37,99,235,0.12), transparent 60%), radial-gradient(ellipse 700px 500px at 85% 15%, rgba(37,99,235,0.06), transparent 60%)',
         'nan-card': 'linear-gradient(145deg, #0F1520 0%, #111827 55%, #0B0F19 100%)',
-        'nan-cta':  'linear-gradient(135deg, rgba(59,130,246,0.12), rgba(59,130,246,0.04))',
+        'nan-cta':  'linear-gradient(135deg, rgba(37,99,235,0.12), rgba(37,99,235,0.04))',
       },
     },
   },

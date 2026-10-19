@@ -249,9 +249,9 @@ export function RewardsSheet({ onClose }: { onClose: () => void }) {
             {/* Balance card */}
             <div style={{
               background: hasReward
-                ? 'linear-gradient(135deg, rgba(59,130,246,0.10) 0%, rgba(80,0,255,0.07) 100%)'
+                ? 'linear-gradient(135deg, rgba(37,99,235,0.10) 0%, rgba(80,0,255,0.07) 100%)'
                 : C.surf,
-              border: `1px solid ${hasReward ? 'rgba(59,130,246,0.22)' : C.bdr}`,
+              border: `1px solid ${hasReward ? 'rgba(37,99,235,0.22)' : C.bdr}`,
               borderRadius: 16, padding: '14px 16px', marginBottom: 12, textAlign: 'center',
             }}>
               <div style={{ fontSize: 11, fontWeight: 700, color: C.t3, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4 }}>Available to claim</div>
@@ -328,12 +328,12 @@ export function RewardsSheet({ onClose }: { onClose: () => void }) {
                 {!nanCode ? (
                   /* ── No NAN name → CTA to claim one ── */
                   <div style={{
-                    background: 'rgba(59,130,246,0.06)', border: '1px solid rgba(59,130,246,0.15)',
+                    background: 'rgba(37,99,235,0.06)', border: '1px solid rgba(37,99,235,0.15)',
                     borderRadius: 16, padding: '16px 16px', marginBottom: 4,
                   }}>
                     <div style={{
                       width: 48, height: 48, borderRadius: 14,
-                      background: 'rgba(59,130,246,0.10)', border: '1px solid rgba(59,130,246,0.22)',
+                      background: 'rgba(37,99,235,0.10)', border: '1px solid rgba(37,99,235,0.22)',
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       margin: '0 auto 10px',
                     }}>
@@ -361,7 +361,7 @@ export function RewardsSheet({ onClose }: { onClose: () => void }) {
                   /* ── Has NAN name → show link + share ── */
                   <>
                     <div style={{
-                      background: C.surf2, border: `1px dashed rgba(59,130,246,0.28)`,
+                      background: C.surf2, border: `1px dashed rgba(37,99,235,0.28)`,
                       borderRadius: 12, padding: '10px 14px', marginBottom: 14,
                       display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10,
                     }}>

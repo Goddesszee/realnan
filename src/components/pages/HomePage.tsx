@@ -77,7 +77,7 @@ function PayLinkCard({
           >
             <div style={{
               width: 44, height: 44, borderRadius: 14, flexShrink: 0,
-              background: 'rgba(59,130,246,0.10)', border: '1px solid rgba(59,130,246,0.18)',
+              background: 'rgba(37,99,235,0.10)', border: '1px solid rgba(37,99,235,0.18)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>
               <AtSign size={20} color={C.blue} />
@@ -98,7 +98,7 @@ function PayLinkCard({
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
               <div style={{
                 width: 44, height: 44, borderRadius: 14, flexShrink: 0,
-                background: 'rgba(59,130,246,0.10)', border: '1px solid rgba(59,130,246,0.18)',
+                background: 'rgba(37,99,235,0.10)', border: '1px solid rgba(37,99,235,0.18)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>
                 <Link2 size={20} color={C.blue} />
@@ -137,7 +137,7 @@ function PayLinkCard({
 
             <button onClick={() => { void share() }} style={{
               width: '100%', padding: '11px', borderRadius: 10,
-              background: 'rgba(59,130,246,0.06)', border: '1px solid rgba(59,130,246,0.12)',
+              background: 'rgba(37,99,235,0.06)', border: '1px solid rgba(37,99,235,0.12)',
               color: C.blue, fontSize: 13, fontWeight: 700,
               cursor: 'pointer', fontFamily: F, letterSpacing: '-0.01em',
             }}>
@@ -699,7 +699,7 @@ export function HomePage() {
           <div style={{
             width: 48, height: 48, borderRadius: 15, flexShrink: 0,
             background: C.blue, display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: '0 4px 16px rgba(59,130,246,0.30)',
+            boxShadow: '0 4px 16px rgba(37,99,235,0.30)',
           }}>
             <Bot size={22} color="#fff" strokeWidth={1.8} />
           </div>

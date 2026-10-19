@@ -247,7 +247,7 @@ export function LandingPage() {
               border: 'none', borderRadius: 14,
               fontSize: 16, fontWeight: 700,
               cursor: 'pointer', fontFamily: F,
-              boxShadow: '0 6px 24px rgba(59,130,246,0.30)',
+              boxShadow: '0 6px 24px rgba(37,99,235,0.30)',
             }}
           >
             Sign up

@@ -199,7 +199,7 @@ export function PayByInvoicePage({ invoiceId, isRequest = false }: Props) {
 
           {/* AI reconciliation result */}
           {claimResult && (
-            <div style={{ background: 'rgba(59,130,246,0.08)', border: '1px solid rgba(8,102,245,0.2)', borderRadius: 14, padding: '14px 16px', marginBottom: 20 }}>
+            <div style={{ background: 'rgba(37,99,235,0.08)', border: '1px solid rgba(8,102,245,0.2)', borderRadius: 14, padding: '14px 16px', marginBottom: 20 }}>
               <div style={{ fontSize: 10, fontWeight: 700, color: BLUE, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 6 }}>NAN AI Reconciliation</div>
               <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.8)', lineHeight: 1.6 }}>{claimResult.aiSummary}</div>
               {isConfirmed && (
@@ -223,7 +223,7 @@ export function PayByInvoicePage({ invoiceId, isRequest = false }: Props) {
                 style={{ flex: 1, height: 44, borderRadius: 12, background: BLUE, border: 'none',
                   color: '#fff', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: F,
                   display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-                  boxShadow: '0 4px 16px rgba(59,130,246,0.28)' }}>
+                  boxShadow: '0 4px 16px rgba(37,99,235,0.28)' }}>
                 <Share2 size={13} /> Share receipt
               </button>
             </div>
@@ -275,7 +275,7 @@ export function PayByInvoicePage({ invoiceId, isRequest = false }: Props) {
           <div style={{ width: '100%', maxWidth: 480, marginBottom: 22 }}>
             <div style={{ position: 'relative', borderRadius: 28, overflow: 'hidden', background: 'linear-gradient(180deg,#111c38 0%,#0c1327 100%)', border: '1px solid rgba(255,255,255,0.08)', boxShadow: '0 28px 60px -24px rgba(8,102,245,0.45), 0 2px 0 rgba(255,255,255,0.04) inset' }}>
               {/* soft blue glow behind the sender */}
-              <div aria-hidden style={{ position: 'absolute', top: -110, left: '50%', transform: 'translateX(-50%)', width: 380, height: 240, background: 'radial-gradient(closest-side, rgba(59,130,246,0.45), rgba(8,102,245,0))', pointerEvents: 'none' }} />
+              <div aria-hidden style={{ position: 'absolute', top: -110, left: '50%', transform: 'translateX(-50%)', width: 380, height: 240, background: 'radial-gradient(closest-side, rgba(37,99,235,0.45), rgba(8,102,245,0))', pointerEvents: 'none' }} />
 
               {/* Sender + amount */}
               <div style={{ position: 'relative', padding: '30px 24px 26px', textAlign: 'center' }}>

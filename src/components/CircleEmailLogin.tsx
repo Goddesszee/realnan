@@ -400,7 +400,7 @@ export function CircleEmailLogin({ onBack, onSuccess }: Props) {
             Tap the button below — a popup will open where you enter the code.
           </p>
 
-          <div style={{ background: 'rgba(59,130,246,0.08)', border: '1px solid rgba(8,102,245,0.2)',
+          <div style={{ background: 'rgba(37,99,235,0.08)', border: '1px solid rgba(8,102,245,0.2)',
             borderRadius: 10, padding: '12px 16px', marginBottom: 20, fontSize: 13, color: BLUE, lineHeight: 1.5 }}>
             Code sent — check inbox and spam folder.
           </div>

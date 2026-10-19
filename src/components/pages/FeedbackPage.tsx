@@ -102,7 +102,7 @@ export function FeedbackPage() {
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7 }}>
           {CATEGORIES.map(cat => (
             <button key={cat.id} onClick={() => setCategory(cat.id)}
-              style={{ padding: '6px 14px', borderRadius: 20, border: `1px solid ${category === cat.id ? 'var(--nan-blue)' : C.bdr}`, background: category === cat.id ? 'rgba(59,130,246,0.10)' : C.surf2, color: category === cat.id ? 'var(--nan-blue)' : C.t2, fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: F, transition: 'all 0.15s' }}>
+              style={{ padding: '6px 14px', borderRadius: 20, border: `1px solid ${category === cat.id ? 'var(--nan-blue)' : C.bdr}`, background: category === cat.id ? 'rgba(37,99,235,0.10)' : C.surf2, color: category === cat.id ? 'var(--nan-blue)' : C.t2, fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: F, transition: 'all 0.15s' }}>
               {cat.label}
             </button>
           ))}

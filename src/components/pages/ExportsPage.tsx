@@ -114,7 +114,7 @@ function RecordRow({ rec, last }: { rec: ExportRecord; last: boolean }) {
     }}>
       <div style={{
         width: 34, height: 34, borderRadius: 9, flexShrink: 0,
-        background: isIn ? 'rgba(16,185,129,0.08)' : rec.sign === '-' ? 'rgba(239,68,68,0.08)' : 'rgba(59,130,246,0.08)',
+        background: isIn ? 'rgba(16,185,129,0.08)' : rec.sign === '-' ? 'rgba(239,68,68,0.08)' : 'rgba(37,99,235,0.08)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>
         <RowIcon size={15} color={color} />
@@ -185,7 +185,7 @@ function Dropdown<T extends string>({
                 onClick={() => { onChange(o.value); setOpen(false) }}
                 style={{
                   width: '100%', textAlign: 'left', padding: '10px 14px',
-                  background: o.value === value ? 'rgba(59,130,246,0.08)' : 'transparent',
+                  background: o.value === value ? 'rgba(37,99,235,0.08)' : 'transparent',
                   border: 'none',
                   borderBottom: i < options.length - 1 ? `1px solid ${C.bdr}` : 'none',
                   color: o.value === value ? 'var(--nan-blue)' : C.text,
@@ -479,8 +479,8 @@ export function ExportsPage() {
     /* ── Top header ── */
     .page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;gap:12px;flex-wrap:wrap;}
     .logo-block{display:flex;align-items:center;gap:10px;}
-    .logo-icon{width:44px;height:44px;border-radius:10px;background:#3B82F6;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-    .logo-text{font-size:22px;font-weight:700;color:#3B82F6;letter-spacing:-0.02em;}
+    .logo-icon{width:44px;height:44px;border-radius:10px;background:#2563EB;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .logo-text{font-size:22px;font-weight:700;color:#2563EB;letter-spacing:-0.02em;}
     .page-title{font-size:11px;color:#888;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;margin-top:2px;}
     .stmt-range{font-size:11px;color:#555;font-weight:600;text-align:right;padding-top:6px;}
     /* ── Account + printed block ── */
@@ -511,7 +511,7 @@ export function ExportsPage() {
     /* ── Footer ── */
     .footer{margin-top:32px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:10px;border-top:1px solid #ddd;padding-top:14px;}
     .footer-brand{display:flex;align-items:center;gap:8px;}
-    .footer-icon{width:26px;height:26px;border-radius:6px;background:#3B82F6;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .footer-icon{width:26px;height:26px;border-radius:6px;background:#2563EB;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
     .footer-name{font-size:12px;font-weight:700;color:#111;}
     .footer-sub{font-size:10px;color:#888;}
     .footer-right{text-align:right;font-size:10px;color:#888;line-height:1.7;}

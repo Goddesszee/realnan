@@ -98,9 +98,9 @@ function BalloonCelebration({ handle, onDone }: { handle: string; onDone: () => 
       {/* Hero card */}
       <div
         style={{
-          background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)',
+          background: 'linear-gradient(135deg, #2563EB 0%, #2563EB 100%)',
           borderRadius: 28, padding: '36px 40px', textAlign: 'center',
-          boxShadow: '0 24px 80px rgba(59,130,246,0.45)',
+          boxShadow: '0 24px 80px rgba(37,99,235,0.45)',
           maxWidth: 320, width: '90%',
           animation: 'nanPop 0.5s cubic-bezier(0.34,1.56,0.64,1)',
         }}
@@ -595,12 +595,12 @@ export function NanNamePage() {
         <div style={{ marginBottom: 20 }}>
           {/* Handle hero card */}
           <div style={{
-            background: 'linear-gradient(135deg, rgba(59,130,246,0.12) 0%, rgba(8,102,245,0.05) 100%)',
-            border: '1.5px solid rgba(59,130,246,0.28)',
+            background: 'linear-gradient(135deg, rgba(37,99,235,0.12) 0%, rgba(8,102,245,0.05) 100%)',
+            border: '1.5px solid rgba(37,99,235,0.28)',
             borderRadius: 22, padding: '28px 22px', marginBottom: 16,
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-              <div style={{ width: 56, height: 56, borderRadius: 18, background: 'var(--nan-blue)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 4px 20px rgba(59,130,246,0.35)' }}>
+              <div style={{ width: 56, height: 56, borderRadius: 18, background: 'var(--nan-blue)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 4px 20px rgba(37,99,235,0.35)' }}>
                 <AtSign size={24} color="#fff" />
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
@@ -692,7 +692,7 @@ export function NanNamePage() {
                 <button key={d.val} onClick={() => !isBusy && setDuration(d.val)}
                   style={{
                     flex: 1, borderRadius: 12, padding: '10px 8px', cursor: isBusy ? 'not-allowed' : 'pointer',
-                    background: duration === d.val ? 'rgba(59,130,246,0.10)' : C.surf2,
+                    background: duration === d.val ? 'rgba(37,99,235,0.10)' : C.surf2,
                     border: `1.5px solid ${duration === d.val ? 'var(--nan-blue)' : C.bdr}`,
                     transition: 'all 0.15s',
                   }}>
@@ -706,7 +706,7 @@ export function NanNamePage() {
 
           {/* Progress indicator */}
           {stepLabel && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(59,130,246,0.06)', border: '1px solid rgba(59,130,246,0.12)', borderRadius: 10, padding: '10px 14px', marginBottom: 14 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(37,99,235,0.06)', border: '1px solid rgba(37,99,235,0.12)', borderRadius: 10, padding: '10px 14px', marginBottom: 14 }}>
               <Loader2 size={14} color="var(--nan-blue)" style={{ animation: 'nan-spin 0.8s linear infinite', flexShrink: 0 }} />
               <span style={{ fontSize: 13, color: 'var(--nan-blue)', fontWeight: 600 }}>{stepLabel}</span>
             </div>
@@ -722,7 +722,7 @@ export function NanNamePage() {
               cursor: (isBusy || !newHandle.trim()) ? 'not-allowed' : 'pointer',
               fontFamily: F,
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-              boxShadow: (!isBusy && newHandle.trim()) ? '0 4px 18px rgba(59,130,246,0.30)' : 'none',
+              boxShadow: (!isBusy && newHandle.trim()) ? '0 4px 18px rgba(37,99,235,0.30)' : 'none',
               transition: 'all 0.15s',
             }}>
             {isBusy

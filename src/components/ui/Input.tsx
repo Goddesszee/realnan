@@ -67,7 +67,7 @@ export function Input({ label, error, helper, prefix, suffix, mono, className, s
           }}
           onFocus={(e) => {
             e.target.style.borderColor = 'var(--nan-blue)'
-            e.target.style.boxShadow = '0 0 0 3px rgba(59,130,246,0.10)'
+            e.target.style.boxShadow = '0 0 0 3px rgba(37,99,235,0.10)'
             onFocus?.(e)
           }}
           onBlur={(e) => {
@@ -104,7 +104,7 @@ export function Textarea({ label, error, helper, style, onFocus, onBlur, ...prop
         }}
         onFocus={(e) => {
           e.target.style.borderColor = 'var(--nan-blue)'
-          e.target.style.boxShadow = '0 0 0 3px rgba(59,130,246,0.10)'
+          e.target.style.boxShadow = '0 0 0 3px rgba(37,99,235,0.10)'
           onFocus?.(e)
         }}
         onBlur={(e) => {

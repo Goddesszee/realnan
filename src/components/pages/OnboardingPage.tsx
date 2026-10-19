@@ -126,8 +126,8 @@ export function OnboardingPage() {
                   <button key={id} onClick={() => toggle(id)} style={{
                     display: 'flex', alignItems: 'center', gap: 14,
                     padding: '12px 14px', borderRadius: 12, cursor: 'pointer', textAlign: 'left',
-                    background: on ? 'rgba(59,130,246,0.10)' : SURF,
-                    border: `1px solid ${on ? 'rgba(59,130,246,0.22)' : BDR}`,
+                    background: on ? 'rgba(37,99,235,0.10)' : SURF,
+                    border: `1px solid ${on ? 'rgba(37,99,235,0.22)' : BDR}`,
                     transition: 'all 0.15s', fontFamily: F, color: TEXT,
                   }}>
                     <span style={{ fontSize: 18, flexShrink: 0, color: on ? BLUE : T2 }}>{icon}</span>

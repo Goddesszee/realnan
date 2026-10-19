@@ -15,8 +15,8 @@ const F    = "'Inter', -apple-system, sans-serif"
 const MONO = "'JetBrains Mono', Menlo, monospace"
 
 const BLUE  = 'var(--nan-blue)'
-const BDIM  = 'rgba(59,130,246,0.10)'
-const BBDR  = 'rgba(59,130,246,0.22)'
+const BDIM  = 'rgba(37,99,235,0.10)'
+const BBDR  = 'rgba(37,99,235,0.22)'
 const GREEN = 'var(--nan-green)'
 
 function doCopy(text: string, onDone: () => void) {

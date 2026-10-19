@@ -142,8 +142,8 @@ function QRScanModal({ onScan, onClose }: { onScan: (addr: string) => void; onCl
                 position: 'absolute', width: 28, height: 28,
                 top: pos.startsWith('t') ? 16 : undefined, bottom: pos.startsWith('b') ? 16 : undefined,
                 left: pos.endsWith('l') ? 16 : undefined, right: pos.endsWith('r') ? 16 : undefined,
-                borderTop: pos.startsWith('t') ? '3px solid #3B82F6' : 'none', borderBottom: pos.startsWith('b') ? '3px solid #3B82F6' : 'none',
-                borderLeft: pos.endsWith('l') ? '3px solid #3B82F6' : 'none', borderRight: pos.endsWith('r') ? '3px solid #3B82F6' : 'none',
+                borderTop: pos.startsWith('t') ? '3px solid #2563EB' : 'none', borderBottom: pos.startsWith('b') ? '3px solid #2563EB' : 'none',
+                borderLeft: pos.endsWith('l') ? '3px solid #2563EB' : 'none', borderRight: pos.endsWith('r') ? '3px solid #2563EB' : 'none',
               }} />
             ))}
             <div style={{ position: 'absolute', bottom: 12, left: 0, right: 0, textAlign: 'center', color: 'rgba(255,255,255,0.8)', fontSize: 12 }}>{hint}</div>
@@ -408,7 +408,7 @@ export function WalletPage({ initialSubView = 'main' }: { initialSubView?: Walle
           </button>
         </div>
         <div className="mt-3 flex items-center gap-2 text-xs text-nan2">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#3B82F6]" />
+          <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB]" />
           Connected to {chain.name}
           <a
             href={`${chain.explorerBase}/address/${address}`}
@@ -784,7 +784,7 @@ function SendFlow({
                 background: 'var(--nan-blue)', border: 'none', color: '#fff',
                 fontWeight: 700, fontSize: 14, cursor: 'pointer', fontFamily: SANS,
                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7,
-                boxShadow: '0 4px 16px rgba(59,130,246,0.28)',
+                boxShadow: '0 4px 16px rgba(37,99,235,0.28)',
               }}
             >
               <Download size={15} /> Download Receipt
@@ -824,7 +824,7 @@ function SendFlow({
           background: 'var(--nan-surface)', border: '1px solid var(--nan-bdr)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>
-          <div style={{ width: 28, height: 28, border: '2px solid #3B82F6', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+          <div style={{ width: 28, height: 28, border: '2px solid #2563EB', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
         </div>
         <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--nan-text)', margin: 0 }}>
           {isCircleUser
@@ -945,14 +945,14 @@ function SendFlow({
                   style={{
                     width: '100%', padding: '14px 16px', borderRadius: 12,
                     background: 'var(--nan-surface2)',
-                    border: `1px solid ${recipientError ? '#EF4444' : resolvedName ? 'rgba(16,185,129,0.5)' : recipient.startsWith('@') ? 'rgba(59,130,246,0.35)' : 'var(--nan-bdr)'}`,
+                    border: `1px solid ${recipientError ? '#EF4444' : resolvedName ? 'rgba(16,185,129,0.5)' : recipient.startsWith('@') ? 'rgba(37,99,235,0.35)' : 'var(--nan-bdr)'}`,
                     color: 'var(--nan-text)', fontSize: 14, fontFamily: 'JetBrains Mono, monospace',
                     outline: 'none', boxSizing: 'border-box', transition: 'border-color 0.15s',
                   }}
                 />
                 {nameResolving && (
                   <div style={{ position: 'absolute', right: 50, top: '50%', transform: 'translateY(-50%)' }}>
-                    <div style={{ width: 16, height: 16, border: '2px solid #3B82F6', borderTopColor: 'transparent', borderRadius: '50%', animation: 'nan-spin 0.7s linear infinite' }} />
+                    <div style={{ width: 16, height: 16, border: '2px solid #2563EB', borderTopColor: 'transparent', borderRadius: '50%', animation: 'nan-spin 0.7s linear infinite' }} />
                   </div>
                 )}
                 {resolvedName && !nameResolving && (
@@ -1037,7 +1037,7 @@ function SendFlow({
                 border: 'none', cursor: canProceedAmount && recipient ? 'pointer' : 'not-allowed',
                 color: canProceedAmount && recipient ? '#fff' : 'var(--nan-text3)',
                 fontSize: 16, fontWeight: 700, fontFamily: SANS,
-                boxShadow: canProceedAmount && recipient ? '0 4px 20px rgba(59,130,246,0.30)' : 'none',
+                boxShadow: canProceedAmount && recipient ? '0 4px 20px rgba(37,99,235,0.30)' : 'none',
                 transition: 'all 0.15s',
                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
               }}
@@ -1131,8 +1131,8 @@ function SendFlow({
                 <button key={tok.symbol} onClick={() => setSelectedToken(tok)} style={{
                   flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
                   padding: '10px 12px', borderRadius: 12,
-                  background: selectedToken.symbol === tok.symbol ? 'rgba(59,130,246,0.10)' : 'var(--nan-surface2)',
-                  border: `1.5px solid ${selectedToken.symbol === tok.symbol ? 'rgba(59,130,246,0.35)' : 'var(--nan-bdr)'}`,
+                  background: selectedToken.symbol === tok.symbol ? 'rgba(37,99,235,0.10)' : 'var(--nan-surface2)',
+                  border: `1.5px solid ${selectedToken.symbol === tok.symbol ? 'rgba(37,99,235,0.35)' : 'var(--nan-bdr)'}`,
                   cursor: 'pointer', fontFamily: SANS,
                 }}>
                   <TokenLogo symbol={tok.symbol} size={20} radius={6} />
@@ -1154,14 +1154,14 @@ function SendFlow({
               style={{
                 width: '100%', padding: '14px 44px 14px 16px', borderRadius: 12, boxSizing: 'border-box',
                 background: 'var(--nan-surface2)',
-                border: `1.5px solid ${recipientError ? '#EF4444' : resolvedName ? 'rgba(16,185,129,0.5)' : recipient.startsWith('@') ? 'rgba(59,130,246,0.35)' : 'var(--nan-bdr)'}`,
+                border: `1.5px solid ${recipientError ? '#EF4444' : resolvedName ? 'rgba(16,185,129,0.5)' : recipient.startsWith('@') ? 'rgba(37,99,235,0.35)' : 'var(--nan-bdr)'}`,
                 color: 'var(--nan-text)', fontSize: 14, fontFamily: 'JetBrains Mono, monospace', outline: 'none',
                 transition: 'border-color 0.15s',
               }}
             />
             {nameResolving && (
               <div style={{ position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)' }}>
-                <div style={{ width: 16, height: 16, border: '2px solid #3B82F6', borderTopColor: 'transparent', borderRadius: '50%', animation: 'nan-spin 0.7s linear infinite' }} />
+                <div style={{ width: 16, height: 16, border: '2px solid #2563EB', borderTopColor: 'transparent', borderRadius: '50%', animation: 'nan-spin 0.7s linear infinite' }} />
               </div>
             )}
             {resolvedName && !nameResolving && (

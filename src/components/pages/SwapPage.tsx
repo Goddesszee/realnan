@@ -532,7 +532,7 @@ export function SwapPage({ inCard = false }: { inCard?: boolean }) {
             {txHash.slice(0, 14)}… <ExternalLink size={10} />
           </a>
         )}
-        <button onClick={reset} style={{ width: '100%', height: 46, background: c.blue, color: '#fff', border: 'none', borderRadius: 13, fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: F, boxShadow: '0 4px 20px rgba(59,130,246,0.25)' }}>
+        <button onClick={reset} style={{ width: '100%', height: 46, background: c.blue, color: '#fff', border: 'none', borderRadius: 13, fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: F, boxShadow: '0 4px 20px rgba(37,99,235,0.25)' }}>
           Swap again
         </button>
       </div>
@@ -735,7 +735,7 @@ export function SwapPage({ inCard = false }: { inCard?: boolean }) {
             </button>
             <button
               onClick={() => void executeSwap()}
-              style={{ flex: 1, height: 46, borderRadius: 13, border: 'none', background: c.blue, color: '#fff', fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: F, boxShadow: '0 4px 20px rgba(59,130,246,0.25)', WebkitTapHighlightColor: 'transparent' }}>
+              style={{ flex: 1, height: 46, borderRadius: 13, border: 'none', background: c.blue, color: '#fff', fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: F, boxShadow: '0 4px 20px rgba(37,99,235,0.25)', WebkitTapHighlightColor: 'transparent' }}>
               Confirm swap
             </button>
           </div>

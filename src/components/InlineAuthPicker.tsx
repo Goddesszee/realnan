@@ -39,7 +39,7 @@ export function InlineAuthPicker({ onWalletConnected, onCircleSuccess, onBack, d
   const text2    = dark ? 'rgba(255,255,255,0.55)'  : 'var(--nan-text2)'
   const surf     = dark ? 'rgba(255,255,255,0.06)'  : 'var(--nan-surface)'
   const bdr      = dark ? 'rgba(255,255,255,0.12)'  : 'var(--nan-bdr)'
-  const bdrHover = dark ? 'rgba(255,255,255,0.20)'  : 'rgba(59,130,246,0.28)'
+  const bdrHover = dark ? 'rgba(255,255,255,0.20)'  : 'rgba(37,99,235,0.28)'
 
   // When a wagmi wallet connects while the picker is open, fire the callback
   useEffect(() => {
@@ -97,7 +97,7 @@ export function InlineAuthPicker({ onWalletConnected, onCircleSuccess, onBack, d
           onClick={() => setMode('email')}
           style={{ width: '100%', minHeight: 60, background: surf, border: `1px solid ${bdrHover}`, borderRadius: 14, cursor: 'pointer', fontFamily: F, display: 'flex', alignItems: 'center', gap: 14, padding: '0 18px', textAlign: 'left' }}
         >
-          <div style={{ width: 38, height: 38, borderRadius: 10, background: 'rgba(59,130,246,0.12)', border: `1px solid rgba(59,130,246,0.28)`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <div style={{ width: 38, height: 38, borderRadius: 10, background: 'rgba(37,99,235,0.12)', border: `1px solid rgba(37,99,235,0.28)`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
             <Mail size={18} color={BLUE} />
           </div>
           <div style={{ flex: 1 }}>

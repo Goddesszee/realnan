@@ -210,7 +210,7 @@ export function ProfilePage() {
               <img src={profile.avatarUrl} alt="Avatar" onError={() => setProfile({ avatarUrl: '' })}
                 style={{ width: 64, height: 64, borderRadius: '50%', objectFit: 'cover', border: `1px solid ${C.bdr}` }} />
             ) : (
-              <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'rgba(59,130,246,0.10)', border: '1px solid rgba(59,130,246,0.22)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26, fontWeight: 700, color: C.blue }}>
+              <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'rgba(37,99,235,0.10)', border: '1px solid rgba(37,99,235,0.22)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26, fontWeight: 700, color: C.blue }}>
                 {avatarLetter}
               </div>
             )}
@@ -254,7 +254,7 @@ export function ProfilePage() {
             <div style={{ background: C.surf, border: `1px solid ${C.bdr}`, borderRadius: 14, padding: '14px 16px', marginTop: 10, overflow: 'hidden', position: 'relative' }}>
               <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: C.blue }} />
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-                <div style={{ width: 34, height: 34, borderRadius: 10, background: 'rgba(59,130,246,0.10)', border: '1px solid rgba(59,130,246,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <div style={{ width: 34, height: 34, borderRadius: 10, background: 'rgba(37,99,235,0.10)', border: '1px solid rgba(37,99,235,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                   <Link2 size={16} color={C.blue} />
                 </div>
                 <div>
@@ -271,7 +271,7 @@ export function ProfilePage() {
                   {linkCopied ? 'Copied!' : 'Copy'}
                 </button>
               </div>
-              <button onClick={() => { void shareLink() }} style={{ width: '100%', padding: '11px', borderRadius: 10, background: 'rgba(59,130,246,0.06)', border: '1px solid rgba(59,130,246,0.12)', color: C.blue, fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: F, letterSpacing: '-0.01em' }}>
+              <button onClick={() => { void shareLink() }} style={{ width: '100%', padding: '11px', borderRadius: 10, background: 'rgba(37,99,235,0.06)', border: '1px solid rgba(37,99,235,0.12)', color: C.blue, fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: F, letterSpacing: '-0.01em' }}>
                 Share my pay link
               </button>
             </div>
@@ -370,7 +370,7 @@ export function ProfilePage() {
                 <div style={{ fontSize: 14, fontWeight: 600, color: C.text }}>Authentication</div>
                 <div style={{ fontSize: 12, color: C.t3, marginTop: 1 }}>One-time password (OTP) via email</div>
               </div>
-              <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--nan-blue)', background: 'rgba(59,130,246,0.08)', border: '1px solid rgba(59,130,246,0.15)', padding: '2px 8px', borderRadius: 20 }}>Active</span>
+              <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--nan-blue)', background: 'rgba(37,99,235,0.08)', border: '1px solid rgba(37,99,235,0.15)', padding: '2px 8px', borderRadius: 20 }}>Active</span>
             </div>
           </div>
 
@@ -448,7 +448,7 @@ export function ProfilePage() {
             return (
               <button key={id} onClick={() => setTheme(id as 'dark' | 'light')}
                 style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 14, padding: '14px 18px', borderLeft: 'none', borderRight: 'none', borderTop: i === 0 ? `1px solid ${C.bdr}` : 'none', borderBottom: i < 2 ? `1px solid ${C.bdr}` : 'none', background: active ? C.blueDim : 'transparent', cursor: 'pointer', fontFamily: F, textAlign: 'left' }}>
-                <div style={{ width: 36, height: 36, borderRadius: 10, background: active ? 'rgba(59,130,246,0.12)' : C.surf2, border: `1px solid ${active ? C.blueBd : C.bdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <div style={{ width: 36, height: 36, borderRadius: 10, background: active ? 'rgba(37,99,235,0.12)' : C.surf2, border: `1px solid ${active ? C.blueBd : C.bdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                   <Icon size={16} color={active ? 'var(--nan-blue)' : C.t2} />
                 </div>
                 <div style={{ flex: 1 }}>

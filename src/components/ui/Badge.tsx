@@ -14,7 +14,7 @@ const styles: Record<BadgeVariant, React.CSSProperties> = {
   success: { background: 'var(--nan-green-dim)',  color: 'var(--nan-green)', border: '1px solid rgba(16,185,129,0.22)' },
   danger:  { background: 'var(--nan-red-dim)',    color: 'var(--nan-red)',   border: '1px solid rgba(239,68,68,0.22)' },
   warning: { background: 'var(--nan-gold-dim)',   color: 'var(--nan-gold)',  border: '1px solid rgba(245,158,11,0.22)' },
-  blue:    { background: 'var(--nan-blue-dim)',   color: 'var(--nan-blue)',  border: '1px solid rgba(59,130,246,0.20)' },
+  blue:    { background: 'var(--nan-blue-dim)',   color: 'var(--nan-blue)',  border: '1px solid rgba(37,99,235,0.20)' },
   mono:    { background: 'var(--nan-surface-2)',  color: 'var(--nan-text-2)', border: '1px solid var(--nan-border)',
              fontFamily: "'JetBrains Mono','SF Mono',Menlo,monospace", letterSpacing: '0.04em' },
 }

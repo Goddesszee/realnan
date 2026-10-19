@@ -15,7 +15,7 @@ const CATEGORIES = [
 ]
 
 const STATUS_COLORS: Record<string, { bg: string; color: string; label: string }> = {
-  new:         { bg: 'rgba(59,130,246,0.08)',   color: 'var(--nan-blue)', label: 'New' },
+  new:         { bg: 'rgba(37,99,235,0.08)',   color: 'var(--nan-blue)', label: 'New' },
   reviewing:   { bg: 'rgba(245,158,11,0.08)',   color: '#F59E0B', label: 'Reviewing' },
   planned:     { bg: 'rgba(16,185,129,0.08)',    color: '#10B981', label: 'Planned' },
   implemented: { bg: 'rgba(16,185,129,0.12)',    color: '#10B981', label: '✓ Implemented' },
@@ -121,8 +121,8 @@ export function SuggestionsPage() {
       {view === 'list' ? (
         <div>
           {/* Hero card */}
-          <div style={{ background: 'linear-gradient(135deg, rgba(59,130,246,0.10) 0%, rgba(59,130,246,0.06) 100%)', border: '1px solid rgba(59,130,246,0.12)', borderRadius: 16, padding: '20px', marginBottom: 16, display: 'flex', gap: 16, alignItems: 'center' }}>
-            <div style={{ width: 44, height: 44, borderRadius: 12, background: 'rgba(59,130,246,0.10)', border: '1px solid rgba(59,130,246,0.20)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <div style={{ background: 'linear-gradient(135deg, rgba(37,99,235,0.10) 0%, rgba(37,99,235,0.06) 100%)', border: '1px solid rgba(37,99,235,0.12)', borderRadius: 16, padding: '20px', marginBottom: 16, display: 'flex', gap: 16, alignItems: 'center' }}>
+            <div style={{ width: 44, height: 44, borderRadius: 12, background: 'rgba(37,99,235,0.10)', border: '1px solid rgba(37,99,235,0.20)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               <Lightbulb size={20} color="var(--nan-blue)" />
             </div>
             <div>
@@ -173,7 +173,7 @@ export function SuggestionsPage() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
               {CATEGORIES.map(cat => (
                 <button key={cat.id} onClick={() => setCategory(cat.id)}
-                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 12px', borderRadius: 10, border: `1px solid ${category === cat.id ? 'var(--nan-blue)' : C.bdr}`, background: category === cat.id ? 'rgba(59,130,246,0.08)' : C.surf2, cursor: 'pointer', fontFamily: F, textAlign: 'left' }}>
+                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 12px', borderRadius: 10, border: `1px solid ${category === cat.id ? 'var(--nan-blue)' : C.bdr}`, background: category === cat.id ? 'rgba(37,99,235,0.08)' : C.surf2, cursor: 'pointer', fontFamily: F, textAlign: 'left' }}>
                   <span style={{ fontSize: 13, fontWeight: 600, color: category === cat.id ? 'var(--nan-blue)' : C.text }}>{cat.label}</span>
                   {category === cat.id && <ChevronRight size={14} color="var(--nan-blue)" />}
                 </button>

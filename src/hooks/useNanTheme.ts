@@ -11,7 +11,7 @@
  *
  * NAN Brand Direction
  * -------------------
- * Premium, professional, clean. Electric blue (#3B82F6) as the sole
+ * Premium, professional, clean. Electric blue (#2563EB) as the sole
  * accent. Deep navy backgrounds. Restrained use of color — only for
  * meaningful signals (actions, status, highlights).
  */
@@ -48,9 +48,9 @@ const DARK: NanTheme = {
   text:    '#F9FAFB',
   t2:      '#9CA3AF',
   t3:      '#4B5563',
-  blue:    '#3B82F6',
-  blueDim: 'rgba(59,130,246,0.10)',
-  blueBd:  'rgba(59,130,246,0.28)',
+  blue:    '#2563EB',
+  blueDim: 'rgba(37,99,235,0.10)',
+  blueBd:  'rgba(37,99,235,0.28)',
   green:   '#10B981',
   red:     '#EF4444',
   gold:    '#F59E0B',

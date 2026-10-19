@@ -231,7 +231,7 @@ export function PaymentCard({ data }: { data: PaymentCardData }) {
         <button
           onClick={data.onConfirm}
           disabled={insufficient || data.executing}
-          style={{ flex:2, height:42, background:insufficient?'rgba(59,130,246,0.28)':BLUE, color:'#fff', border:'none', borderRadius:11, fontSize:13, fontWeight:700, cursor:insufficient||data.executing?'not-allowed':'pointer', fontFamily:F, display:'flex', alignItems:'center', justifyContent:'center', gap:6 }}
+          style={{ flex:2, height:42, background:insufficient?'rgba(37,99,235,0.28)':BLUE, color:'#fff', border:'none', borderRadius:11, fontSize:13, fontWeight:700, cursor:insufficient||data.executing?'not-allowed':'pointer', fontFamily:F, display:'flex', alignItems:'center', justifyContent:'center', gap:6 }}
         >
           {data.executing
             ? <><Loader2 size={13} style={{ animation:'spin 1s linear infinite' }} /> Processing...</>
@@ -355,7 +355,7 @@ export function QuoteCard({ data }: { data: QuoteCardData }) {
           <div style={{ fontSize:12, fontWeight:600, color:TEXT3, marginTop:2 }}>{data.fromSymbol}</div>
         </div>
         <ArrowRight size={16} color={TEXT3} style={{ flexShrink:0 }} />
-        <div style={{ flex:1, background:'rgba(59,130,246,0.06)', border:'1px solid rgba(59,130,246,0.12)', borderRadius:12, padding:'10px 12px', textAlign:'center' }}>
+        <div style={{ flex:1, background:'rgba(37,99,235,0.06)', border:'1px solid rgba(37,99,235,0.12)', borderRadius:12, padding:'10px 12px', textAlign:'center' }}>
           <div style={{ fontSize:18, fontWeight:800, color:BLUE, fontVariantNumeric:'tabular-nums' }}>{fmt2(data.toAmount)}</div>
           <div style={{ fontSize:12, fontWeight:600, color:TEXT3, marginTop:2 }}>{data.toSymbol}</div>
         </div>

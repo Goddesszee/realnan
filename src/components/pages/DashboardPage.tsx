@@ -45,7 +45,7 @@ function Sparkline({ points, color, height = 80 }: { points: number[]; color: st
 }
 
 // ── donut chart ───────────────────────────────────────────────────────────────
-function Donut({ value, label, color = '#3B82F6' }: { value: string; label: string; color?: string }) {
+function Donut({ value, label, color = '#2563EB' }: { value: string; label: string; color?: string }) {
   const R = 70
   const cx = 90
   const cy = 90

@@ -14,8 +14,8 @@ const SURF = 'var(--nan-surface)'
 const SURF2= 'var(--nan-surface2)'
 const BDR  = 'var(--nan-bdr)'
 const BLUE = 'var(--nan-blue)'
-const BLUE_DIM = 'rgba(59,130,246,0.10)'
-const BLUE_BD  = 'rgba(59,130,246,0.18)'
+const BLUE_DIM = 'rgba(37,99,235,0.10)'
+const BLUE_BD  = 'rgba(37,99,235,0.18)'
 const TEXT = 'var(--nan-text)'
 const T2   = 'var(--nan-text2)'
 const T3   = 'var(--nan-text3)'
@@ -305,7 +305,7 @@ export function GatewayPage() {
 
       {/* ── Header ── */}
       <div style={{ display:'flex', alignItems:'center', gap:10, padding:'20px 0 18px' }}>
-        <div style={{ width:38, height:38, borderRadius:11, background:BLUE, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, boxShadow:`0 4px 14px rgba(59,130,246,0.30)` }}>
+        <div style={{ width:38, height:38, borderRadius:11, background:BLUE, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, boxShadow:`0 4px 14px rgba(37,99,235,0.30)` }}>
           <Layers size={18} color="#fff" />
         </div>
         <div style={{ flex:1 }}>
@@ -363,7 +363,7 @@ export function GatewayPage() {
       <div style={{ display:'flex', gap:10, marginBottom:16 }}>
         <button
           onClick={() => setTab(tab === 'deposit' ? 'balance' : 'deposit')}
-          style={{ flex:1, display:'flex', alignItems:'center', justifyContent:'center', gap:8, padding:'13px 0', borderRadius:14, border: tab==='deposit' ? 'none' : `1px solid ${BDR}`, background: tab==='deposit' ? BLUE : SURF, color: tab==='deposit' ? '#fff' : TEXT, fontSize:14, fontWeight:600, fontFamily:F, cursor:'pointer', transition:'all 0.15s', boxShadow: tab==='deposit' ? `0 4px 16px rgba(59,130,246,0.25)` : 'none' }}>
+          style={{ flex:1, display:'flex', alignItems:'center', justifyContent:'center', gap:8, padding:'13px 0', borderRadius:14, border: tab==='deposit' ? 'none' : `1px solid ${BDR}`, background: tab==='deposit' ? BLUE : SURF, color: tab==='deposit' ? '#fff' : TEXT, fontSize:14, fontWeight:600, fontFamily:F, cursor:'pointer', transition:'all 0.15s', boxShadow: tab==='deposit' ? `0 4px 16px rgba(37,99,235,0.25)` : 'none' }}>
           <ArrowDownToLine size={15} />
           Deposit
         </button>
@@ -560,7 +560,7 @@ function DepositTab({ address, walletBalance, usdcFact, onSuccess }: {
         <button onClick={reset} style={{ width:'100%', padding:'14px 0', background:SURF, border:`1px solid ${BDR}`, borderRadius:14, fontSize:14, fontWeight:600, color:TEXT, cursor:'pointer', fontFamily:F }}>Deposit again</button>
       ) : (
         <button onClick={() => void handleDeposit()} disabled={!amount || parseFloat(amount)<=0 || phase!=='idle'}
-          style={{ width:'100%', padding:'15px 0', borderRadius:14, fontSize:15, fontWeight:700, border:'none', fontFamily:F, cursor:(!amount||phase!=='idle') ? 'not-allowed' : 'pointer', background:(!amount||phase!=='idle') ? SURF : BLUE, color:(!amount||phase!=='idle') ? T2 : '#fff', transition:'all 0.15s', boxShadow:(!amount||phase!=='idle') ? 'none' : `0 4px 16px rgba(59,130,246,0.28)` }}>
+          style={{ width:'100%', padding:'15px 0', borderRadius:14, fontSize:15, fontWeight:700, border:'none', fontFamily:F, cursor:(!amount||phase!=='idle') ? 'not-allowed' : 'pointer', background:(!amount||phase!=='idle') ? SURF : BLUE, color:(!amount||phase!=='idle') ? T2 : '#fff', transition:'all 0.15s', boxShadow:(!amount||phase!=='idle') ? 'none' : `0 4px 16px rgba(37,99,235,0.28)` }}>
           {phase==='approving' ? 'Approving…' : phase==='depositing' ? 'Depositing…' : `Deposit ${amount||'0.00'} USDC`}
         </button>
       )}
@@ -752,7 +752,7 @@ function PasskeyDepositTab({ address, walletBalance, usdcFact, onSuccess }: {
         <button onClick={reset} style={{ width:'100%', padding:'14px 0', background:SURF, border:`1px solid ${BDR}`, borderRadius:14, fontSize:14, fontWeight:600, color:TEXT, cursor:'pointer', fontFamily:F }}>Deposit again</button>
       ) : (
         <button onClick={() => void handleDeposit()} disabled={!amount || parseFloat(amount)<=0 || busy}
-          style={{ width:'100%', padding:'15px 0', borderRadius:14, fontSize:15, fontWeight:700, border:'none', fontFamily:F, cursor:(!amount||busy) ? 'not-allowed' : 'pointer', background:(!amount||busy) ? SURF : BLUE, color:(!amount||busy) ? T2 : '#fff', transition:'all 0.15s', boxShadow:(!amount||busy) ? 'none' : `0 4px 16px rgba(59,130,246,0.28)` }}>
+          style={{ width:'100%', padding:'15px 0', borderRadius:14, fontSize:15, fontWeight:700, border:'none', fontFamily:F, cursor:(!amount||busy) ? 'not-allowed' : 'pointer', background:(!amount||busy) ? SURF : BLUE, color:(!amount||busy) ? T2 : '#fff', transition:'all 0.15s', boxShadow:(!amount||busy) ? 'none' : `0 4px 16px rgba(37,99,235,0.28)` }}>
           {busy ? 'Processing…' : `Deposit ${amount||'0.00'} USDC`}
         </button>
       )}
@@ -836,7 +836,7 @@ function W3SDepositTab({ address, walletBalance, usdcFact, onSuccess }: {
       {error && <div style={{ background:'rgba(239,68,68,0.08)', border:'1px solid rgba(239,68,68,0.22)', borderRadius:10, padding:'10px 14px', fontSize:12, color:'#EF4444' }}>{error}</div>}
       {busy && <div style={{ fontSize:13, color:T2, display:'flex', alignItems:'center', gap:7 }}><div style={{ width:11, height:11, borderRadius:'50%', border:`2px solid ${BLUE}`, borderTopColor:'transparent', animation:'nan-spin 0.8s linear infinite', flexShrink:0 }} />{status === 'approving' ? 'Approve in Circle popup…' : status === 'polling' ? 'Confirming on-chain…' : 'Preparing…'}</div>}
       <button onClick={() => void handleDeposit()} disabled={!amount || parseFloat(amount)<=0 || busy}
-        style={{ width:'100%', padding:'15px 0', borderRadius:14, fontSize:15, fontWeight:700, border:'none', fontFamily:F, cursor:(!amount||busy) ? 'not-allowed' : 'pointer', background:(!amount||busy) ? SURF : BLUE, color:(!amount||busy) ? T2 : '#fff', transition:'all 0.15s', boxShadow:(!amount||busy) ? 'none' : `0 4px 16px rgba(59,130,246,0.28)` }}>
+        style={{ width:'100%', padding:'15px 0', borderRadius:14, fontSize:15, fontWeight:700, border:'none', fontFamily:F, cursor:(!amount||busy) ? 'not-allowed' : 'pointer', background:(!amount||busy) ? SURF : BLUE, color:(!amount||busy) ? T2 : '#fff', transition:'all 0.15s', boxShadow:(!amount||busy) ? 'none' : `0 4px 16px rgba(37,99,235,0.28)` }}>
         {busy ? 'Processing…' : `Deposit ${amount||'0.00'} USDC`}
       </button>
     </div>
@@ -1168,7 +1168,7 @@ function TransferTab({ address, gatewayBalance, onSuccess }: {
         <button onClick={reset} style={{ width:'100%', padding:'14px 0', background:SURF, border:`1px solid ${BDR}`, borderRadius:14, fontSize:14, fontWeight:600, color:TEXT, cursor:'pointer', fontFamily:F }}>Transfer again</button>
       ) : (
         <button onClick={() => void handleTransfer()} disabled={!amount || parseFloat(amount)<=0 || phase!=='idle' || gwBal<=0}
-          style={{ width:'100%', padding:'15px 0', borderRadius:14, fontSize:15, fontWeight:700, border:'none', fontFamily:F, cursor:(!amount||phase!=='idle'||gwBal<=0) ? 'not-allowed' : 'pointer', background:(!amount||phase!=='idle'||gwBal<=0) ? SURF : BLUE, color:(!amount||phase!=='idle'||gwBal<=0) ? T2 : '#fff', transition:'all 0.15s', boxShadow:(!amount||phase!=='idle'||gwBal<=0) ? 'none' : `0 4px 16px rgba(59,130,246,0.28)` }}>
+          style={{ width:'100%', padding:'15px 0', borderRadius:14, fontSize:15, fontWeight:700, border:'none', fontFamily:F, cursor:(!amount||phase!=='idle'||gwBal<=0) ? 'not-allowed' : 'pointer', background:(!amount||phase!=='idle'||gwBal<=0) ? SURF : BLUE, color:(!amount||phase!=='idle'||gwBal<=0) ? T2 : '#fff', transition:'all 0.15s', boxShadow:(!amount||phase!=='idle'||gwBal<=0) ? 'none' : `0 4px 16px rgba(37,99,235,0.28)` }}>
           {phase==='estimating' ? 'Estimating fees…' : phase==='signing' ? 'Sign in wallet…' : phase==='submitting' ? 'Submitting…' : phase==='forwarding' ? 'Forwarding…' : `Transfer ${amount||'0.00'} USDC to ${destChain?.name ?? '…'}`}
         </button>
       )}
@@ -1466,7 +1466,7 @@ function CircleTransferTab({ address, gatewayBalance, onSuccess }: {
         <button onClick={reset} style={{ width:'100%', padding:'14px 0', background:SURF, border:`1px solid ${BDR}`, borderRadius:14, fontSize:14, fontWeight:600, color:TEXT, cursor:'pointer', fontFamily:F }}>Transfer again</button>
       ) : (
         <button onClick={() => void handleTransfer()} disabled={!amount || parseFloat(amount)<=0 || phase!=='idle' || gwBal<=0}
-          style={{ width:'100%', padding:'15px 0', borderRadius:14, fontSize:15, fontWeight:700, border:'none', fontFamily:F, cursor:(!amount||phase!=='idle'||gwBal<=0) ? 'not-allowed' : 'pointer', background:(!amount||phase!=='idle'||gwBal<=0) ? SURF : BLUE, color:(!amount||phase!=='idle'||gwBal<=0) ? T2 : '#fff', transition:'all 0.15s', boxShadow:(!amount||phase!=='idle'||gwBal<=0) ? 'none' : `0 4px 16px rgba(59,130,246,0.28)` }}>
+          style={{ width:'100%', padding:'15px 0', borderRadius:14, fontSize:15, fontWeight:700, border:'none', fontFamily:F, cursor:(!amount||phase!=='idle'||gwBal<=0) ? 'not-allowed' : 'pointer', background:(!amount||phase!=='idle'||gwBal<=0) ? SURF : BLUE, color:(!amount||phase!=='idle'||gwBal<=0) ? T2 : '#fff', transition:'all 0.15s', boxShadow:(!amount||phase!=='idle'||gwBal<=0) ? 'none' : `0 4px 16px rgba(37,99,235,0.28)` }}>
           {phase==='signing' ? 'Sign in wallet…' : phase==='submitting' ? 'Submitting…' : phase==='minting' ? 'Minting on destination…' : `Transfer ${amount||'0.00'} USDC to ${destChain?.name ?? '…'}`}
         </button>
       )}

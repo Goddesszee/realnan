@@ -412,7 +412,7 @@ export function MainnetSetupPage() {
             </div>
             <div style={{
               padding: '4px 10px', borderRadius: 20,
-              background: allRequiredFilled ? 'rgba(34,197,94,0.12)' : 'rgba(59,130,246,0.08)',
+              background: allRequiredFilled ? 'rgba(34,197,94,0.12)' : 'rgba(37,99,235,0.08)',
               border: `1px solid ${allRequiredFilled ? 'rgba(34,197,94,0.3)' : 'rgba(8,102,245,0.2)'}`,
               fontSize: 11, fontWeight: 600,
               color: allRequiredFilled ? '#22c55e' : 'var(--nan-blue)',
@@ -445,7 +445,7 @@ export function MainnetSetupPage() {
 
         {/* Step 2 — Vercel KV notice */}
         <div style={{
-          background: 'rgba(59,130,246,0.06)', border: '1px solid rgba(59,130,246,0.15)',
+          background: 'rgba(37,99,235,0.06)', border: '1px solid rgba(37,99,235,0.15)',
           borderRadius: 14, padding: '14px 16px', marginBottom: 16,
         }}>
           <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--nan-blue)', marginBottom: 6 }}>

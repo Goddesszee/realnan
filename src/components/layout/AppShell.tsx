@@ -25,7 +25,7 @@ interface SearchResult {
   id: string; title: string; subtitle: string; category: string
   Icon: React.ElementType; iconColor: string; action: string
 }
-const NAN_BLUE = '#3B82F6'
+const NAN_BLUE = '#2563EB'
 const ALL_RESULTS: SearchResult[] = [
   { id:'send',        title:'Send USDC',           subtitle:'Transfer to any wallet',             category:'Payments',    Icon:ArrowRight,     iconColor:NAN_BLUE,      action:'send' },
   { id:'receive',     title:'Receive USDC',         subtitle:'Share your address',                 category:'Payments',    Icon:ArrowRight,     iconColor:'#10B981', action:'receive' },
@@ -88,8 +88,8 @@ function NanNameBadge({ onClaim, C }: { onClaim: () => void; C: ReturnType<typeo
           display: 'flex', alignItems: 'center', gap: 6,
           padding: '6px 12px',
           borderRadius: 20,
-          border: `1px solid rgba(59,130,246,0.28)`,
-          background: 'rgba(59,130,246,0.08)',
+          border: `1px solid rgba(37,99,235,0.28)`,
+          background: 'rgba(37,99,235,0.08)',
           cursor: 'pointer',
           fontFamily: F,
           WebkitTapHighlightColor: 'transparent',
@@ -245,8 +245,8 @@ function CommandPalette({ onClose, onGo }: { onClose: () => void; onGo: (action:
                     style={{
                       width: '100%', display: 'flex', alignItems: 'center', gap: 12,
                       padding: '9px 10px', borderRadius: 10,
-                      border: `1px solid ${active ? 'rgba(59,130,246,0.28)' : 'transparent'}`,
-                      background: active ? 'rgba(59,130,246,0.08)' : 'transparent',
+                      border: `1px solid ${active ? 'rgba(37,99,235,0.28)' : 'transparent'}`,
+                      background: active ? 'rgba(37,99,235,0.08)' : 'transparent',
                       cursor: 'pointer', fontFamily: F, textAlign: 'left', transition: 'all 0.08s',
                     }}
                   >
@@ -367,7 +367,7 @@ function SideNavBtn({
       style={{
         width: '100%', display: 'flex', alignItems: 'center', gap: 11,
         padding: '9px 12px', borderRadius: 10,
-        border: `1px solid ${isActive ? 'rgba(59,130,246,0.28)' : 'transparent'}`,
+        border: `1px solid ${isActive ? 'rgba(37,99,235,0.28)' : 'transparent'}`,
         background: isActive ? 'rgba(8,102,245,0.1)' : 'transparent',
         cursor: 'pointer', transition: 'all 0.12s', fontFamily: F, marginBottom: 2,
         WebkitTapHighlightColor: 'transparent',
@@ -375,8 +375,8 @@ function SideNavBtn({
     >
       <div style={{
         width: 32, height: 32, borderRadius: 8, flexShrink: 0,
-        background: isActive ? 'rgba(59,130,246,0.15)' : C.surf2,
-        border: `1px solid ${isActive ? 'rgba(59,130,246,0.30)' : C.bdr}`,
+        background: isActive ? 'rgba(37,99,235,0.15)' : C.surf2,
+        border: `1px solid ${isActive ? 'rgba(37,99,235,0.30)' : C.bdr}`,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>
         <Icon size={15} color={isActive ? NAN_BLUE : C.t2} />
@@ -385,7 +385,7 @@ function SideNavBtn({
         <div style={{ fontSize: 13, fontWeight: 600, color: isActive ? NAN_BLUE : C.text, lineHeight: 1.2 }}>{label}</div>
         {showDesc && <div style={{ fontSize: 11, color: C.t3, marginTop: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{desc}</div>}
       </div>
-      <ChevronRight size={12} color={isActive ? 'rgba(59,130,246,0.45)' : C.t3} />
+      <ChevronRight size={12} color={isActive ? 'rgba(37,99,235,0.45)' : C.t3} />
     </button>
   )
 }
@@ -766,7 +766,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 const isActive = activeView === id
                 return (
                   <button key={`${id}-${label}`} onClick={() => go(id)} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 11, padding: '9px 10px', borderRadius: 10, border: `1px solid ${isActive ? C.blueBd : 'transparent'}`, background: isActive ? C.blueDim : 'transparent', cursor: 'pointer', transition: 'all 0.12s', fontFamily: F, marginBottom: 2, WebkitTapHighlightColor: 'transparent' }}>
-                    <div style={{ width: 32, height: 32, borderRadius: 8, flexShrink: 0, background: isActive ? 'rgba(59,130,246,0.15)' : C.surf2, border: `1px solid ${isActive ? C.blueBd : C.bdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div style={{ width: 32, height: 32, borderRadius: 8, flexShrink: 0, background: isActive ? 'rgba(37,99,235,0.15)' : C.surf2, border: `1px solid ${isActive ? C.blueBd : C.bdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <Icon size={15} color={isActive ? C.blue : C.t2} />
                     </div>
                     <div style={{ flex: 1, textAlign: 'left', minWidth: 0 }}>

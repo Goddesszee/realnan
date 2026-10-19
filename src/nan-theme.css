@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════
    NAN DESIGN SYSTEM — v5.0
-   Brand: Electric Blue #3B82F6 · Deep Navy #0B0F19 · White #F9FAFB
+   Brand: Electric Blue #2563EB · Deep Navy #0B0F19 · White #F9FAFB
    Premium, professional, clean. Blue for actions — nowhere else.
 ═══════════════════════════════════════════════════════ */
 
@@ -17,9 +17,9 @@
   --nan-border-2:  rgba(255,255,255,0.13);
 
   /* ── Brand blue — single source of truth ── */
-  --nan-blue:       #3B82F6;
-  --nan-blue-dim:   rgba(59,130,246,0.10);
-  --nan-blue-glow:  rgba(59,130,246,0.22);
+  --nan-blue:       #2563EB;
+  --nan-blue-dim:   rgba(37,99,235,0.10);
+  --nan-blue-glow:  rgba(37,99,235,0.22);
   --nan-blue-hover: #2563EB;
 
   /* ── Text ── */
@@ -225,11 +225,11 @@ html, body, #root {
 
 .nan-btn-primary {
   background: var(--nan-blue); color: #fff;
-  box-shadow: 0 2px 12px rgba(59,130,246,0.28);
+  box-shadow: 0 2px 12px rgba(37,99,235,0.28);
 }
 .nan-btn-primary:hover:not(:disabled) {
   background: var(--nan-blue-hover);
-  box-shadow: 0 4px 20px rgba(59,130,246,0.38);
+  box-shadow: 0 4px 20px rgba(37,99,235,0.38);
 }
 
 .nan-btn-secondary {
@@ -398,7 +398,7 @@ html, body, #root {
 }
 .nan-action-btn:hover { background: var(--nan-surface-2); border-color: var(--nan-border-2); transform: translateY(-1px); }
 .nan-action-btn.primary-action { background: var(--nan-blue-dim); border-color: var(--nan-blue-glow); }
-.nan-action-btn.primary-action:hover { background: rgba(59,130,246,0.16); }
+.nan-action-btn.primary-action:hover { background: rgba(37,99,235,0.16); }
 .nan-action-icon {
   width: 36px; height: 36px; border-radius: 10px;
   display: flex; align-items: center; justify-content: center;

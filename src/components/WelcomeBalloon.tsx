@@ -119,7 +119,7 @@ export function WelcomeBalloon() {
       <div style={{
         position: 'relative', zIndex: 1,
         background: 'linear-gradient(155deg, #08102A 0%, #0D1A40 55%, #08102A 100%)',
-        border: '1.5px solid rgba(59,130,246,0.35)',
+        border: '1.5px solid rgba(37,99,235,0.35)',
         borderRadius: 32,
         padding: '48px 36px 36px',
         maxWidth: 340, width: '88%',
@@ -132,7 +132,7 @@ export function WelcomeBalloon() {
         {/* Animated glow border */}
         <div style={{
           position: 'absolute', inset: -1, borderRadius: 33,
-          background: 'linear-gradient(135deg, rgba(59,130,246,0.45), rgba(16,185,129,0.15), rgba(59,130,246,0.45))',
+          background: 'linear-gradient(135deg, rgba(37,99,235,0.45), rgba(16,185,129,0.15), rgba(37,99,235,0.45))',
           zIndex: -1,
           animation: 'wb-glow 2.5s ease-in-out infinite alternate',
         }} />
@@ -170,8 +170,8 @@ export function WelcomeBalloon() {
         {/* Name badge */}
         <div style={{
           display: 'inline-flex', alignItems: 'center', gap: 8,
-          background: 'rgba(59,130,246,0.15)',
-          border: '1px solid rgba(59,130,246,0.35)',
+          background: 'rgba(37,99,235,0.15)',
+          border: '1px solid rgba(37,99,235,0.35)',
           borderRadius: 50, padding: '9px 20px',
           marginBottom: 24,
         }}>
@@ -206,7 +206,7 @@ export function WelcomeBalloon() {
           onClick={e => { e.stopPropagation(); dismiss() }}
           style={{
             width: '100%', padding: '15px',
-            background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)',
+            background: 'linear-gradient(135deg, #2563EB 0%, #2563EB 100%)',
             border: 'none', borderRadius: 16,
             color: '#fff', fontSize: 16, fontWeight: 800,
             cursor: 'pointer', fontFamily: F,

@@ -96,8 +96,8 @@ export function NotificationsPage() {
                 display: 'flex', alignItems: 'flex-start', gap: 12, padding: '14px 16px',
                 borderRadius: 22,
                 background: 'var(--nan-surface)',
-                border: `1px solid ${n.read ? 'var(--nan-bdr)' : 'rgba(59,130,246,0.30)'}`,
-                boxShadow: n.read ? 'none' : '0 2px 14px rgba(59,130,246,0.10)',
+                border: `1px solid ${n.read ? 'var(--nan-bdr)' : 'rgba(37,99,235,0.30)'}`,
+                boxShadow: n.read ? 'none' : '0 2px 14px rgba(37,99,235,0.10)',
                 cursor: (n.ticketId || n.type === 'invoice_paid' || n.type === 'invoice_claimed') ? 'pointer' : 'default',
                 transition: 'background 0.15s',
               }}

@@ -207,7 +207,7 @@ function WalletPanel({
           border: 'none', color: '#fff', fontSize: 16, fontWeight: 700,
           cursor: isDisabled ? 'not-allowed' : 'pointer', fontFamily: F,
           display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-          boxShadow: isDisabled ? 'none' : '0 4px 20px rgba(59,130,246,0.28)',
+          boxShadow: isDisabled ? 'none' : '0 4px 20px rgba(37,99,235,0.28)',
           transition: 'all 0.15s',
         }}
       >

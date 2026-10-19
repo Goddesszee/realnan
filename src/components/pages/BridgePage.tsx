@@ -1627,7 +1627,7 @@ export function BridgePage({ inCard = false }: { inCard?: boolean }) {
             fontFamily: F,
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
             transition: 'all 0.15s',
-            boxShadow: canBridge ? '0 4px 20px rgba(59,130,246,0.25)' : 'none',
+            boxShadow: canBridge ? '0 4px 20px rgba(37,99,235,0.25)' : 'none',
             WebkitTapHighlightColor: 'transparent',
           }}>
           {status === 'bridging'

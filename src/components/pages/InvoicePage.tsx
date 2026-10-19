@@ -70,8 +70,8 @@ function computeTotals(items: InvoiceLineItem[]) {
 
 const STATUS_META: Record<InvoiceStatus, { label: string; color: string; bg: string }> = {
   draft:          { label: 'Draft',    color: T3,    bg: SURF2 },
-  sent:           { label: 'Sent',     color: BLUE,  bg: 'rgba(59,130,246,0.10)' },
-  viewed:         { label: 'Viewed',   color: BLUE,  bg: 'rgba(59,130,246,0.10)' },
+  sent:           { label: 'Sent',     color: BLUE,  bg: 'rgba(37,99,235,0.10)' },
+  viewed:         { label: 'Viewed',   color: BLUE,  bg: 'rgba(37,99,235,0.10)' },
   partially_paid: { label: 'Partial',  color: AMBER, bg: 'rgba(245,158,11,0.10)' },
   paid:           { label: 'Paid',     color: GREEN, bg: 'rgba(34,197,94,0.10)' },
   overdue:        { label: 'Overdue',  color: RED,   bg: 'rgba(239,68,68,0.10)' },
@@ -146,7 +146,7 @@ function CurrencyPicker({ value, onChange }: { value: string; onChange: (v: stri
         <div style={{ position: 'absolute', top: 'calc(100% + 4px)', left: 0, right: 0, zIndex: 50, background: SURF2, border: `1px solid ${BDR}`, borderRadius: 12, overflow: 'hidden', boxShadow: '0 8px 24px rgba(0,0,0,0.4)' }}>
           {CURRENCIES.map(c => (
             <button key={c} type="button" onClick={() => { onChange(c); setOpen(false) }}
-              style={{ width: '100%', padding: '11px 14px', display: 'flex', alignItems: 'center', gap: 10, background: c === value ? 'rgba(59,130,246,0.10)' : 'transparent', border: 'none', cursor: 'pointer', fontFamily: F, borderBottom: c !== CURRENCIES[CURRENCIES.length - 1] ? `1px solid ${BDR}` : 'none' }}>
+              style={{ width: '100%', padding: '11px 14px', display: 'flex', alignItems: 'center', gap: 10, background: c === value ? 'rgba(37,99,235,0.10)' : 'transparent', border: 'none', cursor: 'pointer', fontFamily: F, borderBottom: c !== CURRENCIES[CURRENCIES.length - 1] ? `1px solid ${BDR}` : 'none' }}>
               <TokenLogo symbol={c} size={22} />
               <span style={{ fontSize: 14, fontWeight: 600, color: TEXT, flex: 1, textAlign: 'left' }}>{c}</span>
               {c === value && <div style={{ width: 18, height: 18, borderRadius: '50%', border: `2px solid ${BLUE}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><div style={{ width: 9, height: 9, borderRadius: '50%', background: BLUE }} /></div>}
@@ -494,7 +494,7 @@ export function InvoicePage() {
                 </div>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', flexWrap: delConfirm === inv.id ? 'wrap' : 'nowrap', gap: 6, marginTop: 12, paddingTop: 12, borderTop: `1px solid ${BDR}` }}>
-                <button onClick={() => copyLink(inv)} style={{ ...actionBtn, flex: 1, minWidth: 0, padding: '0 8px', justifyContent: 'center', background: 'rgba(59,130,246,0.10)', borderColor: 'rgba(59,130,246,0.25)', color: BLUE }}><Copy size={14} style={{ flexShrink: 0 }} /> {typeof window !== 'undefined' && window.innerWidth < 345 ? 'Copy' : 'Copy link'}</button>
+                <button onClick={() => copyLink(inv)} style={{ ...actionBtn, flex: 1, minWidth: 0, padding: '0 8px', justifyContent: 'center', background: 'rgba(37,99,235,0.10)', borderColor: 'rgba(37,99,235,0.25)', color: BLUE }}><Copy size={14} style={{ flexShrink: 0 }} /> {typeof window !== 'undefined' && window.innerWidth < 345 ? 'Copy' : 'Copy link'}</button>
                 <button onClick={() => doShare(inv)} style={{ ...actionBtn, flex: 1, minWidth: 0, padding: '0 8px', justifyContent: 'center' }}><Share2 size={14} style={{ flexShrink: 0 }} /> Share</button>
                 <button onClick={() => printInvoice(inv)} aria-label="Print" style={{ ...actionBtn, padding: 0, width: 34, flexShrink: 0, justifyContent: 'center' }}><Printer size={14} /></button>
                 <button onClick={() => shareOnWhatsApp(invoiceChaseText(inv, invoicePaymentLink(inv)))} aria-label={isInvoiceOverdue(inv) ? 'Send reminder on WhatsApp' : 'Send on WhatsApp'} style={{ ...actionBtn, padding: 0, width: 34, flexShrink: 0, justifyContent: 'center', color: '#128C7E' }}><MessageCircle size={14} /></button>
@@ -565,7 +565,7 @@ export function InvoicePage() {
           )
         })()}
 
-        <div style={{ background: 'rgba(59,130,246,0.06)', border: `1px solid rgba(59,130,246,0.12)`, borderRadius: 12, padding: '12px 14px', marginBottom: 14 }}>
+        <div style={{ background: 'rgba(37,99,235,0.06)', border: `1px solid rgba(37,99,235,0.12)`, borderRadius: 12, padding: '12px 14px', marginBottom: 14 }}>
           <div style={{ fontSize: 14, fontWeight: 700, color: TEXT, marginBottom: 8 }}>Payment link</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <div style={{ flex: 1, fontSize: 12, color: T2, fontFamily: 'monospace', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{payLink}</div>

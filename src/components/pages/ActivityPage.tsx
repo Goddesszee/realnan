@@ -170,7 +170,7 @@ function ReceiptModal({ item, onClose, ownAddress }: { item: ActivityItem; onClo
             <a href={txUrl} target="_blank" rel="noreferrer" style={{
               display: 'flex', alignItems: 'center', gap: 6, marginTop: 12,
               padding: '10px 14px', borderRadius: 10,
-              background: 'rgba(8,102,245,0.07)', border: '1px solid rgba(59,130,246,0.15)',
+              background: 'rgba(8,102,245,0.07)', border: '1px solid rgba(37,99,235,0.15)',
               color: 'var(--nan-blue)', fontSize: 12, fontWeight: 600, textDecoration: 'none',
             }}>
               <ExternalLink size={13} /> View on Explorer
@@ -185,7 +185,7 @@ function ReceiptModal({ item, onClose, ownAddress }: { item: ActivityItem; onClo
             padding: '13px', borderRadius: 12,
             background: 'var(--nan-blue)', border: 'none', color: '#fff',
             fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: "'Inter', sans-serif",
-            boxShadow: '0 4px 16px rgba(59,130,246,0.28)',
+            boxShadow: '0 4px 16px rgba(37,99,235,0.28)',
           }}>
             <Download size={15} /> Download
           </button>
@@ -448,7 +448,7 @@ export function ActivityPage() {
                                 fontSize: 11, color: BLUE, fontFamily: MONO,
                                 display: 'flex', alignItems: 'center', gap: 3,
                                 textDecoration: 'none', fontWeight: 600,
-                                background: 'rgba(59,130,246,0.08)',
+                                background: 'rgba(37,99,235,0.08)',
                                 padding: '3px 7px', borderRadius: 6,
                               }}
                             >

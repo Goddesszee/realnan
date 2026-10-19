@@ -160,7 +160,7 @@ export function SettingsPage() {
           sub={editingLimits ? undefined : `${agentPermissions.dailyLimit} USDC/day`}
           right={editingLimits ? (
             <input type="number" value={daily} onChange={e => setDaily(e.target.value)}
-              style={{ width:90, padding:'6px 10px', border:`1px solid rgba(59,130,246,0.22)`, borderRadius:8, fontSize:13, fontFamily:MONO, color:TEXT, background:SURF2, outline:'none', textAlign:'right' }}
+              style={{ width:90, padding:'6px 10px', border:`1px solid rgba(37,99,235,0.22)`, borderRadius:8, fontSize:13, fontFamily:MONO, color:TEXT, background:SURF2, outline:'none', textAlign:'right' }}
               placeholder="USDC" />
           ) : undefined}
         />
@@ -170,7 +170,7 @@ export function SettingsPage() {
           sub={editingLimits ? undefined : `${agentPermissions.perTxLimit} USDC/tx`}
           right={editingLimits ? (
             <input type="number" value={perTx} onChange={e => setPerTx(e.target.value)}
-              style={{ width:90, padding:'6px 10px', border:`1px solid rgba(59,130,246,0.22)`, borderRadius:8, fontSize:13, fontFamily:MONO, color:TEXT, background:SURF2, outline:'none', textAlign:'right' }}
+              style={{ width:90, padding:'6px 10px', border:`1px solid rgba(37,99,235,0.22)`, borderRadius:8, fontSize:13, fontFamily:MONO, color:TEXT, background:SURF2, outline:'none', textAlign:'right' }}
               placeholder="USDC" />
           ) : undefined}
           noBorder

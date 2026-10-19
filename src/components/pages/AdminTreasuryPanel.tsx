@@ -135,7 +135,7 @@ function ContractCard({ kind, address, label }: { kind: Kind; address: `0x${stri
       )}
       {me && problem && !busy && <div style={{ fontSize: 11, color: '#F59E0B', marginTop: 8 }}>{problem}</div>}
       {lastTx && (
-        <a href={buildTxExplorerUrl(ARC_CHAIN_ID, lastTx) ?? '#'} target="_blank" rel="noreferrer" style={{ display: 'block', fontSize: 12, color: '#3B82F6', marginTop: 10 }}>View last withdrawal ↗</a>
+        <a href={buildTxExplorerUrl(ARC_CHAIN_ID, lastTx) ?? '#'} target="_blank" rel="noreferrer" style={{ display: 'block', fontSize: 12, color: '#2563EB', marginTop: 10 }}>View last withdrawal ↗</a>
       )}
     </div>
   )

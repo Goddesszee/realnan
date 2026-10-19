@@ -182,7 +182,7 @@ function ServiceCard({ svc, onView, C }: { svc: MarketplaceService; onView: (s: 
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
         <div style={{
           width: 38, height: 38, borderRadius: 11, flexShrink: 0,
-          background: 'rgba(59,130,246,0.10)', border: '1px solid rgba(59,130,246,0.14)',
+          background: 'rgba(37,99,235,0.10)', border: '1px solid rgba(37,99,235,0.14)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>
           <CategoryIcon cat={svc.category} size={16} color={BLUE} strokeWidth={1.8} />
@@ -209,7 +209,7 @@ function ServiceCard({ svc, onView, C }: { svc: MarketplaceService; onView: (s: 
             </div>
             <span style={{
               fontSize: 10, fontWeight: 600, color: BLUE,
-              background: 'rgba(59,130,246,0.08)', border: '1px solid rgba(59,130,246,0.15)',
+              background: 'rgba(37,99,235,0.08)', border: '1px solid rgba(37,99,235,0.15)',
               borderRadius: 6, padding: '1px 6px',
             }}>{paymentShort(svc.payment_methods)}</span>
           </div>
@@ -294,7 +294,7 @@ function ServiceDetail({ svc, onBack, C }: {
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
           <div style={{
             width: 46, height: 46, borderRadius: 14, flexShrink: 0,
-            background: 'rgba(59,130,246,0.10)', border: '1px solid rgba(8,102,245,0.2)',
+            background: 'rgba(37,99,235,0.10)', border: '1px solid rgba(8,102,245,0.2)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}>
             <CategoryIcon cat={svc.category} size={20} color={BLUE} strokeWidth={1.7} />
@@ -329,7 +329,7 @@ function ServiceDetail({ svc, onBack, C }: {
 
       {/* Payment mechanism explanation */}
       <div style={{
-        background: 'rgba(8,102,245,0.05)', border: '1px solid rgba(59,130,246,0.12)',
+        background: 'rgba(8,102,245,0.05)', border: '1px solid rgba(37,99,235,0.12)',
         borderRadius: 12, padding: '11px 14px',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 5 }}>
@@ -578,7 +578,7 @@ export function AgentServicesTab({ C }: Props) {
 
       {/* Header */}
       <div style={{
-        background: 'rgba(8,102,245,0.07)', border: '1px solid rgba(59,130,246,0.14)',
+        background: 'rgba(8,102,245,0.07)', border: '1px solid rgba(37,99,235,0.14)',
         borderRadius: 14, padding: '14px 16px',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 5 }}>
@@ -592,7 +592,7 @@ export function AgentServicesTab({ C }: Props) {
           <button
             onClick={() => void load()}
             style={{
-              width: 28, height: 28, borderRadius: 8, background: 'rgba(59,130,246,0.10)',
+              width: 28, height: 28, borderRadius: 8, background: 'rgba(37,99,235,0.10)',
               border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center',
               cursor: 'pointer', WebkitTapHighlightColor: 'transparent',
             }}
