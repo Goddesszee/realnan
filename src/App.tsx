@@ -6,6 +6,7 @@ import { PaymentRequestPayPage } from './components/pages/PaymentRequestPayPage'
 import { PayByNamePage } from './components/pages/PayByNamePage'
 import { LanguageFab } from './components/LanguageFab'
 import { NairaRampPage } from './components/pages/NairaRampPage'
+import { CurrencyConverterPage } from './components/pages/CurrencyConverterPage'
 import { nairaRampVisible } from './lib/naira-ramp'
 import { PayByInvoicePage } from './components/pages/PayByInvoicePage'
 import { InvoicePage } from './components/pages/InvoicePage'
@@ -337,6 +338,7 @@ export default function App() {
         {activeView === 'onramp' && <OnrampPage />}
         {activeView === 'naira-in' && nairaRampVisible() && <NairaRampPage mode="in" />}
         {activeView === 'naira-opay' && nairaRampVisible() && <NairaRampPage mode="in" initialMethod="opay" />}
+        {activeView === 'converter' && <CurrencyConverterPage />}
         {activeView === 'cashout' && nairaRampVisible() && <NairaRampPage mode="out" />}
         {activeView === 'faucet' && <FaucetPage />}
         {activeView === 'activity' && <ActivityPage />}

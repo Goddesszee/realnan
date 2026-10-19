@@ -5,7 +5,7 @@ import { currencyFlag, type DisplayCurrency } from './display-currency'
 
 const F = "'Inter', -apple-system, sans-serif"
 
-function Sheet({ list, current, onPick, onClose }: { list: DisplayCurrency[]; current: string; onPick: (c: string) => void; onClose: () => void }) {
+function Sheet({ list, current, onPick, onClose, title }: { title: string; list: DisplayCurrency[]; current: string; onPick: (c: string) => void; onClose: () => void }) {
   const [q, setQ] = useState('')
   const needle = q.trim().toLowerCase()
   const shown = needle ? list.filter(c => c.code.toLowerCase().includes(needle) || c.name.toLowerCase().includes(needle)) : list
@@ -14,7 +14,7 @@ function Sheet({ list, current, onPick, onClose }: { list: DisplayCurrency[]; cu
       <div onClick={e => e.stopPropagation()} role="dialog" aria-label="Choose currency"
         style={{ width: '100%', maxWidth: 480, maxHeight: '80vh', display: 'flex', flexDirection: 'column', background: 'var(--nan-surface, #151B2D)', color: 'var(--nan-text, #fff)', borderTopLeftRadius: 20, borderTopRightRadius: 20, border: '1px solid var(--nan-bdr, rgba(255,255,255,0.1))', padding: '16px 16px calc(16px + env(safe-area-inset-bottom))' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-          <div style={{ fontSize: 16, fontWeight: 700 }}>Show balance in</div>
+          <div style={{ fontSize: 16, fontWeight: 700 }}>{title}</div>
           <button onClick={onClose} aria-label="Close" style={{ background: 'none', border: 'none', color: 'var(--nan-text3, rgba(255,255,255,0.5))', fontSize: 22, cursor: 'pointer', lineHeight: 1 }}>×</button>
         </div>
         <input value={q} onChange={e => setQ(e.target.value)} placeholder="Search currency or country" aria-label="Search currency"
@@ -36,10 +36,10 @@ function Sheet({ list, current, onPick, onClose }: { list: DisplayCurrency[]; cu
   )
 }
 
-export function openCurrencyPicker(list: DisplayCurrency[], current: string, onPick: (code: string) => void) {
+export function openCurrencyPicker(list: DisplayCurrency[], current: string, onPick: (code: string) => void, title = 'Show balance in') {
   const host = document.createElement('div')
   document.body.appendChild(host)
   const root = createRoot(host)
   const close = () => { root.unmount(); host.remove() }
-  root.render(<Sheet list={list} current={current} onPick={onPick} onClose={close} />)
+  root.render(<Sheet title={title} list={list} current={current} onPick={onPick} onClose={close} />)
 }

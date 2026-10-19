@@ -208,3 +208,17 @@ export function useFxRate(code: string): number | undefined {
   }, [])
   return cache?.rates[code]
 }
+
+/** All live rates (units per 1 USD), the currency list and when they were fetched. For the converter. */
+export function useFxRates() {
+  const [cache, setCache] = useState<RateCache | null>(readCache)
+  useEffect(() => {
+    const sync = () => setCache(readCache())
+    listeners.add(sync)
+    let live = true
+    void ensureRates().then(c => { if (live && c) setCache(c) })
+    startPolling()
+    return () => { live = false; listeners.delete(sync); stopPolling() }
+  }, [])
+  return { rates: cache?.rates, updatedAt: cache ? new Date(cache.at) : null }
+}

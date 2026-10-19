@@ -309,6 +309,7 @@ const SIDEBAR_SECTIONS = [
   { title: 'Finance', items: [
     { id: 'trade',     label: 'Trade',     Icon: ArrowLeftRight, desc: 'Swap & bridge USDC' },
     { id: 'gateway',   label: 'Gateway',   Icon: Layers,         desc: 'Unified cross-chain balance' },
+    { id: 'converter', label: 'Currency converter', Icon: ArrowLeftRight, desc: 'Live rates, every currency' },
   ]},
   { title: 'Automation', items: [
     { id: 'agent',        label: 'AI Agents',     Icon: Bot,    desc: 'Create and manage agents' },
