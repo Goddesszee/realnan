@@ -45,6 +45,7 @@ import { TermsPage, PrivacyPage } from './components/pages/LegalPage'
 import { NanNamePage } from './components/pages/NanNamePage'
 import { ReferralPage } from './components/pages/ReferralPage'
 import { MainnetSetupPage } from './components/pages/MainnetSetupPage'
+import { MorePage } from './components/pages/MorePage'
 import { WelcomeBalloon } from './components/WelcomeBalloon'
 import { useActivityStream } from './hooks/useActivityStream'
 import { usePresence } from './hooks/usePresence'
@@ -362,6 +363,7 @@ export default function App() {
         {activeView === 'referral' && <ReferralPage />}
         {activeView === 'invoices' && <InvoicePage />}
         {activeView === 'payroll' && <BatchPayrollPage />}
+        {activeView === 'more' && <MorePage />}
         {activeView === 'terms' && <TermsPage />}
         {activeView === 'privacy' && <PrivacyPage />}
       </ErrorBoundary>

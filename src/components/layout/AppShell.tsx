@@ -339,7 +339,7 @@ const SIDEBAR_SECTIONS = [
 //  - No "Swap" (complex enough to be desktop-first)
 // - No "Bridge" (it's in the bottom nav) and no "Help & Info" section (Support, FAQ, Feedback,
 //   Suggestions and About now live on the Profile page).
-const MOBILE_DRAWER_SECTIONS = SIDEBAR_SECTIONS.filter(s => s.title !== 'Help & Info').map(s => ({
+export const MOBILE_DRAWER_SECTIONS = SIDEBAR_SECTIONS.filter(s => s.title !== 'Help & Info').map(s => ({
   ...s,
   items: s.items.filter(i =>
     i.id !== 'home' &&
@@ -730,138 +730,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <div style={{ position: 'fixed', top: 16, left: '50%', transform: 'translateX(-50%)', background: C.blue, color: '#fff', padding: '7px 18px', borderRadius: 20, fontSize: 12, fontWeight: 600, zIndex: 300, pointerEvents: 'none' }}>Admin unlocked</div>
       )}
 
-      {/* Drawer overlay */}
-      {drawerOpen && (
-        <div onClick={() => setDrawerOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 105, background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)', WebkitBackdropFilter: 'blur(4px)' }} />
-      )}
-
-      {/* Mobile side drawer */}
-      <div style={{
-        position: 'fixed', top: 0, right: 0,
-        /* height hugs content, capped at full viewport */
-        maxHeight: '100dvh', height: 'auto',
-        width: 'min(264px, calc(100vw - 40px))', zIndex: 110,
-        background: C.isDark ? '#0F1420' : '#FFFFFF',
-        boxShadow: C.isDark ? '-20px 0 60px rgba(0,0,0,0.7)' : '-4px 0 32px rgba(0,0,0,0.12)',
-        transform: drawerOpen ? 'translateX(0)' : 'translateX(100%)',
-        transition: 'transform 0.26s cubic-bezier(0.4,0,0.2,1)',
-        display: 'flex', flexDirection: 'column',
-        borderLeft: `1px solid ${C.bdr}`,
-        borderBottomLeftRadius: 20,
-        overflowY: 'auto',
-        overflowX: 'hidden',
-      }}>
-        {/* ── Profile header ── */}
-        {(() => {
-          const drawerAuth = useAppStore.getState().auth
-          const drawerProfile = useAppStore.getState().profile
-          const drawerHandle = useAppStore.getState().nanHandle
-          const name = drawerProfile?.displayName || drawerAuth?.email?.split('@')[0] || 'Your account'
-          const handle = drawerHandle ? `@${drawerHandle}` : drawerAuth?.email ?? ''
-          const avatar = drawerProfile?.avatarUrl
-          const initials = name.slice(0, 2).toUpperCase()
-          return (
-            <div style={{
-              flexShrink: 0,
-              padding: '10px 14px 12px',
-              borderBottom: `1px solid ${C.bdr}`,
-            }}>
-              {/* Top row: logo (admin tap) + close */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-                <button onClick={handleLogoTap} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', display: 'flex', alignItems: 'center', WebkitTapHighlightColor: 'transparent' }}>
-                  <NanLogo height={24} />
-                </button>
-                <button onClick={() => setDrawerOpen(false)} aria-label="Close menu" style={{
-                  width: 28, height: 28, borderRadius: 8,
-                  background: C.surf2, border: `1px solid ${C.bdr}`,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  cursor: 'pointer',
-                }}>
-                  <X size={13} color={C.t2} />
-                </button>
-              </div>
-              {/* Avatar + name */}
-              <button onClick={() => go('profile')} style={{
-                display: 'flex', alignItems: 'center', gap: 12,
-                background: 'none', border: 'none', cursor: 'pointer',
-                fontFamily: F, textAlign: 'left', padding: 0,
-                width: '100%', WebkitTapHighlightColor: 'transparent',
-              }}>
-                <div style={{
-                  width: 40, height: 40, borderRadius: 20, flexShrink: 0,
-                  background: C.isDark ? 'rgba(37,99,235,0.12)' : 'rgba(37,99,235,0.08)',
-                  border: `2px solid ${C.bdr}`,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  overflow: 'hidden',
-                }}>
-                  {avatar
-                    ? <img src={avatar} alt={name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    : <span style={{ fontSize: 15, fontWeight: 700, color: C.blue }}>{initials}</span>
-                  }
-                </div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 15, fontWeight: 700, color: C.text, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{name}</div>
-                  <div style={{ fontSize: 12, color: C.t2, marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{handle}</div>
-                </div>
-                <ChevronRight size={14} color={C.t3} style={{ flexShrink: 0 }} />
-              </button>
-            </div>
-          )
-        })()}
-
-        {/* ── Nav sections ── */}
-        <div style={{
-          overflowX: 'hidden',
-          padding: '4px 8px 4px',
-        }}>
-          {MOBILE_DRAWER_SECTIONS.map((section, si) => (
-            <div key={section.title} style={{ marginTop: si === 0 ? 2 : 4 }}>
-              {/* Section label */}
-              <div style={{
-                fontSize: 10, fontWeight: 600, color: C.t3,
-                textTransform: 'uppercase', letterSpacing: '0.07em',
-                padding: '4px 10px 2px',
-              }}>{section.title}</div>
-
-              {/* Items */}
-              {section.items.map(({ id, label, Icon }) => {
-                const isActive = activeView === id
-                return (
-                  <button key={`${id}-${label}`} onClick={() => go(id)} style={{
-                    width: '100%', display: 'flex', alignItems: 'center', gap: 9,
-                    padding: '5px 10px', borderRadius: 9,
-                    border: 'none',
-                    background: isActive ? C.blueDim : 'transparent',
-                    cursor: 'pointer', transition: 'background 0.12s',
-                    fontFamily: F, marginBottom: 1,
-                    WebkitTapHighlightColor: 'transparent',
-                    boxSizing: 'border-box',
-                  }}>
-                    <div style={{
-                      width: 26, height: 26, borderRadius: 7, flexShrink: 0,
-                      background: isActive ? C.blue : C.isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      transition: 'background 0.12s',
-                    }}>
-                      <Icon size={13} color={isActive ? '#fff' : C.t2} strokeWidth={isActive ? 2.2 : 1.8} />
-                    </div>
-                    <span style={{
-                      flex: 1, textAlign: 'left', fontSize: 13,
-                      fontWeight: isActive ? 700 : 500,
-                      color: isActive ? C.blue : C.text,
-                    }}>{label}</span>
-                    {isActive && <div style={{ width: 4, height: 4, borderRadius: '50%', background: C.blue, flexShrink: 0 }} />}
-                  </button>
-                )
-              })}
-            </div>
-          ))}
-        </div>
-
-        {/* safe-area bottom pad */}
-        <div style={{ flexShrink: 0, height: 'max(8px, env(safe-area-inset-bottom))' }} />
-      </div>
-
       {paletteOpen && <CommandPalette onClose={() => setPaletteOpen(false)} onGo={go} />}
 
       {/* Wrong-chain banner — only shown on mobile when wagmi wallet is on wrong network */}
@@ -921,7 +789,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               </button>
             )
           })}
-          <button onClick={() => setDrawerOpen(v => !v)} aria-label="More" style={{
+          <button onClick={() => go('more')} aria-label="More" style={{
             flex: 1, display: 'flex', flexDirection: 'column',
             alignItems: 'center', justifyContent: 'flex-start', gap: 3,
             paddingTop: 10, paddingBottom: 12,
@@ -932,13 +800,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           }}>
             <div style={{
               width: 36, height: 28, borderRadius: 14,
-              background: drawerOpen ? C.blue : 'transparent',
+              background: activeView === 'more' ? C.blue : 'transparent',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               transition: 'background 0.15s', flexShrink: 0,
             }}>
-              <Menu size={17} color={drawerOpen ? '#fff' : C.t3} strokeWidth={drawerOpen ? 2.2 : 1.7} />
+              <Menu size={17} color={activeView === 'more' ? '#fff' : C.t3} strokeWidth={activeView === 'more' ? 2.2 : 1.7} />
             </div>
-            <span style={{ fontSize: 10, fontWeight: drawerOpen ? 700 : 500, color: drawerOpen ? C.blue : C.t3, lineHeight: 1 }}>More</span>
+            <span style={{ fontSize: 10, fontWeight: activeView === 'more' ? 700 : 500, color: activeView === 'more' ? C.blue : C.t3, lineHeight: 1 }}>More</span>
           </button>
         </div>
       </nav>
