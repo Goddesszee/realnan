@@ -248,7 +248,7 @@ function EmailScreen({ onBack, onSend, C }: {
           onKeyDown={e => e.key === 'Enter' && void submit()}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
-          autoFocus
+
           style={{
             width: '100%', padding: '15px 16px 15px 46px',
             border: `1.5px solid ${error ? '#EF4444' : focused ? BLUE : C.bdr}`,
