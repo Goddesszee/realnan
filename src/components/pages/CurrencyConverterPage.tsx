@@ -68,16 +68,20 @@ export function CurrencyConverterPage() {
     [rates],
   )
   const nameOf = (c: string) => list.find(x => x.code === c)?.name ?? c
-  const rateOf = (c: string) => (c === 'USD' ? 1 : rates?.[c])
+  const fxOf = (c: string) => (c === 'USD' ? 1 : rates?.[c])
+  const value = parseFloat(amount.replace(/,/g, ''))
+
+  // Live P2P market rate: used for naira (either side) and for any USD pair, when available.
+  const p2pFiat = from === 'NGN' || to === 'NGN' ? 'NGN' : from === 'USD' && to !== 'USD' ? to : to === 'USD' && from !== 'USD' ? from : null
+  const p2p = useP2P(p2pFiat)
+  const p2pMid = p2p ? (p2p.buy + p2p.sell) / 2 : null
+  const usingP2P = Boolean(p2p && p2pFiat && (from === p2pFiat || to === p2pFiat))
+  // Units per 1 USD: the P2P middle price for the P2P currency, the market rate for everything else.
+  const rateOf = (c: string) => (p2pMid && c === p2pFiat ? p2pMid : fxOf(c))
   const rFrom = rateOf(from), rTo = rateOf(to)
   const ready = Boolean(rFrom && rTo)
-  const value = parseFloat(amount.replace(/,/g, ''))
   const result = ready && Number.isFinite(value) ? (value / rFrom!) * rTo! : null
   const unit = ready ? rTo! / rFrom! : null
-
-  // P2P applies when one side is US dollars and the other is the local currency.
-  const p2pFiat = from === 'USD' && to !== 'USD' ? to : to === 'USD' && from !== 'USD' ? from : null
-  const p2p = useP2P(p2pFiat)
   const p2pUsd = p2pFiat && Number.isFinite(value) ? (from === 'USD' ? value : null) : null
   const p2pLocal = p2pFiat && Number.isFinite(value) ? (to === 'USD' ? value : null) : null
 
@@ -132,7 +136,10 @@ export function CurrencyConverterPage() {
 
       <div style={{ fontSize: 13, color: T2, textAlign: 'center', marginBottom: 18 }}>
         {unit !== null ? <>1 {from} = <b style={{ color: TEXT }}>{money(unit)} {to}</b></> : (rates ? 'No rate for this pair' : 'Getting live rates…')}
-        {unit !== null && (sourceAt || updatedAt) && <div style={{ fontSize: 11, color: T3, marginTop: 3 }}>
+        {unit !== null && usingP2P && p2p && <div style={{ fontSize: 11, color: T3, marginTop: 3 }}>
+          Live P2P market rate ({p2p.source}), updated {new Date(p2p.at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+        </div>}
+        {unit !== null && !usingP2P && (sourceAt || updatedAt) && <div style={{ fontSize: 11, color: T3, marginTop: 3 }}>
           {sourceAt
             ? <>Market rate set {sourceAt.toLocaleString([], { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</>
             : <>Checked {updatedAt!.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</>}
