@@ -22,18 +22,9 @@ import { showIncomeStatement } from '../../lib/income-statement'
 import { shareOnWhatsApp, invoiceChaseText, isInvoiceOverdue } from '../../lib/whatsapp'
 import { useAccount } from 'wagmi'
 import { TokenLogo } from '../ui/TokenLogo'
+import { useNanTheme } from '../../hooks/useNanTheme'
 
-// ── Design tokens ────────────────────────────────────────────────────────────
-const F     = "'Inter', -apple-system, sans-serif"
-const SURF  = 'var(--nan-surface, #151B2D)'
-const SURF2 = 'var(--nan-surface2, #1C2340)'
-const BDR   = 'var(--nan-bdr, rgba(255,255,255,0.10))'
-const BLUE  = 'var(--nan-blue)'
-const TEXT  = 'var(--nan-text, #FFFFFF)'
-const T2    = 'var(--nan-text2, rgba(255,255,255,0.65))'
-const T3    = 'var(--nan-text3, rgba(255,255,255,0.40))'
-const GREEN = 'var(--nan-green)'
-const RED   = 'var(--nan-red)'
+const F = "'Inter', -apple-system, sans-serif"
 const AMBER = '#F59E0B'
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -68,53 +59,36 @@ function computeTotals(items: InvoiceLineItem[]) {
   return { subtotal, discountTotal, taxTotal, total: taxBase + taxTotal }
 }
 
-const STATUS_META: Record<InvoiceStatus, { label: string; color: string; bg: string }> = {
-  draft:          { label: 'Draft',    color: T3,    bg: SURF2 },
-  sent:           { label: 'Sent',     color: BLUE,  bg: 'rgba(37,99,235,0.10)' },
-  viewed:         { label: 'Viewed',   color: BLUE,  bg: 'rgba(37,99,235,0.10)' },
-  partially_paid: { label: 'Partial',  color: AMBER, bg: 'rgba(245,158,11,0.10)' },
-  paid:           { label: 'Paid',     color: GREEN, bg: 'rgba(34,197,94,0.10)' },
-  overdue:        { label: 'Overdue',  color: RED,   bg: 'rgba(239,68,68,0.10)' },
-  cancelled:      { label: 'Cancelled',color: T3,    bg: SURF2 },
+function makeStatusMeta(blue: string, green: string, red: string, t3: string, surf2: string): Record<InvoiceStatus, { label: string; color: string; bg: string }> {
+  return {
+    draft:          { label: 'Draft',     color: t3,    bg: surf2 },
+    sent:           { label: 'Sent',      color: blue,  bg: 'rgba(37,99,235,0.10)' },
+    viewed:         { label: 'Viewed',    color: blue,  bg: 'rgba(37,99,235,0.10)' },
+    partially_paid: { label: 'Partial',   color: AMBER, bg: 'rgba(245,158,11,0.10)' },
+    paid:           { label: 'Paid',      color: green, bg: 'rgba(34,197,94,0.10)' },
+    overdue:        { label: 'Overdue',   color: red,   bg: 'rgba(239,68,68,0.10)' },
+    cancelled:      { label: 'Cancelled', color: t3,    bg: surf2 },
+  }
 }
 
 // ── Shared sub-components ────────────────────────────────────────────────────
-function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
+function Field({ label, error, t2, red, children }: { label: string; error?: string; t2: string; red: string; children: React.ReactNode }) {
   return (
     <div>
-      <div style={{ fontSize: 13, fontWeight: 600, color: T2, marginBottom: 6 }}>{label.replace(/ \*$/, '')}{/\*$/.test(label) && <span style={{ color: RED }}> *</span>}</div>
+      <div style={{ fontSize: 13, fontWeight: 600, color: t2, marginBottom: 6 }}>{label.replace(/ \*$/, '')}{/\*$/.test(label) && <span style={{ color: red }}> *</span>}</div>
       {children}
-      {error && <div style={{ fontSize: 11, color: RED, marginTop: 4, display: 'flex', alignItems: 'center', gap: 4 }}><AlertCircle size={10} />{error}</div>}
+      {error && <div style={{ fontSize: 11, color: red, marginTop: 4, display: 'flex', alignItems: 'center', gap: 4 }}><AlertCircle size={10} />{error}</div>}
     </div>
   )
 }
 
-function StatusBadge({ status, isQuick }: { status: InvoiceStatus; isQuick?: boolean }) {
-  const m = STATUS_META[status] ?? STATUS_META.draft
+function StatusBadge({ status, isQuick, statusMeta }: { status: InvoiceStatus; isQuick?: boolean; statusMeta: ReturnType<typeof makeStatusMeta> }) {
+  const m = statusMeta[status] ?? statusMeta.draft
   return (
     <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 10, fontWeight: 700, padding: '3px 9px', borderRadius: 20, color: m.color, background: m.bg, border: `1px solid ${m.color}22`, whiteSpace: 'nowrap' }}>
       {isQuick && <Zap size={9} />}{m.label}
     </span>
   )
-}
-
-const inputBase: React.CSSProperties = {
-  width: '100%', boxSizing: 'border-box', padding: '12px 14px', minHeight: 46,
-  border: `1px solid ${BDR}`, borderRadius: 12,
-  fontFamily: F, fontSize: 15, outline: 'none',
-  color: TEXT, background: SURF2,
-}
-const btnPrimary: React.CSSProperties = {
-  flex: 1, height: 50, background: BLUE, color: '#fff',
-  border: 'none', borderRadius: 14, fontSize: 15, fontWeight: 700,
-  cursor: 'pointer', fontFamily: F, display: 'flex',
-  alignItems: 'center', justifyContent: 'center', gap: 6,
-}
-const btnGhost: React.CSSProperties = {
-  flex: 1, height: 50, background: 'transparent', color: T2,
-  border: `1px solid ${BDR}`, borderRadius: 14, fontSize: 15,
-  fontWeight: 600, cursor: 'pointer', fontFamily: F,
-  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
 }
 
 function emptyItem(): InvoiceLineItem {
@@ -137,19 +111,19 @@ function CurrencyPicker({ value, onChange }: { value: string; onChange: (v: stri
   return (
     <div ref={ref} style={{ position: 'relative' }}>
       <button type="button" onClick={() => setOpen(o => !o)}
-        style={{ width: '100%', boxSizing: 'border-box', padding: '8px 12px', border: `1px solid ${BDR}`, borderRadius: 10, fontFamily: F, fontSize: 14, outline: 'none', color: TEXT, background: SURF2, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8 }}>
+        style={{ width: '100%', boxSizing: 'border-box', padding: '8px 12px', border: '1px solid var(--nan-border)', borderRadius: 10, fontFamily: F, fontSize: 14, outline: 'none', color: 'var(--nan-text)', background: 'var(--nan-surface-2)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8 }}>
         <TokenLogo symbol={value} size={20} />
         <span style={{ flex: 1, textAlign: 'left', fontWeight: 600 }}>{value}</span>
-        <ChevronDown size={14} color={T2} style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s', flexShrink: 0 }} />
+        <ChevronDown size={14} color="var(--nan-text-2)" style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s', flexShrink: 0 }} />
       </button>
       {open && (
-        <div style={{ position: 'absolute', top: 'calc(100% + 4px)', left: 0, right: 0, zIndex: 50, background: SURF2, border: `1px solid ${BDR}`, borderRadius: 12, overflow: 'hidden', boxShadow: '0 8px 24px rgba(0,0,0,0.4)' }}>
+        <div style={{ position: 'absolute', top: 'calc(100% + 4px)', left: 0, right: 0, zIndex: 50, background: 'var(--nan-surface-2)', border: '1px solid var(--nan-border)', borderRadius: 12, overflow: 'hidden', boxShadow: '0 8px 24px rgba(0,0,0,0.18)' }}>
           {CURRENCIES.map(c => (
             <button key={c} type="button" onClick={() => { onChange(c); setOpen(false) }}
-              style={{ width: '100%', padding: '11px 14px', display: 'flex', alignItems: 'center', gap: 10, background: c === value ? 'rgba(37,99,235,0.10)' : 'transparent', border: 'none', cursor: 'pointer', fontFamily: F, borderBottom: c !== CURRENCIES[CURRENCIES.length - 1] ? `1px solid ${BDR}` : 'none' }}>
+              style={{ width: '100%', padding: '11px 14px', display: 'flex', alignItems: 'center', gap: 10, background: c === value ? 'rgba(37,99,235,0.10)' : 'transparent', border: 'none', cursor: 'pointer', fontFamily: F, borderBottom: c !== CURRENCIES[CURRENCIES.length - 1] ? '1px solid var(--nan-border)' : 'none' }}>
               <TokenLogo symbol={c} size={22} />
-              <span style={{ fontSize: 14, fontWeight: 600, color: TEXT, flex: 1, textAlign: 'left' }}>{c}</span>
-              {c === value && <div style={{ width: 18, height: 18, borderRadius: '50%', border: `2px solid ${BLUE}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><div style={{ width: 9, height: 9, borderRadius: '50%', background: BLUE }} /></div>}
+              <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--nan-text)', flex: 1, textAlign: 'left' }}>{c}</span>
+              {c === value && <div style={{ width: 18, height: 18, borderRadius: '50%', border: '2px solid var(--nan-blue)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><div style={{ width: 9, height: 9, borderRadius: '50%', background: 'var(--nan-blue)' }} /></div>}
             </button>
           ))}
         </div>
@@ -185,6 +159,38 @@ function emptyForm(defaultAddress = ''): DraftForm {
 
 // ── Main component ────────────────────────────────────────────────────────────
 export function InvoicePage() {
+  const C = useNanTheme()
+  // Theme-reactive shorthand locals (replaces module-level static vars)
+  const SURF  = C.surf
+  const SURF2 = C.surf2
+  const BDR   = C.bdr
+  const BLUE  = C.blue
+  const TEXT  = C.text
+  const T2    = C.t2
+  const T3    = C.t3
+  const GREEN = C.green
+  const RED   = C.red
+  const STATUS_META = makeStatusMeta(BLUE, GREEN, RED, T3, SURF2)
+
+  const inputBase: React.CSSProperties = {
+    width: '100%', boxSizing: 'border-box', padding: '12px 14px', minHeight: 46,
+    border: `1px solid ${BDR}`, borderRadius: 12,
+    fontFamily: F, fontSize: 15, outline: 'none',
+    color: TEXT, background: SURF2,
+  }
+  const btnPrimary: React.CSSProperties = {
+    flex: 1, height: 50, background: BLUE, color: '#fff',
+    border: 'none', borderRadius: 14, fontSize: 15, fontWeight: 700,
+    cursor: 'pointer', fontFamily: F, display: 'flex',
+    alignItems: 'center', justifyContent: 'center', gap: 6,
+  }
+  const btnGhost: React.CSSProperties = {
+    flex: 1, height: 50, background: 'transparent', color: T2,
+    border: `1px solid ${BDR}`, borderRadius: 14, fontSize: 15,
+    fontWeight: 600, cursor: 'pointer', fontFamily: F,
+    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+  }
+
   const localCcy = useDisplayCurrency()
   const { address: wagmiAddress } = useAccount()
   const { auth, profile, invoices, addInvoice, updateInvoice, removeInvoice, addContact } = useAppStore()
@@ -407,7 +413,7 @@ export function InvoicePage() {
             <div style={{ background: SURF, border: `1px solid ${BDR}`, borderRadius: 14, padding: '16px 16px 14px', marginBottom: 16 }}>
               <div style={{ fontSize: 11, fontWeight: 600, color: T3, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Waiting to be paid</div>
               <div style={{ marginTop: 6, display: 'flex', alignItems: 'baseline', gap: 7, flexWrap: 'wrap' }}>
-                <span style={{ fontSize: 'clamp(26px, 8vw, 32px)', fontWeight: 700, color: TEXT, letterSpacing: '-0.03em', lineHeight: 1.1, fontVariantNumeric: 'tabular-nums' }}>{fmt0(outstanding)}</span>
+                <span style={{ fontSize: 'clamp(22px, 7vw, 28px)', fontWeight: 800, color: TEXT, letterSpacing: '-0.03em', lineHeight: 1.1, fontVariantNumeric: 'tabular-nums' }}>{fmt0(outstanding)}</span>
                 <span style={{ fontSize: 13, fontWeight: 600, color: T3 }}>USDC</span>
               </div>
               <div style={{ marginTop: 12, paddingTop: 12, borderTop: `1px solid ${BDR}`, display: 'flex', gap: 18, flexWrap: 'wrap', fontSize: 13, color: T2 }}>
@@ -423,7 +429,7 @@ export function InvoicePage() {
                 const on = filterStatus === c.id
                 return (
                   <button key={c.id} role="tab" aria-selected={on} onClick={() => setFilterStatus(c.id)}
-                    style={{ flexShrink: 0, height: 36, padding: '0 14px', borderRadius: 999, border: `1px solid ${on ? BLUE : BDR}`, background: on ? BLUE : SURF2, color: on ? '#fff' : T2, fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: F, display: 'inline-flex', alignItems: 'center', gap: 7 }}>
+                    style={{ flexShrink: 0, height: 32, padding: '0 12px', borderRadius: 999, border: `1px solid ${on ? BLUE : BDR}`, background: on ? BLUE : SURF2, color: on ? '#fff' : T2, fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: F, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
                     {c.label}
                     <span style={{ fontSize: 11, fontWeight: 700, opacity: on ? 0.85 : 0.6 }}>{c.n}</span>
                   </button>
@@ -460,54 +466,73 @@ export function InvoicePage() {
           const who = (inv.customerName || 'Customer').trim()
           const hue = [...who].reduce((h, ch) => (h * 31 + ch.charCodeAt(0)) >>> 0, 7) % 360
           const amountStr = inv.total.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-          const actionBtn: React.CSSProperties = { height: 34, padding: '0 12px', borderRadius: 10, border: `1px solid ${BDR}`, background: SURF2, color: T2, fontSize: 12, fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: 6, cursor: 'pointer', fontFamily: F, whiteSpace: 'nowrap', flexShrink: 0 }
+          const iconBg = `hsl(${hue},55%,${C.isDark ? '22%' : '88%'})`
+          const iconColor = `hsl(${hue},60%,${C.isDark ? '72%' : '38%'})`
+          const actionBtn: React.CSSProperties = {
+            height: 32, padding: '0 10px', borderRadius: 8,
+            border: `1px solid ${BDR}`, background: SURF2, color: T2,
+            fontSize: 12, fontWeight: 600, display: 'inline-flex', alignItems: 'center',
+            gap: 5, cursor: 'pointer', fontFamily: F, whiteSpace: 'nowrap', flexShrink: 0,
+          }
           return (
-            <div key={inv.id} style={{ background: SURF, border: `1px solid ${BDR}`, borderRadius: 18, padding: 14 }}>
-              <button onClick={() => { setSelectedId(inv.id); setView('detail') }} style={{ width: '100%', background: 'none', border: 'none', cursor: 'pointer', padding: 0, textAlign: 'left', fontFamily: F, display: 'flex', alignItems: 'center', gap: 12 }}>
-                <div style={{ position: 'relative', width: 40, height: 40, borderRadius: 12, flexShrink: 0, background: SURF2, border: `1px solid ${BDR}`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: BLUE, fontSize: 16, fontWeight: 700 }}>
+            <div key={inv.id} style={{
+              background: SURF, border: `1px solid ${BDR}`,
+              borderRadius: 16, overflow: 'hidden',
+            }}>
+              {/* ── Clickable row ── */}
+              <button
+                onClick={() => { setSelectedId(inv.id); setView('detail') }}
+                style={{ width: '100%', background: 'none', border: 'none', cursor: 'pointer', padding: '14px 14px 12px', textAlign: 'left', fontFamily: F, display: 'flex', alignItems: 'center', gap: 12 }}
+              >
+                {/* Avatar */}
+                <div style={{ position: 'relative', width: 38, height: 38, borderRadius: 10, flexShrink: 0, background: iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15, fontWeight: 700, color: iconColor }}>
                   {who[0]?.toUpperCase() ?? '?'}
                   {isQuick && (
-                    <span style={{ position: 'absolute', right: -3, bottom: -3, width: 19, height: 19, borderRadius: '50%', background: BLUE, border: `2px solid ${SURF}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <Zap size={10} color="#fff" />
+                    <span style={{ position: 'absolute', right: -3, bottom: -3, width: 16, height: 16, borderRadius: '50%', background: BLUE, border: `2px solid ${SURF}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Zap size={8} color="#fff" />
                     </span>
                   )}
                 </div>
+                {/* Name + ref */}
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10 }}>
-                    <div style={{ minWidth: 0 }}>
-                      <div style={{ fontSize: 15, fontWeight: 700, color: TEXT, overflowWrap: 'anywhere', lineHeight: 1.25 }}>{inv.customerName}</div>
-                      <div style={{ fontSize: 12, color: T3, marginTop: 2 }}>{isQuick ? 'Request' : 'Invoice'} {inv.number}</div>
-                    </div>
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, flexShrink: 0, marginTop: 2, fontSize: 12, fontWeight: 700, color: meta.color }}>
-                      <span style={{ width: 7, height: 7, borderRadius: '50%', background: meta.color }} />
-                      {meta.label}
-                    </span>
-                  </div>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: TEXT, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{inv.customerName}</div>
+                  <div style={{ fontSize: 11, color: T3, marginTop: 1 }}>{isQuick ? 'Request' : 'Invoice'} {inv.number}</div>
                 </div>
+                {/* Status dot */}
+                <span style={{ flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 11, fontWeight: 700, color: meta.color }}>
+                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: meta.color, flexShrink: 0 }} />
+                  {meta.label}
+                </span>
               </button>
-              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 10, marginTop: 12, flexWrap: 'wrap' }}>
-                <div style={{ fontSize: 22, fontWeight: 800, color: inv.status === 'paid' ? GREEN : TEXT, letterSpacing: '-0.03em', fontVariantNumeric: 'tabular-nums' }}>
-                  {amountStr} <span style={{ fontSize: 12, fontWeight: 600, color: T3 }}>{inv.currency}</span>
+
+              {/* ── Amount + due row ── */}
+              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 10, padding: '0 14px 12px', flexWrap: 'wrap' }}>
+                <div style={{ fontSize: 20, fontWeight: 800, color: inv.status === 'paid' ? GREEN : TEXT, letterSpacing: '-0.03em', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>
+                  {amountStr} <span style={{ fontSize: 11, fontWeight: 600, color: T3 }}>{inv.currency}</span>
                 </div>
-                <div style={{ fontSize: 12, color: inv.status === 'overdue' ? RED : T3 }}>
+                <div style={{ fontSize: 11, color: inv.status === 'overdue' ? RED : T3 }}>
                   {inv.amountDue > 0 && inv.amountDue < inv.total ? `${fmtAmt(inv.amountDue, inv.currency)} left · ` : ''}Due {fmtDate(inv.dueDate)}
                 </div>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', flexWrap: delConfirm === inv.id ? 'wrap' : 'nowrap', gap: 6, marginTop: 12, paddingTop: 12, borderTop: `1px solid ${BDR}` }}>
-                <button onClick={() => copyLink(inv)} style={{ ...actionBtn, flex: 1, minWidth: 0, padding: '0 8px', justifyContent: 'center', background: 'rgba(37,99,235,0.10)', borderColor: 'rgba(37,99,235,0.25)', color: BLUE }}><Copy size={14} style={{ flexShrink: 0 }} /> {typeof window !== 'undefined' && window.innerWidth < 345 ? 'Copy' : 'Copy link'}</button>
-                <button onClick={() => doShare(inv)} style={{ ...actionBtn, flex: 1, minWidth: 0, padding: '0 8px', justifyContent: 'center' }}><Share2 size={14} style={{ flexShrink: 0 }} /> Share</button>
-                <button onClick={() => printInvoice(inv)} aria-label="Print" style={{ ...actionBtn, padding: 0, width: 34, flexShrink: 0, justifyContent: 'center' }}><Printer size={14} /></button>
-                <button onClick={() => shareOnWhatsApp(invoiceChaseText(inv, invoicePaymentLink(inv)))} aria-label={isInvoiceOverdue(inv) ? 'Send reminder on WhatsApp' : 'Send on WhatsApp'} style={{ ...actionBtn, padding: 0, width: 34, flexShrink: 0, justifyContent: 'center', color: '#128C7E' }}><MessageCircle size={14} /></button>
-                <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
-                  {delConfirm === inv.id ? (
-                    <>
-                      <button onClick={() => setDelConfirm(null)} style={actionBtn}>Cancel</button>
-                      <button onClick={() => { removeInvoice(inv.id); setDelConfirm(null); toast.success('Deleted') }} style={{ ...actionBtn, background: RED, borderColor: RED, color: '#fff' }}>Delete</button>
-                    </>
-                  ) : (
-                    <button onClick={() => setDelConfirm(inv.id)} aria-label="Delete" style={{ ...actionBtn, padding: 0, width: 34, justifyContent: 'center', color: T3 }}><Trash2 size={14} /></button>
-                  )}
-                </div>
+
+              {/* ── Action row ── */}
+              <div style={{ display: 'flex', alignItems: 'center', flexWrap: delConfirm === inv.id ? 'wrap' : 'nowrap', gap: 6, padding: '10px 14px 12px', borderTop: `1px solid ${BDR}` }}>
+                <button onClick={() => copyLink(inv)} style={{ ...actionBtn, flex: 1, padding: '0 6px', justifyContent: 'center', background: C.blueDim, borderColor: C.blueBd, color: BLUE }}>
+                  <Copy size={13} style={{ flexShrink: 0 }} /> Copy link
+                </button>
+                <button onClick={() => doShare(inv)} style={{ ...actionBtn, flex: 1, padding: '0 6px', justifyContent: 'center' }}>
+                  <Share2 size={13} style={{ flexShrink: 0 }} /> Share
+                </button>
+                <button onClick={() => printInvoice(inv)} aria-label="Print" style={{ ...actionBtn, padding: 0, width: 32, justifyContent: 'center' }}><Printer size={13} /></button>
+                <button onClick={() => shareOnWhatsApp(invoiceChaseText(inv, invoicePaymentLink(inv)))} aria-label="Send on WhatsApp" style={{ ...actionBtn, padding: 0, width: 32, justifyContent: 'center', color: '#128C7E', borderColor: 'rgba(18,140,126,0.25)', background: 'rgba(18,140,126,0.08)' }}><MessageCircle size={13} /></button>
+                {delConfirm === inv.id ? (
+                  <>
+                    <button onClick={() => setDelConfirm(null)} style={actionBtn}>Cancel</button>
+                    <button onClick={() => { removeInvoice(inv.id); setDelConfirm(null); toast.success('Deleted') }} style={{ ...actionBtn, background: RED, borderColor: RED, color: '#fff' }}>Delete</button>
+                  </>
+                ) : (
+                  <button onClick={() => setDelConfirm(inv.id)} aria-label="Delete" style={{ ...actionBtn, padding: 0, width: 32, justifyContent: 'center' }}><Trash2 size={13} /></button>
+                )}
               </div>
             </div>
           )
@@ -747,11 +772,11 @@ export function InvoicePage() {
           </div>
 
           <div style={{ background: SURF, border: `1px solid ${BDR}`, borderRadius: 18, padding: 18, display: 'flex', flexDirection: 'column', gap: 14 }}>
-            <Field label="Who should pay? *" error={errors.quickRecipient}>
+            <Field t2={T2} red={RED} label="Who should pay? *" error={errors.quickRecipient}>
               <input value={form.quickRecipient} onChange={e => setForm(f => ({ ...f, quickRecipient: e.target.value }))}
                 placeholder="Name or email" style={{ ...inputBase, borderColor: errors.quickRecipient ? 'rgba(239,68,68,0.5)' : BDR }} />
             </Field>
-            <Field label="What's it for? (optional)">
+            <Field t2={T2} red={RED} label="What's it for? (optional)">
               <input value={form.quickNote} onChange={e => setForm(f => ({ ...f, quickNote: e.target.value }))}
                 placeholder="Dinner, rent, design work…" style={inputBase} />
             </Field>
@@ -762,11 +787,11 @@ export function InvoicePage() {
               <div style={{ fontSize: 15, fontWeight: 700, color: TEXT }}>Where should the money go?</div>
               <div style={{ fontSize: 13, color: T2, marginTop: 3, lineHeight: 1.5 }}>Add your NAN handle, a wallet address, or both so payers can send crypto.</div>
             </div>
-            <Field label="Your NAN handle">
+            <Field t2={T2} red={RED} label="Your NAN handle">
               <input value={form.payToNanHandle} onChange={e => setForm(f => ({ ...f, payToNanHandle: e.target.value }))}
                 placeholder="@yourname" style={inputBase} />
             </Field>
-            <Field label="Your wallet address">
+            <Field t2={T2} red={RED} label="Your wallet address">
               <input value={form.payToAddress} onChange={e => setForm(f => ({ ...f, payToAddress: e.target.value }))}
                 placeholder="0x…" style={{ ...inputBase, fontFamily: 'monospace', fontSize: 13 }} />
             </Field>
@@ -793,17 +818,17 @@ export function InvoicePage() {
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
         <div style={{ background: SURF, border: `1px solid ${BDR}`, borderRadius: 18, padding: 18, display: 'flex', flexDirection: 'column', gap: 14 }}>
           <div style={{ fontSize: 15, fontWeight: 700, color: TEXT }}>Your Business</div>
-          <Field label="Business name *" error={errors.businessName}>
+          <Field t2={T2} red={RED} label="Business name *" error={errors.businessName}>
             <input value={form.businessName} onChange={e => setForm(f => ({ ...f, businessName: e.target.value }))} placeholder="Your name or company" style={{ ...inputBase, borderColor: errors.businessName ? 'rgba(239,68,68,0.5)' : BDR }} />
           </Field>
-          <Field label="Email">
+          <Field t2={T2} red={RED} label="Email">
             <input value={form.businessEmail} onChange={e => setForm(f => ({ ...f, businessEmail: e.target.value }))} placeholder="you@email.com" style={inputBase} />
           </Field>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 12 }}>
-            <Field label="NAN handle (optional)">
+            <Field t2={T2} red={RED} label="NAN handle (optional)">
               <input value={form.payToNanHandle} onChange={e => setForm(f => ({ ...f, payToNanHandle: e.target.value }))} placeholder="@yourname" style={inputBase} />
             </Field>
-            <Field label="Wallet address (optional)">
+            <Field t2={T2} red={RED} label="Wallet address (optional)">
               <input value={form.payToAddress} onChange={e => setForm(f => ({ ...f, payToAddress: e.target.value }))} placeholder="0x…" style={{ ...inputBase, fontFamily: 'monospace', fontSize: 12 }} />
             </Field>
           </div>
@@ -812,24 +837,24 @@ export function InvoicePage() {
 
         <div style={{ background: SURF, border: `1px solid ${BDR}`, borderRadius: 18, padding: 18, display: 'flex', flexDirection: 'column', gap: 14 }}>
           <div style={{ fontSize: 15, fontWeight: 700, color: TEXT }}>Bill To</div>
-          <Field label="Client name *" error={errors.customerName}>
+          <Field t2={T2} red={RED} label="Client name *" error={errors.customerName}>
             <input value={form.customerName} onChange={e => setForm(f => ({ ...f, customerName: e.target.value }))} placeholder="Client name or company" style={{ ...inputBase, borderColor: errors.customerName ? 'rgba(239,68,68,0.5)' : BDR }} />
           </Field>
-          <Field label="Client email">
+          <Field t2={T2} red={RED} label="Client email">
             <input value={form.customerEmail} onChange={e => setForm(f => ({ ...f, customerEmail: e.target.value }))} placeholder="client@email.com" style={inputBase} />
           </Field>
         </div>
 
         <div style={{ background: SURF, border: `1px solid ${BDR}`, borderRadius: 18, padding: 18, display: 'flex', flexDirection: 'column', gap: 14 }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 12 }}>
-            <Field label="Issue date">
+            <Field t2={T2} red={RED} label="Issue date">
               <input type="date" value={form.issueDate} onChange={e => setForm(f => ({ ...f, issueDate: e.target.value }))} style={inputBase} />
             </Field>
-            <Field label="Due date *" error={errors.dueDate}>
+            <Field t2={T2} red={RED} label="Due date *" error={errors.dueDate}>
               <input type="date" value={form.dueDate} onChange={e => setForm(f => ({ ...f, dueDate: e.target.value }))} style={{ ...inputBase, borderColor: errors.dueDate ? 'rgba(239,68,68,0.5)' : BDR }} />
             </Field>
           </div>
-          <Field label="Currency">
+          <Field t2={T2} red={RED} label="Currency">
             <CurrencyPicker value={form.currency} onChange={v => setForm(f => ({ ...f, currency: v }))} />
           </Field>
           <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
@@ -860,12 +885,12 @@ export function InvoicePage() {
                 )}
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 8, marginBottom: 8 }}>
-                <Field label="Qty"><input type="number" min="1" value={item.quantity} onChange={e => updateItem(item.id, { quantity: Math.max(1, parseFloat(e.target.value) || 1) })} style={inputBase} /></Field>
-                <Field label={`Unit price (${form.currency})`}><input type="number" min="0" step="0.01" value={item.unitPrice || ''} onChange={e => updateItem(item.id, { unitPrice: parseFloat(e.target.value) || 0 })} placeholder="0.00" style={inputBase} /></Field>
+                <Field t2={T2} red={RED} label="Qty"><input type="number" min="1" value={item.quantity} onChange={e => updateItem(item.id, { quantity: Math.max(1, parseFloat(e.target.value) || 1) })} style={inputBase} /></Field>
+                <Field t2={T2} red={RED} label={`Unit price (${form.currency})`}><input type="number" min="0" step="0.01" value={item.unitPrice || ''} onChange={e => updateItem(item.id, { unitPrice: parseFloat(e.target.value) || 0 })} placeholder="0.00" style={inputBase} /></Field>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-                <Field label="Discount %"><input type="number" min="0" max="100" value={item.discount ?? ''} onChange={e => updateItem(item.id, { discount: parseFloat(e.target.value) || 0 })} placeholder="0" style={inputBase} /></Field>
-                <Field label="Tax %"><input type="number" min="0" max="100" value={item.tax ?? ''} onChange={e => updateItem(item.id, { tax: parseFloat(e.target.value) || 0 })} placeholder="0" style={inputBase} /></Field>
+                <Field t2={T2} red={RED} label="Discount %"><input type="number" min="0" max="100" value={item.discount ?? ''} onChange={e => updateItem(item.id, { discount: parseFloat(e.target.value) || 0 })} placeholder="0" style={inputBase} /></Field>
+                <Field t2={T2} red={RED} label="Tax %"><input type="number" min="0" max="100" value={item.tax ?? ''} onChange={e => updateItem(item.id, { tax: parseFloat(e.target.value) || 0 })} placeholder="0" style={inputBase} /></Field>
               </div>
               {item.name && item.unitPrice > 0 && (
                 <div style={{ marginTop: 6, fontSize: 12, color: T2, textAlign: 'right' }}>
@@ -884,10 +909,10 @@ export function InvoicePage() {
 
         <div style={{ background: SURF, border: `1px solid ${BDR}`, borderRadius: 18, padding: 18, display: 'flex', flexDirection: 'column', gap: 14 }}>
           <div style={{ fontSize: 15, fontWeight: 700, color: TEXT }}>Notes & Instructions</div>
-          <Field label="Notes (optional)">
+          <Field t2={T2} red={RED} label="Notes (optional)">
             <textarea value={form.notes} onChange={e => setForm(f => ({ ...f, notes: e.target.value }))} placeholder="Thank you for your business!" rows={3} style={{ ...inputBase, resize: 'vertical', lineHeight: 1.5 }} />
           </Field>
-          <Field label="Payment instructions">
+          <Field t2={T2} red={RED} label="Payment instructions">
             <textarea value={form.paymentInstructions} onChange={e => setForm(f => ({ ...f, paymentInstructions: e.target.value }))} placeholder="Pay via the link below, or send USDC directly to the address above." rows={2} style={{ ...inputBase, resize: 'vertical', lineHeight: 1.5 }} />
           </Field>
         </div>
