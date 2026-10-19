@@ -737,14 +737,19 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
       {/* Mobile side drawer */}
       <div style={{
-        position: 'fixed', top: 0, right: 0, bottom: 0,
-        width: 'min(272px, calc(100vw - 40px))', zIndex: 110,
+        position: 'fixed', top: 0, right: 0,
+        /* height hugs content, capped at full viewport */
+        maxHeight: '100dvh', height: 'auto',
+        width: 'min(264px, calc(100vw - 40px))', zIndex: 110,
         background: C.isDark ? '#0F1420' : '#FFFFFF',
         boxShadow: C.isDark ? '-20px 0 60px rgba(0,0,0,0.7)' : '-4px 0 32px rgba(0,0,0,0.12)',
         transform: drawerOpen ? 'translateX(0)' : 'translateX(100%)',
         transition: 'transform 0.26s cubic-bezier(0.4,0,0.2,1)',
         display: 'flex', flexDirection: 'column',
         borderLeft: `1px solid ${C.bdr}`,
+        borderBottomLeftRadius: 20,
+        overflowY: 'auto',
+        overflowX: 'hidden',
       }}>
         {/* ── Profile header ── */}
         {(() => {
@@ -806,10 +811,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
         {/* ── Nav sections ── */}
         <div style={{
-          flex: 1, overflowY: 'auto', overflowX: 'hidden',
-          WebkitOverflowScrolling: 'touch',
-          padding: '4px 8px 8px',
-          scrollbarWidth: 'none',
+          overflowX: 'hidden',
+          padding: '4px 8px 4px',
         }}>
           {MOBILE_DRAWER_SECTIONS.map((section, si) => (
             <div key={section.title} style={{ marginTop: si === 0 ? 2 : 4 }}>
