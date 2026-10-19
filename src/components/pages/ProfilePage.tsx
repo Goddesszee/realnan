@@ -185,13 +185,12 @@ export function ProfilePage() {
   }
 
   if (view === 'main') {
-    const nameShown = profile.displayName || auth?.email?.split('@')[0] || 'User'
     const nanRow: RowOpts | null = nanHandle
       ? { key: 'nan', icon: <AtSign />, label: 'NAN Name', sub: `@${nanHandle}`, onClick: () => setActiveView('nan-name') }
       : registrySet ? { key: 'nan', icon: <AtSign />, label: 'NAN Name', sub: 'Get your @handle', onClick: () => setActiveView('nan-name') } : null
     return (
       <div style={{ width: '100%', fontFamily: F, paddingBottom: 80 }}>
-        {/* Header — same pattern as My Account and the other pages */}
+        {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
           <button onClick={() => setActiveView('home')} aria-label="Back"
             style={{ width: 32, height: 32, borderRadius: 8, background: C.surf, border: `1px solid ${C.bdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
@@ -220,19 +219,41 @@ export function ProfilePage() {
               <Camera size={11} color="#fff" />
             </button>
           </div>
-          <div style={{ minWidth: 0 }}>
-            <div style={{ fontSize: 18, fontWeight: 700, letterSpacing: '-0.02em', color: C.text, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{nameShown}</div>
-            {(nanHandle || auth?.email) && <div style={{ fontSize: 12, color: C.t3, marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{nanHandle ? `@${nanHandle}` : auth?.email}</div>}
+          <div style={{ minWidth: 0, flex: 1 }}>
+            {nanHandle ? (
+              <>
+                <div style={{ fontSize: 20, fontWeight: 700, letterSpacing: '-0.02em', color: C.blue }}>@{nanHandle}</div>
+                {auth?.email && <div style={{ fontSize: 12, color: C.t3, marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{auth.email}</div>}
+              </>
+            ) : (
+              <button onClick={() => setActiveView('nan-name')} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', textAlign: 'left', fontFamily: F }}>
+                <style>{`@keyframes nan-blink{0%,100%{opacity:1}50%{opacity:0.35}}`}</style>
+                <div style={{ fontSize: 16, fontWeight: 700, color: '#F59E0B', animation: 'nan-blink 1.4s ease-in-out infinite' }}>✦ Get your NAN name</div>
+                <div style={{ fontSize: 12, color: C.t3, marginTop: 2 }}>Tap to claim your @handle</div>
+              </button>
+            )}
             {saveError && <div style={{ fontSize: 12, color: '#EF4444', marginTop: 4 }}>{saveError}</div>}
           </div>
         </div>
+
+        {sectionLabel('Preferences')}
+        {cardBlock([
+          {
+            key: 'dark', icon: <Moon />, label: 'Dark Mode', onClick: () => setTheme(isDark ? 'light' : 'dark'),
+            right: (
+              <div aria-label="Dark mode" style={{ width: 44, height: 26, borderRadius: 13, background: isDark ? C.blue : C.surf2, border: `1px solid ${isDark ? C.blue : C.bdr}`, position: 'relative', flexShrink: 0, transition: 'background 0.2s' }}>
+                <div style={{ position: 'absolute', top: 3, left: isDark ? 21 : 3, width: 18, height: 18, borderRadius: 9, background: '#fff', transition: 'left 0.2s' }} />
+              </div>
+            ),
+          },
+          { key: 'currency', icon: <Wallet />, label: 'Show balance in', sub: ccy.code === 'USD' ? 'US dollars only' : `${currencyFlag(ccy.code)} ${ccy.code}`, onClick: () => openCurrencyPicker(ccy.list, ccy.code, ccy.setCode) },
+          { key: 'language', icon: <Globe />, label: 'Language', sub: currentLanguageLabel(), onClick: openLanguagePicker },
+        ])}
 
         {sectionLabel('Account')}
         {cardBlock([
           { key: 'account', icon: <User />, label: 'My Account', onClick: () => { setTab('profile'); setView('account') } },
           nanRow,
-          { key: 'currency', icon: <Wallet />, label: 'Show balance in', sub: ccy.code === 'USD' ? 'US dollars only' : `${currencyFlag(ccy.code)} ${ccy.code}`, onClick: () => openCurrencyPicker(ccy.list, ccy.code, ccy.setCode) },
-          { key: 'language', icon: <Globe />, label: 'Language', sub: currentLanguageLabel(), onClick: openLanguagePicker },
           { key: 'referral', icon: <Gift />, label: 'Refer a Friend', sub: refEarned && Number(refEarned) > 0 ? `$${refEarned} earned` : 'Earn $1 USDC when a friend joins & sends $100', onClick: () => setActiveView('referral') },
         ])}
 
@@ -277,16 +298,6 @@ export function ProfilePage() {
             </div>
           )
         })()}
-
-        {sectionLabel('Preferences')}
-        {cardBlock([{
-          key: 'dark', icon: <Moon />, label: 'Dark Mode', onClick: () => setTheme(isDark ? 'light' : 'dark'),
-          right: (
-            <div aria-label="Dark mode" style={{ width: 44, height: 26, borderRadius: 13, background: isDark ? C.blue : C.surf2, border: `1px solid ${isDark ? C.blue : C.bdr}`, position: 'relative', flexShrink: 0, transition: 'background 0.2s' }}>
-              <div style={{ position: 'absolute', top: 3, left: isDark ? 21 : 3, width: 18, height: 18, borderRadius: 9, background: '#fff', transition: 'left 0.2s' }} />
-            </div>
-          ),
-        }])}
 
         {sectionLabel('Help & Info')}
         {cardBlock([
