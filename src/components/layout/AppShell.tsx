@@ -690,27 +690,23 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             scrollbarWidth: 'thin',
             scrollbarColor: `${C.bdr} transparent`,
             /* Pages that need full-bleed (agent) manage their own layout */
-            display: activeView === 'agent' ? 'flex' : 'block',
-            flexDirection: activeView === 'agent' ? 'column' : undefined,
+            display: 'block',
           }}>
             {/* Content wrapper: consistent horizontal padding + max-width constraint.
-                Full-bleed views (agent, dashboard) get no max-width cap. */}
+                Full-bleed views (dashboard) get no max-width cap. */}
             <div style={{
-              padding: activeView === 'agent'
-                ? '0'
-                : activeView === 'dashboard'
-                  ? '28px 32px 48px'
+              padding: activeView === 'dashboard'
+                ? '28px 32px 48px'
+                : activeView === 'agent'
+                  ? '0'
                   : '24px 28px 48px',
-              maxWidth: (activeView === 'agent' || activeView === 'dashboard')
-                ? 'none'
-                : 900,
+              maxWidth: activeView === 'dashboard' ? 'none' : 900,
               width: '100%',
               margin: '0 auto',
               boxSizing: 'border-box',
-              flex: activeView === 'agent' ? 1 : undefined,
+              height: activeView === 'agent' ? '100%' : undefined,
               display: activeView === 'agent' ? 'flex' : 'block',
               flexDirection: activeView === 'agent' ? 'column' : undefined,
-              minHeight: activeView === 'agent' ? 0 : undefined,
             }}>
               {children}
             </div>
@@ -737,16 +733,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <main style={{
         flex: 1,
         minHeight: 0,           /* critical: lets flex item shrink below content height */
-        overflowY: activeView === 'agent' ? 'hidden' : 'auto',
+        overflowY: 'auto',
         overflowX: 'hidden',
-        paddingTop: activeView === 'agent' ? 0 : 12,
-        paddingLeft: activeView === 'agent' ? 0 : 'max(16px,env(safe-area-inset-left))',
-        paddingRight: activeView === 'agent' ? 0 : 'max(16px,env(safe-area-inset-right))',
-        paddingBottom: activeView === 'agent' ? 0 : 'max(20px,env(safe-area-inset-bottom))',
+        paddingTop: 12,
+        paddingLeft: 'max(16px,env(safe-area-inset-left))',
+        paddingRight: 'max(16px,env(safe-area-inset-right))',
+        paddingBottom: 'max(20px,env(safe-area-inset-bottom))',
         scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch',
         msOverflowStyle: 'none',
-        display: activeView === 'agent' ? 'flex' : 'block',
-        flexDirection: activeView === 'agent' ? 'column' : undefined,
+        display: 'block',
         width: '100%',
         boxSizing: 'border-box',
       }}>
@@ -759,7 +754,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         background: C.isDark ? '#08090B' : '#FFFFFF',
         borderTop: `1px solid ${C.bdr}`,
         transition: 'background 0.25s',
-        display: activeView === 'agent' ? 'none' : undefined,
+        display: undefined,
         boxShadow: C.isDark ? 'none' : '0 -1px 8px rgba(0,0,0,0.06)',
       }}>
         <div style={{ display: 'flex', maxWidth: 480, margin: '0 auto' }}>

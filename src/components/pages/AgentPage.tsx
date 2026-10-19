@@ -277,15 +277,17 @@ export function AgentPage() {
   const { setActiveView } = useAppStore()
 
   return (
-    /* Fill 100% of AppShell's <main> with no padding — chat manages its own insets */
+    /* Chat fills the available viewport height inside AppShell's scrollable main */
     <div style={{
       fontFamily: F,
       display: 'flex',
       flexDirection: 'column',
-      flex: 1,
-      minHeight: 0,
+      height: 'calc(100dvh - 120px)', /* viewport minus bottom nav (~60px) + top padding (12px) × 2 */
+      minHeight: 400,
       overflow: 'hidden',
       position: 'relative',
+      borderRadius: 16,
+      border: `1px solid ${BDR}`,
     }}>
 
       {/* ── WhatsApp-style fixed conversation header ── */}
@@ -295,7 +297,6 @@ export function AgentPage() {
         alignItems: 'center',
         gap: 10,
         padding: '8px 12px',
-        paddingTop: 'max(8px, env(safe-area-inset-top))',
         borderBottom: `1px solid ${BDR}`,
         background: SURF,
         position: 'relative',
