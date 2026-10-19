@@ -690,27 +690,27 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             scrollbarWidth: 'thin',
             scrollbarColor: `${C.bdr} transparent`,
             /* Pages that need full-bleed (agent) manage their own layout */
-            display: (activeView === 'agent' || activeView === 'agent-wallet') ? 'flex' : 'block',
-            flexDirection: (activeView === 'agent' || activeView === 'agent-wallet') ? 'column' : undefined,
+            display: activeView === 'agent' ? 'flex' : 'block',
+            flexDirection: activeView === 'agent' ? 'column' : undefined,
           }}>
             {/* Content wrapper: consistent horizontal padding + max-width constraint.
                 Full-bleed views (agent, dashboard) get no max-width cap. */}
             <div style={{
-              padding: (activeView === 'agent' || activeView === 'agent-wallet')
+              padding: activeView === 'agent'
                 ? '0'
                 : activeView === 'dashboard'
                   ? '28px 32px 48px'
                   : '24px 28px 48px',
-              maxWidth: (activeView === 'agent' || activeView === 'agent-wallet' || activeView === 'dashboard')
+              maxWidth: (activeView === 'agent' || activeView === 'dashboard')
                 ? 'none'
                 : 900,
               width: '100%',
               margin: '0 auto',
               boxSizing: 'border-box',
-              flex: (activeView === 'agent' || activeView === 'agent-wallet') ? 1 : undefined,
-              display: (activeView === 'agent' || activeView === 'agent-wallet') ? 'flex' : 'block',
-              flexDirection: (activeView === 'agent' || activeView === 'agent-wallet') ? 'column' : undefined,
-              minHeight: (activeView === 'agent' || activeView === 'agent-wallet') ? 0 : undefined,
+              flex: activeView === 'agent' ? 1 : undefined,
+              display: activeView === 'agent' ? 'flex' : 'block',
+              flexDirection: activeView === 'agent' ? 'column' : undefined,
+              minHeight: activeView === 'agent' ? 0 : undefined,
             }}>
               {children}
             </div>
@@ -737,16 +737,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <main style={{
         flex: 1,
         minHeight: 0,           /* critical: lets flex item shrink below content height */
-        overflowY: (activeView === 'agent' || activeView === 'agent-wallet') ? 'hidden' : 'auto',
+        overflowY: activeView === 'agent' ? 'hidden' : 'auto',
         overflowX: 'hidden',
-        paddingTop: (activeView === 'agent' || activeView === 'agent-wallet') ? 0 : 12,
-        paddingLeft: (activeView === 'agent' || activeView === 'agent-wallet') ? 0 : 'max(16px,env(safe-area-inset-left))',
-        paddingRight: (activeView === 'agent' || activeView === 'agent-wallet') ? 0 : 'max(16px,env(safe-area-inset-right))',
-        paddingBottom: (activeView === 'agent' || activeView === 'agent-wallet') ? 0 : 'max(20px,env(safe-area-inset-bottom))',
+        paddingTop: activeView === 'agent' ? 0 : 12,
+        paddingLeft: activeView === 'agent' ? 0 : 'max(16px,env(safe-area-inset-left))',
+        paddingRight: activeView === 'agent' ? 0 : 'max(16px,env(safe-area-inset-right))',
+        paddingBottom: activeView === 'agent' ? 0 : 'max(20px,env(safe-area-inset-bottom))',
         scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch',
         msOverflowStyle: 'none',
-        display: (activeView === 'agent' || activeView === 'agent-wallet') ? 'flex' : 'block',
-        flexDirection: (activeView === 'agent' || activeView === 'agent-wallet') ? 'column' : undefined,
+        display: activeView === 'agent' ? 'flex' : 'block',
+        flexDirection: activeView === 'agent' ? 'column' : undefined,
         width: '100%',
         boxSizing: 'border-box',
       }}>
@@ -759,7 +759,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         background: C.isDark ? '#08090B' : '#FFFFFF',
         borderTop: `1px solid ${C.bdr}`,
         transition: 'background 0.25s',
-        display: (activeView === 'agent' || activeView === 'agent-wallet') ? 'none' : undefined,
+        display: activeView === 'agent' ? 'none' : undefined,
         boxShadow: C.isDark ? 'none' : '0 -1px 8px rgba(0,0,0,0.06)',
       }}>
         <div style={{ display: 'flex', maxWidth: 480, margin: '0 auto' }}>
