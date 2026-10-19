@@ -812,20 +812,20 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         flexShrink: 0, zIndex: 100,
         background: C.isDark ? '#08090B' : '#FFFFFF',
         borderTop: `1px solid ${C.bdr}`,
-        paddingBottom: 'env(safe-area-inset-bottom,0px)',
         transition: 'background 0.25s',
         display: (activeView === 'agent' || activeView === 'agent-wallet') ? 'none' : undefined,
         boxShadow: C.isDark ? 'none' : '0 -1px 0 rgba(0,0,0,0.06)',
+        paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 8px)',
       }}>
-        <div style={{ display: 'flex', maxWidth: 480, margin: '0 auto' }}>
+        <div style={{ display: 'flex', maxWidth: 480, margin: '0 auto', paddingTop: 8 }}>
           {NAV_ITEMS.map(({ id, label, Icon }) => {
             const isActive = navActive(id)
             return (
               <button key={id} onClick={() => go(id)} aria-label={label} style={{
                 flex: 1, display: 'flex', flexDirection: 'column',
-                alignItems: 'center', justifyContent: 'flex-end', gap: 4,
-                padding: '8px 2px 10px',
-                minHeight: 56, border: 'none', background: 'transparent',
+                alignItems: 'center', justifyContent: 'center', gap: 3,
+                padding: '0 2px',
+                height: 46, border: 'none', background: 'transparent',
                 cursor: 'pointer', transition: 'all 0.12s',
                 fontFamily: F, WebkitTapHighlightColor: 'transparent',
               }}>
@@ -843,9 +843,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           })}
           <button onClick={() => setDrawerOpen(v => !v)} aria-label="More" style={{
             flex: 1, display: 'flex', flexDirection: 'column',
-            alignItems: 'center', justifyContent: 'flex-end', gap: 4,
-            padding: '8px 2px 10px',
-            minHeight: 56, border: 'none', background: 'transparent',
+            alignItems: 'center', justifyContent: 'center', gap: 3,
+            padding: '0 2px',
+            height: 46, border: 'none', background: 'transparent',
             cursor: 'pointer', transition: 'all 0.12s',
             fontFamily: F, WebkitTapHighlightColor: 'transparent',
           }}>
