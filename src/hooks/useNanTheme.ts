@@ -60,12 +60,12 @@ const DARK: NanTheme = {
 // ── LIGHT palette ─────────────────────────────────────────────────────────────
 // Clean white + electric blue. High contrast, minimal shadows.
 const LIGHT: NanTheme = {
-  bg:      '#F5F7FA',
+  bg:      '#F4F6F9',
   surf:    '#FFFFFF',
-  surf2:   '#F0F2F5',
-  surf3:   '#E5E8EF',
-  bdr:     'rgba(0,0,0,0.08)',
-  bdr2:    'rgba(0,0,0,0.14)',
+  surf2:   '#F2F4F7',
+  surf3:   '#E8EBF0',
+  bdr:     'rgba(0,0,0,0.07)',
+  bdr2:    'rgba(0,0,0,0.12)',
   text:    '#111827',
   t2:      '#4B5563',
   t3:      '#9CA3AF',

@@ -19,8 +19,8 @@ import './console-capture'
     const s = localStorage.getItem('paywell-state-v2')
     const parsed = s ? (JSON.parse(s) as { state?: { theme?: string } }) : null
     const t = parsed?.state?.theme ?? null
-    document.documentElement.setAttribute('data-theme', t === 'light' ? 'light' : 'dark')
-  } catch { document.documentElement.setAttribute('data-theme', 'dark') }
+    document.documentElement.setAttribute('data-theme', t === 'dark' ? 'dark' : 'light')
+  } catch { document.documentElement.setAttribute('data-theme', 'light') }
 })()
 
 import { StrictMode } from 'react'

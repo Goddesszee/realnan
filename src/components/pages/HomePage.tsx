@@ -63,7 +63,7 @@ function PayLinkCard({
         position: 'relative', overflow: 'hidden',
       }}>
         {/* top accent bar */}
-        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: 'linear-gradient(90deg, #0866F5, #7B61FF)' }} />
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: C.blue, borderRadius: '18px 18px 0 0' }} />
 
         {!handle ? (
           /* ── No NAN name yet ── */
@@ -213,22 +213,22 @@ function ActionBtn({ Icon, label, primary, ai, onClick, C }: {
 }) {
   return (
     <button onClick={onClick} style={{
-      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 7,
+      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
       background: 'none', border: 'none', cursor: 'pointer', fontFamily: F,
       WebkitTapHighlightColor: 'transparent', flex: 1, padding: '4px 0', minWidth: 0,
     }}>
       <div style={{
-        width: 52, height: 52, borderRadius: 18,
-        background: primary ? C.blue : ai ? C.blueDim : C.surf2,
-        border: primary ? 'none' : ai ? `1px solid ${C.blueBd}` : `1px solid ${C.bdr}`,
+        width: 56, height: 56, borderRadius: 28,
+        background: primary ? C.blue : C.surf,
+        border: primary ? 'none' : `1.5px solid ${C.bdr2}`,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        boxShadow: primary ? `0 6px 20px ${C.blue}66` : ai ? `0 2px 12px ${C.blue}30` : 'none',
+        boxShadow: primary ? `0 4px 16px ${C.blue}44` : C.isDark ? 'none' : '0 1px 4px rgba(0,0,0,0.06)',
         flexShrink: 0, position: 'relative',
       }}>
-        <Icon size={20} color={primary ? '#fff' : ai ? C.blue : C.t2} strokeWidth={1.9} />
+        <Icon size={21} color={primary ? '#fff' : ai ? C.blue : C.text} strokeWidth={primary ? 2.2 : 1.8} />
         {ai && (
           <div style={{
-            position: 'absolute', top: -4, right: -4,
+            position: 'absolute', top: -2, right: -2,
             width: 14, height: 14, borderRadius: '50%',
             background: C.blue, border: `2px solid ${C.bg}`,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -237,13 +237,13 @@ function ActionBtn({ Icon, label, primary, ai, onClick, C }: {
           </div>
         )}
       </div>
-      <span style={{ fontSize: 11, fontWeight: ai ? 700 : 600, color: ai ? C.blue : C.t2, whiteSpace: 'nowrap' }}>{label}</span>
+      <span style={{ fontSize: 11, fontWeight: 600, color: primary ? C.blue : C.t2, whiteSpace: 'nowrap' }}>{label}</span>
     </button>
   )
 }
 
 // ─── Card dimensions shared across the scroll row ────────────────────────────
-const CARD_W = 130  // px — fits ~2.5 on a 375 px screen so next card peeks
+const CARD_W = 150  // px — fits ~2.3 on a 375 px screen so next card peeks
 
 // ─── Token card — logo + amount + label ──────────────────────────────────────
 
@@ -255,7 +255,8 @@ function TokenCard({
   onClick: () => void; hidden: boolean; C: NanTheme; isLoading: boolean
 }) {
   const isEurc     = symbol === 'EURC'
-  const tokenColor = symbol === 'USDC' ? '#2775CA' : '#0099CC'
+  const flag       = symbol === 'USDC' ? '🇺🇸' : '🇪🇺'
+  const isZero     = !isLoading && parseFloat(quantity) === 0
   const isInert    = !onClick || onClick.toString() === '() => {}'
   return (
     <div
@@ -263,30 +264,42 @@ function TokenCard({
       style={{
         width: CARD_W, flexShrink: 0,
         background: C.surf, border: `1px solid ${C.bdr}`,
-        borderRadius: 16, padding: '14px 12px 12px',
+        borderRadius: 20, padding: '18px 16px 14px',
         cursor: isInert ? 'default' : 'pointer', fontFamily: F,
         WebkitTapHighlightColor: 'transparent', textAlign: 'left',
+        boxShadow: C.isDark ? 'none' : '0 1px 6px rgba(0,0,0,0.05)',
       }}
     >
-      <div style={{ marginBottom: 8 }}>
-        <TokenLogo symbol={symbol} size={30} radius={9} />
-      </div>
+      {/* Flag icon */}
+      <div style={{ fontSize: 26, lineHeight: 1, marginBottom: 10 }}>{flag}</div>
+
       {isLoading ? (
-        <div style={{ height: 18, width: 54, background: C.surf2, borderRadius: 6, marginBottom: 6 }} />
+        <div style={{ height: 22, width: 64, background: C.surf2, borderRadius: 6, marginBottom: 8 }} />
       ) : (
         <div style={{
-          fontSize: 14, fontWeight: 800, color: C.text,
-          fontFamily: MONO, letterSpacing: '-0.02em',
-          marginBottom: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+          fontSize: 18, fontWeight: 800, color: C.text,
+          letterSpacing: '-0.02em',
+          marginBottom: 4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
         }}>
           {hidden ? '••••' : `${isEurc ? '€' : '$'}${quantity}`}
         </div>
       )}
-      {!hidden && !isLoading && isEurc && parseFloat(usdValue) > 0 && (
-        <div style={{ fontSize: 9, color: C.t3, fontFamily: MONO, marginBottom: 2 }}>≈ ${usdValue}</div>
-      )}
-      <div style={{ fontSize: 10, fontWeight: 600, color: tokenColor }}>
-        {symbol} · Arc
+
+      {/* "Get account" row — mirrors reference */}
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 5,
+        background: C.surf2, border: `1px solid ${C.bdr}`,
+        borderRadius: 8, padding: '5px 8px', marginTop: 4,
+        width: 'fit-content',
+      }}>
+        <svg width="11" height="11" viewBox="0 0 20 20" fill="none">
+          <rect x="2" y="5" width="16" height="12" rx="2" stroke={C.t3} strokeWidth="1.6"/>
+          <path d="M2 8h16" stroke={C.t3} strokeWidth="1.6"/>
+          <path d="M6 14h2M10 14h4" stroke={C.t3} strokeWidth="1.4" strokeLinecap="round"/>
+        </svg>
+        <span style={{ fontSize: 10, fontWeight: 600, color: C.t2, whiteSpace: 'nowrap' }}>
+          {isZero ? 'Get account' : `${symbol} · Arc`}
+        </span>
       </div>
     </div>
   )
@@ -439,9 +452,9 @@ export function HomePage() {
           <button
             onClick={() => setActiveView('profile')}
             style={{
-              width: 36, height: 36, borderRadius: '50%',
-              background: profile.avatarUrl ? 'transparent' : C.blue,
-              border: profile.avatarUrl ? `2px solid ${C.bdr}` : 'none',
+              width: 38, height: 38, borderRadius: '50%',
+              background: profile.avatarUrl ? 'transparent' : C.surf2,
+              border: `2px solid ${C.bdr2}`,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               cursor: 'pointer', overflow: 'hidden', flexShrink: 0,
               WebkitTapHighlightColor: 'transparent', padding: 0,
@@ -450,13 +463,13 @@ export function HomePage() {
             {profile.avatarUrl
               ? <img src={profile.avatarUrl} alt="avatar" style={{ width: 36, height: 36, objectFit: 'cover' }} />
               : <svg viewBox="0 0 20 20" width="16" height="16" fill="none">
-                  <circle cx="10" cy="7" r="3.2" stroke="#fff" strokeWidth="1.6" />
-                  <path d="M3.5 17c0-3.038 2.91-5.5 6.5-5.5s6.5 2.462 6.5 5.5" stroke="#fff" strokeWidth="1.6" strokeLinecap="round" />
+                  <circle cx="10" cy="7" r="3.2" stroke={C.t2} strokeWidth="1.6" />
+                  <path d="M3.5 17c0-3.038 2.91-5.5 6.5-5.5s6.5 2.462 6.5 5.5" stroke={C.t2} strokeWidth="1.6" strokeLinecap="round" />
                 </svg>
             }
           </button>
           <div style={{ minWidth: 0 }}>
-            <div style={{ fontSize: 15, fontWeight: 700, color: C.text, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            <div style={{ fontSize: 17, fontWeight: 700, color: C.text, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               Hi, {firstName}
             </div>
             {!hasHandle && (
@@ -482,17 +495,16 @@ export function HomePage() {
           <button
             onClick={() => (nairaRampVisible() ? showAddMoneySheet(setActiveView) : setActiveView('onramp'))}
             style={{
-              display: 'flex', alignItems: 'center', gap: 4,
-              padding: '6px 10px', borderRadius: 20,
+              display: 'flex', alignItems: 'center', gap: 5,
+              padding: '9px 16px', borderRadius: 24,
               background: C.blue, border: 'none',
-              color: '#fff', fontSize: 11, fontWeight: 700,
+              color: '#fff', fontSize: 13, fontWeight: 700,
               cursor: 'pointer', fontFamily: F,
-              boxShadow: '0 2px 8px rgba(59,130,246,0.28)',
+              boxShadow: `0 4px 14px ${C.blue}44`,
               WebkitTapHighlightColor: 'transparent',
               letterSpacing: '-0.01em', whiteSpace: 'nowrap',
             }}
           >
-            <Plus size={11} strokeWidth={2.5} />
             Add Money
           </button>
         </div>
@@ -517,7 +529,7 @@ export function HomePage() {
           <div style={{ height: 44, width: 180, background: C.surf2, borderRadius: 10, animation: 'nan-shimmer 1.4s ease infinite' }} />
         ) : (
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
-            <div style={{ fontSize: 28, fontWeight: 700, letterSpacing: '-0.02em', color: C.text, lineHeight: 1.15, fontFamily: F }}>
+            <div style={{ fontSize: 36, fontWeight: 800, letterSpacing: '-0.03em', color: C.text, lineHeight: 1.1, fontFamily: F }}>
               {hidden ? '••••••' : (totalLocalNumber ?? displayTotal)}
             </div>
             <span style={{ fontSize: 16, fontWeight: 600, color: C.t2 }}>{totalLocalNumber ? `${currencyFlag(localCcy.code)} ${localCcy.code}` : 'USD'}</span>
@@ -630,8 +642,8 @@ export function HomePage() {
           onClick={() => setRewardsOpen(true)}
           style={{
             width: CARD_W, flexShrink: 0,
-            background: 'linear-gradient(145deg, rgba(59,130,246,0.12) 0%, rgba(80,0,255,0.08) 100%)',
-            border: '1px solid rgba(59,130,246,0.22)',
+            background: C.blueDim,
+            border: `1px solid ${C.blueBd}`,
             borderRadius: 16, padding: '14px 12px 12px',
             cursor: 'pointer', fontFamily: F,
             WebkitTapHighlightColor: 'transparent', textAlign: 'left',
@@ -678,8 +690,8 @@ export function HomePage() {
           onClick={() => setActiveView('agent-wallet')}
           style={{
             width: '100%', padding: '18px 20px', borderRadius: 18,
-            border: '1px solid rgba(59,130,246,0.20)',
-            background: 'linear-gradient(135deg, rgba(59,130,246,0.10) 0%, rgba(8,102,245,0.03) 100%)',
+            border: `1px solid ${C.blueBd}`,
+            background: C.blueDim,
             cursor: 'pointer', fontFamily: F, WebkitTapHighlightColor: 'transparent',
             display: 'flex', alignItems: 'center', gap: 16,
           }}

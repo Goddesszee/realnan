@@ -57,13 +57,13 @@
 
 /* ── Light mode ── */
 [data-theme="light"] {
-  --nan-bg:        #F5F7FA;
+  --nan-bg:        #F4F6F9;
   --nan-bg-2:      #ECEEF2;
   --nan-surface:   #FFFFFF;
-  --nan-surface-2: #F0F2F5;
-  --nan-surface-3: #E5E8EF;
-  --nan-border:    rgba(0,0,0,0.08);
-  --nan-border-2:  rgba(0,0,0,0.14);
+  --nan-surface-2: #F2F4F7;
+  --nan-surface-3: #E8EBF0;
+  --nan-border:    rgba(0,0,0,0.07);
+  --nan-border-2:  rgba(0,0,0,0.12);
   --nan-blue:       #2563EB;
   --nan-blue-dim:   rgba(37,99,235,0.08);
   --nan-blue-glow:  rgba(37,99,235,0.18);

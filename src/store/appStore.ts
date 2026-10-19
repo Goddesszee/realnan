@@ -563,7 +563,7 @@ export const useAppStore = create<AppState>()(
       setShowWelcome: (v) => set({ showWelcome: v }),
       previousView: null,
 
-      theme: 'dark',
+      theme: 'light',
       setTheme: (t) => { document.documentElement.setAttribute('data-theme', t); set({ theme: t }) },
 
       notifications: [],

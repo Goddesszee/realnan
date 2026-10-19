@@ -289,6 +289,7 @@ function CommandPalette({ onClose, onGo }: { onClose: () => void; onGo: (action:
 // ── Nav items (mobile bottom bar) ─────────────────────────────────────────────
 const NAV_ITEMS = [
   { id: 'home',     label: 'Home',     Icon: Home },
+  { id: 'activity', label: 'Activity', Icon: Activity },
   { id: 'invoices', label: 'Invoices', Icon: FileText },
   { id: 'gateway',  label: 'Gateway',  Icon: Layers },
 ]
@@ -815,37 +816,50 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         paddingBottom: 'env(safe-area-inset-bottom,0px)',
         transition: 'background 0.25s',
         display: (activeView === 'agent' || activeView === 'agent-wallet') ? 'none' : undefined,
+        boxShadow: C.isDark ? 'none' : '0 -1px 0 rgba(0,0,0,0.06)',
       }}>
-        <div style={{ display: 'flex', maxWidth: 480, margin: '0 auto' }}>
+        <div style={{ display: 'flex', maxWidth: 480, margin: '0 auto', padding: '6px 0 2px' }}>
           {NAV_ITEMS.map(({ id, label, Icon }) => {
             const isActive = navActive(id)
             return (
               <button key={id} onClick={() => go(id)} aria-label={label} style={{
                 flex: 1, display: 'flex', flexDirection: 'column',
-                alignItems: 'center', justifyContent: 'center', gap: 3,
-                padding: '8px 2px 8px',
+                alignItems: 'center', justifyContent: 'center', gap: 4,
+                padding: '4px 2px 6px',
                 minHeight: 52, border: 'none', background: 'transparent',
-                cursor: 'pointer', transition: 'color 0.12s',
-                fontFamily: F, WebkitTapHighlightColor: 'transparent', position: 'relative',
+                cursor: 'pointer', transition: 'all 0.12s',
+                fontFamily: F, WebkitTapHighlightColor: 'transparent',
               }}>
-                <Icon size={18} color={isActive ? C.blue : C.t3} strokeWidth={isActive ? 2.2 : 1.7} />
-                <span style={{ fontSize: 9, fontWeight: isActive ? 700 : 400, color: isActive ? C.blue : C.t3, lineHeight: 1 }}>{label}</span>
-                {isActive && <span style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: 18, height: 2, borderRadius: 2, background: C.blue }} />}
+                <div style={{
+                  width: 36, height: 28, borderRadius: 14,
+                  background: isActive ? C.blue : 'transparent',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  transition: 'background 0.15s',
+                }}>
+                  <Icon size={17} color={isActive ? '#fff' : C.t3} strokeWidth={isActive ? 2.2 : 1.7} />
+                </div>
+                <span style={{ fontSize: 9, fontWeight: isActive ? 700 : 500, color: isActive ? C.blue : C.t3, lineHeight: 1 }}>{label}</span>
               </button>
             )
           })}
           <button onClick={() => setDrawerOpen(v => !v)} aria-label="More" style={{
             flex: 1, display: 'flex', flexDirection: 'column',
-            alignItems: 'center', justifyContent: 'center', gap: 3,
-            padding: '8px 2px 8px',
+            alignItems: 'center', justifyContent: 'center', gap: 4,
+            padding: '4px 2px 6px',
             minHeight: 52, border: 'none', background: 'transparent',
-            cursor: 'pointer', transition: 'color 0.12s',
+            cursor: 'pointer', transition: 'all 0.12s',
             fontFamily: F, WebkitTapHighlightColor: 'transparent',
           }}>
-            <Menu size={18} color={drawerOpen ? C.blue : C.t3} strokeWidth={drawerOpen ? 2.2 : 1.7} />
-            <span style={{ fontSize: 9, fontWeight: drawerOpen ? 700 : 400, color: drawerOpen ? C.blue : C.t3, lineHeight: 1 }}>More</span>
+            <div style={{
+              width: 36, height: 28, borderRadius: 14,
+              background: drawerOpen ? C.blue : 'transparent',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              transition: 'background 0.15s',
+            }}>
+              <Menu size={17} color={drawerOpen ? '#fff' : C.t3} strokeWidth={drawerOpen ? 2.2 : 1.7} />
+            </div>
+            <span style={{ fontSize: 9, fontWeight: drawerOpen ? 700 : 500, color: drawerOpen ? C.blue : C.t3, lineHeight: 1 }}>More</span>
           </button>
-
         </div>
       </nav>
     </div>
