@@ -9,7 +9,7 @@ import {
   ArrowUpRight, ArrowDownLeft, ChevronRight,
   ArrowDownToLine, Sparkles, Bot,
   CheckCircle2, Clock, ShoppingBag,
-  RefreshCw, Gift, Link2, Copy, Check as CheckIcon, AtSign,
+  RefreshCw, Gift, Link2, Copy, Check as CheckIcon, AtSign, Share2,
   ExternalLink, Repeat2, X as XIcon,
 } from 'lucide-react'
 import { useAppStore, ActivityItem } from '../../store/appStore'
@@ -56,97 +56,84 @@ function PayLinkCard({
   }
 
   return (
-    <div style={{ marginBottom: 22 }}>
-      <div style={{ fontSize: 13, fontWeight: 700, color: C.text, marginBottom: 10 }}>Your Pay Link</div>
-      <div style={{
-        background: C.surf, border: `1px solid ${C.bdr}`,
-        borderRadius: 18, padding: '16px 18px',
-        position: 'relative', overflow: 'hidden',
-      }}>
-        {/* top accent bar */}
-        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: C.blue, borderRadius: '18px 18px 0 0' }} />
+    <div style={{ marginBottom: 20 }}>
+      {!handle ? (
+        /* ── No NAN name yet — compact CTA ── */
+        <button
+          onClick={() => setActiveView('nan-name')}
+          style={{
+            width: '100%', display: 'flex', alignItems: 'center', gap: 12,
+            padding: '14px 16px', borderRadius: 14,
+            background: C.blueDim, border: `1px solid ${C.blueBd}`,
+            cursor: 'pointer', fontFamily: F,
+            WebkitTapHighlightColor: 'transparent', textAlign: 'left',
+            boxSizing: 'border-box',
+          }}
+        >
+          <div style={{
+            width: 38, height: 38, borderRadius: 11, flexShrink: 0,
+            background: C.blue,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <AtSign size={18} color="#fff" />
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: C.text }}>Get your pay link</div>
+            <div style={{ fontSize: 11, color: C.t2, marginTop: 1 }}>Claim a @name · anyone can pay you</div>
+          </div>
+          <ChevronRight size={15} color={C.blue} strokeWidth={2.5} />
+        </button>
+      ) : (
+        /* ── Has NAN name — prominent pay link ── */
+        <div style={{
+          background: C.surf, border: `1px solid ${C.bdr}`,
+          borderRadius: 14, overflow: 'hidden',
+        }}>
+          {/* top blue accent bar */}
+          <div style={{ height: 3, background: C.blue }} />
 
-        {!handle ? (
-          /* ── No NAN name yet ── */
-          <button
-            onClick={() => setActiveView('nan-name')}
-            style={{
-              width: '100%', background: 'none', border: 'none', cursor: 'pointer',
-              display: 'flex', alignItems: 'center', gap: 14, padding: 0, fontFamily: F,
-              WebkitTapHighlightColor: 'transparent', textAlign: 'left',
-            }}
-          >
-            <div style={{
-              width: 44, height: 44, borderRadius: 14, flexShrink: 0,
-              background: 'rgba(37,99,235,0.10)', border: '1px solid rgba(37,99,235,0.18)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}>
-              <AtSign size={20} color={C.blue} />
-            </div>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontSize: 14, fontWeight: 700, color: C.text, marginBottom: 3 }}>
-                Get a NAN name to create your pay link
-              </div>
-              <div style={{ fontSize: 12, color: C.t3, lineHeight: 1.4 }}>
-                Anyone can pay you from anywhere — no crypto wallet needed on their end
-              </div>
-            </div>
-            <ChevronRight size={16} color={C.blue} strokeWidth={2.5} />
-          </button>
-        ) : (
-          /* ── Has NAN name — show link ── */
-          <>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
+          <div style={{ padding: '12px 14px' }}>
+            {/* Link row — big and visible */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
               <div style={{
-                width: 44, height: 44, borderRadius: 14, flexShrink: 0,
-                background: 'rgba(37,99,235,0.10)', border: '1px solid rgba(37,99,235,0.18)',
+                width: 36, height: 36, borderRadius: 10, flexShrink: 0,
+                background: C.blueDim, border: `1px solid ${C.blueBd}`,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>
-                <Link2 size={20} color={C.blue} />
+                <Link2 size={16} color={C.blue} />
               </div>
-              <div style={{ minWidth: 0 }}>
-                <div style={{ fontSize: 14, fontWeight: 700, color: C.text }}>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 15, fontWeight: 700, color: C.text, letterSpacing: '-0.01em', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   nanarc.xyz/<span style={{ color: C.blue }}>@{handle}</span>
                 </div>
-                <div style={{ fontSize: 11, color: C.t3, marginTop: 2 }}>
-                  Share it — anyone can pay with card or crypto
-                </div>
+                <div style={{ fontSize: 11, color: C.t3, marginTop: 1 }}>Your pay link · anyone can pay with card or crypto</div>
               </div>
             </div>
 
-            {/* link display row */}
-            <div style={{
-              display: 'flex', alignItems: 'center', gap: 8,
-              background: C.surf2, border: `1px solid ${C.bdr}`,
-              borderRadius: 10, padding: '7px 8px 7px 12px', marginBottom: 10,
-            }}>
-              <span style={{ flex: 1, fontSize: 11, color: C.t2, fontFamily: MONO, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                {payLink}
-              </span>
+            {/* Action row */}
+            <div style={{ display: 'flex', gap: 8 }}>
               <button onClick={copy} style={{
-                flexShrink: 0, display: 'flex', alignItems: 'center', gap: 5,
-                padding: '6px 10px', borderRadius: 7,
+                flex: 1, height: 38, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                borderRadius: 10, border: 'none', cursor: 'pointer', fontFamily: F,
                 background: copied ? 'rgba(16,185,129,0.12)' : C.blue,
-                border: 'none', cursor: 'pointer',
-                fontSize: 11, fontWeight: 700, color: copied ? '#10B981' : '#fff',
-                transition: 'all 0.15s', fontFamily: F,
+                color: copied ? '#10B981' : '#fff',
+                fontSize: 13, fontWeight: 700, transition: 'all 0.15s',
               }}>
-                {copied ? <CheckIcon size={11} /> : <Copy size={11} />}
-                {copied ? 'Copied!' : 'Copy'}
+                {copied ? <CheckIcon size={13} /> : <Copy size={13} />}
+                {copied ? 'Copied!' : 'Copy link'}
+              </button>
+              <button onClick={() => { void share() }} style={{
+                flex: 1, height: 38, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                borderRadius: 10, border: `1px solid ${C.bdr}`, cursor: 'pointer', fontFamily: F,
+                background: 'transparent', color: C.text,
+                fontSize: 13, fontWeight: 600,
+              }}>
+                <Share2 size={13} color={C.t2} /> Share
               </button>
             </div>
-
-            <button onClick={() => { void share() }} style={{
-              width: '100%', padding: '11px', borderRadius: 10,
-              background: 'rgba(37,99,235,0.06)', border: '1px solid rgba(37,99,235,0.12)',
-              color: C.blue, fontSize: 13, fontWeight: 700,
-              cursor: 'pointer', fontFamily: F, letterSpacing: '-0.01em',
-            }}>
-              Share my pay link
-            </button>
-          </>
-        )}
-      </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
@@ -800,6 +787,9 @@ export function HomePage() {
         <ActionBtn Icon={Bot}             label="NAN AI"    ai      onClick={() => setActiveView('agent')}   C={C} />
       </div>
 
+      {/* ── 4b. NAN PAY LINK — above the fold ── */}
+      <PayLinkCard nanHandle={nanHandle} setActiveView={setActiveView} C={C} />
+
       {/* ── 5. QUICK ACTIONS — Agent Wallet ── */}
       <div style={{ marginBottom: 22 }}>
         <div style={{ fontSize: 13, fontWeight: 700, color: C.text, marginBottom: 10 }}>Quick actions</div>
@@ -832,8 +822,7 @@ export function HomePage() {
         </button>
       </div>
 
-      {/* ── 5b. NAN PAY LINK ── */}
-      <PayLinkCard nanHandle={nanHandle} setActiveView={setActiveView} C={C} />
+
 
       {/* ── 6. RECENT ACTIVITY ── */}
       <div>
