@@ -288,9 +288,9 @@ function CommandPalette({ onClose, onGo }: { onClose: () => void; onGo: (action:
 
 // ── Nav items (mobile bottom bar) ─────────────────────────────────────────────
 const NAV_ITEMS = [
-  { id: 'home',     label: 'Home',     Icon: Home },
-  { id: 'invoices', label: 'Invoices', Icon: FileText },
-  { id: 'gateway',  label: 'Gateway',  Icon: Layers },
+  { id: 'home',         label: 'Home',         Icon: Home },
+  { id: 'invoices',     label: 'Invoices',     Icon: FileText },
+  { id: 'agent-wallet', label: 'Agent Wallet', Icon: Wallet },
 ]
 
 // ── Sidebar sections (desktop sidebar only — mobile drawer uses MOBILE_SECTIONS) ──
@@ -344,8 +344,8 @@ export const MOBILE_DRAWER_SECTIONS = SIDEBAR_SECTIONS.filter(s => s.title !== '
   items: s.items.filter(i =>
     i.id !== 'home' &&
     i.id !== 'dashboard' &&
-    i.id !== 'invoices' &&   // Invoices is in the bottom nav
-    i.id !== 'gateway' &&    // Gateway is in the bottom nav
+    i.id !== 'invoices' &&      // Invoices is in the bottom nav
+    i.id !== 'agent-wallet' &&  // Agent Wallet is in the bottom nav
     i.id !== 'favorites' &&
     i.id !== 'contacts' &&
     !(s.title === 'Payments' && i.label === 'Transactions') &&

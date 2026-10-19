@@ -790,37 +790,7 @@ export function HomePage() {
       {/* ── 4b. NAN PAY LINK — above the fold ── */}
       <PayLinkCard nanHandle={nanHandle} setActiveView={setActiveView} C={C} />
 
-      {/* ── 5. QUICK ACTIONS — Agent Wallet ── */}
-      <div style={{ marginBottom: 22 }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: C.text, marginBottom: 10 }}>Quick actions</div>
-        <button
-          onClick={() => setActiveView('agent-wallet')}
-          style={{
-            width: '100%', padding: '18px 20px', borderRadius: 18,
-            border: `1px solid ${C.blueBd}`,
-            background: C.blueDim,
-            cursor: 'pointer', fontFamily: F, WebkitTapHighlightColor: 'transparent',
-            display: 'flex', alignItems: 'center', gap: 16,
-          }}
-        >
-          <div style={{
-            width: 48, height: 48, borderRadius: 15, flexShrink: 0,
-            background: C.blue, display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: '0 4px 16px rgba(37,99,235,0.30)',
-          }}>
-            <Bot size={22} color="#fff" strokeWidth={1.8} />
-          </div>
-          <div style={{ textAlign: 'left', flex: 1, minWidth: 0 }}>
-            <div style={{ fontSize: 14, fontWeight: 800, color: C.text, letterSpacing: '-0.02em', marginBottom: 3 }}>
-              Agent Wallet
-            </div>
-            <div style={{ fontSize: 12, color: C.t2, lineHeight: 1.45 }}>
-              Give your AI agent a wallet to pay for approved services
-            </div>
-          </div>
-          <ChevronRight size={17} color={C.blue} strokeWidth={2.5} />
-        </button>
-      </div>
+
 
 
 
