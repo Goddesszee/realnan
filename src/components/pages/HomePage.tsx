@@ -10,6 +10,7 @@ import {
   ArrowDownToLine, Sparkles, Bot,
   CheckCircle2, Clock, ShoppingBag,
   RefreshCw, Gift, Link2, Copy, Check as CheckIcon, AtSign,
+  ExternalLink, Repeat2, X as XIcon,
 } from 'lucide-react'
 import { useAppStore, ActivityItem } from '../../store/appStore'
 import { getUsdc } from '../../onchain-facts'
@@ -150,57 +151,162 @@ function PayLinkCard({
   )
 }
 
-// ─── Transaction row ──────────────────────────────────────────────────────────
+// ─── Recent Activity helpers ──────────────────────────────────────────────────
 
-function txTypeIcon(item: ActivityItem, C: NanTheme) {
-  if (item.agentInitiated) return { icon: <Bot size={15} color={C.blue} />, bg: C.blueDim }
-  if (item.type === 'bridge') return { icon: <ArrowLeftRight size={15} color="#818CF8" />, bg: 'rgba(129,140,248,0.10)' }
-  if (item.type === 'purchase' || item.type === 'agent_purchase') return { icon: <ShoppingBag size={15} color={C.gold} />, bg: `rgba(245,158,11,0.10)` }
-  if (item.sign === '+') return { icon: <ArrowDownLeft size={15} color={C.green} />, bg: 'rgba(16,185,129,0.10)' }
-  return { icon: <ArrowUpRight size={15} color={C.red} />, bg: 'rgba(239,68,68,0.10)' }
+type TxFilter = 'all' | 'sent' | 'received' | 'swaps' | 'agent'
+
+function txLabel(item: ActivityItem): string {
+  if (item.agentInitiated) return 'Agent payment'
+  if (item.type === 'swap')           return 'Token swap'
+  if (item.type === 'bridge')         return 'Bridge transfer'
+  if (item.type === 'purchase')       return 'Purchase'
+  if (item.type === 'agent_purchase') return 'Agent payment'
+  if (item.type === 'request')        return item.sign === '+' ? 'Request paid' : 'Payment request'
+  if (item.sign === '+')              return 'Payment received'
+  return 'Payment sent'
+}
+
+function txIcon(item: ActivityItem, C: NanTheme): { icon: React.ReactNode; bg: string; iconColor: string } {
+  if (item.agentInitiated || item.type === 'agent_purchase') return { icon: <Bot size={14} />, bg: C.blueDim, iconColor: C.blue }
+  if (item.type === 'swap')    return { icon: <Repeat2 size={14} />, bg: 'rgba(139,92,246,0.10)', iconColor: '#8B5CF6' }
+  if (item.type === 'bridge')  return { icon: <ArrowLeftRight size={14} />, bg: 'rgba(139,92,246,0.10)', iconColor: '#8B5CF6' }
+  if (item.type === 'purchase') return { icon: <ShoppingBag size={14} />, bg: `rgba(245,158,11,0.10)`, iconColor: C.gold }
+  if (item.sign === '+')       return { icon: <ArrowDownLeft size={14} />, bg: 'rgba(16,185,129,0.10)', iconColor: C.green }
+  return { icon: <ArrowUpRight size={14} />, bg: 'rgba(239,68,68,0.08)', iconColor: C.red }
+}
+
+function txExplorerUrl(item: ActivityItem): string | null {
+  if (!item.txHash) return null
+  const base = item.chain?.toLowerCase().includes('base') ? 'https://sepolia.basescan.org'
+    : item.chain?.toLowerCase().includes('eth') ? 'https://sepolia.etherscan.io'
+    : 'https://explorer.arc.io'
+  return `${base}/tx/${item.txHash}`
+}
+
+function StatusPill({ status, C }: { status: ActivityItem['status']; C: NanTheme }) {
+  const map = {
+    confirmed: { label: 'Completed', color: C.green,  bg: 'rgba(16,185,129,0.10)' },
+    pending:   { label: 'Pending',   color: C.gold,   bg: 'rgba(245,158,11,0.10)' },
+    failed:    { label: 'Failed',    color: C.red,    bg: 'rgba(239,68,68,0.08)'  },
+  }
+  const s = map[status] ?? map.confirmed
+  return (
+    <span style={{
+      fontSize: 10, fontWeight: 700, color: s.color,
+      background: s.bg, borderRadius: 20,
+      padding: '2px 7px', whiteSpace: 'nowrap', letterSpacing: '0.01em',
+      fontFamily: F,
+    }}>
+      {s.label}
+    </span>
+  )
 }
 
 function TxRow({ item, C, last }: { item: ActivityItem; C: NanTheme; last: boolean }) {
-  const isIn = item.sign === '+'
-  const { icon, bg } = txTypeIcon(item, C)
-  const ts = new Date(item.timestamp)
+  const [expanded, setExpanded] = React.useState(false)
+  const isIn  = item.sign === '+'
+  const isSwap = item.type === 'swap'
+  const { icon, bg, iconColor } = txIcon(item, C)
+  const ts        = new Date(item.timestamp)
   const timeLabel = ts.toLocaleTimeString('en', { hour: '2-digit', minute: '2-digit' })
   const dateLabel = ts.toLocaleDateString('en', { month: 'short', day: 'numeric' })
-  const isConfirmed = item.status === 'confirmed'
-  const isPending   = item.status === 'pending'
+  const explorerUrl = txExplorerUrl(item)
+  const amtStr = `${item.sign === '+' ? '+' : '−'}$${typeof item.amount === 'number' ? item.amount.toFixed(2) : item.amount}`
+
+  // Parse swap description e.g. "Swapped 10 USDC → 9.2 EURC"
+  const swapMatch = isSwap ? item.description.match(/(\d[\d.]*)\s+(\w+)\s*[→>]\s*(\d[\d.]*)\s+(\w+)/i) : null
 
   return (
-    <div style={{
-      display: 'flex', alignItems: 'center', gap: 12,
-      padding: '12px 0',
-      borderBottom: last ? 'none' : `1px solid ${C.bdr}`,
-    }}>
-      <div style={{
-        width: 38, height: 38, borderRadius: 11, flexShrink: 0,
-        background: bg,
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-      }}>
-        {icon}
-      </div>
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: 13, fontWeight: 600, color: C.text, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-          {item.description}
+    <div>
+      <button
+        onClick={() => setExpanded(v => !v)}
+        style={{
+          width: '100%', display: 'flex', alignItems: 'center', gap: 12,
+          padding: '11px 16px',
+          background: 'none', border: 'none', cursor: 'pointer',
+          borderBottom: (!expanded && !last) ? `1px solid ${C.bdr}` : 'none',
+          fontFamily: F, WebkitTapHighlightColor: 'transparent',
+          textAlign: 'left', transition: 'background 0.1s',
+        }}
+      >
+        {/* Circle icon */}
+        <div style={{
+          width: 36, height: 36, borderRadius: '50%', flexShrink: 0,
+          background: bg,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          color: iconColor,
+        }}>
+          {icon}
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 3, flexWrap: 'wrap' }}>
-          {item.counterparty && (
-            <span style={{ fontSize: 11, color: C.t3 }}>{item.counterparty}</span>
+
+        {/* Label + meta */}
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: 13, fontWeight: 600, color: C.text, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', lineHeight: 1.3 }}>
+            {txLabel(item)}
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginTop: 2 }}>
+            {item.counterparty && (
+              <span style={{ fontSize: 11, color: C.t2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 100 }}>{item.counterparty}</span>
+            )}
+            {item.counterparty && <span style={{ fontSize: 10, color: C.t3 }}>·</span>}
+            <span style={{ fontSize: 11, color: C.t3, whiteSpace: 'nowrap' }}>{dateLabel}, {timeLabel}</span>
+          </div>
+        </div>
+
+        {/* Amount + status */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4, flexShrink: 0 }}>
+          {isSwap && swapMatch ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+              <span style={{ fontSize: 12, fontWeight: 700, color: C.text, fontFamily: MONO }}>{swapMatch[1]} {swapMatch[2]}</span>
+              <ArrowLeftRight size={10} color={C.t3} />
+              <span style={{ fontSize: 12, fontWeight: 700, color: C.green, fontFamily: MONO }}>{swapMatch[3]} {swapMatch[4]}</span>
+            </div>
+          ) : (
+            <span style={{
+              fontSize: 13, fontWeight: 700, fontFamily: MONO,
+              color: isIn ? C.green : C.text,
+            }}>{amtStr}</span>
           )}
-          <span style={{ fontSize: 10, color: C.t3 }}>{dateLabel} · {timeLabel}</span>
-          {isConfirmed && <CheckCircle2 size={10} color={C.green} />}
-          {isPending   && <Clock        size={10} color={C.gold} />}
+          <StatusPill status={item.status} C={C} />
         </div>
-      </div>
-      <span style={{
-        fontFamily: MONO, fontSize: 13, fontWeight: 700,
-        color: isIn ? C.green : C.red, flexShrink: 0,
-      }}>
-        {item.sign}{item.amount}
-      </span>
+      </button>
+
+      {/* Expanded detail drawer */}
+      {expanded && (
+        <div style={{
+          padding: '10px 16px 14px 64px',
+          borderBottom: !last ? `1px solid ${C.bdr}` : 'none',
+          background: C.isDark ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.015)',
+        }}>
+          {/* Description */}
+          <div style={{ fontSize: 12, color: C.t2, marginBottom: 8, lineHeight: 1.5 }}>
+            {item.description}
+          </div>
+          {/* txHash */}
+          {item.txHash && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
+              <span style={{ fontSize: 11, color: C.t3, fontFamily: MONO, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, minWidth: 0 }}>
+                {item.txHash.slice(0, 18)}…{item.txHash.slice(-6)}
+              </span>
+              {explorerUrl && (
+                <a href={explorerUrl} target="_blank" rel="noreferrer" style={{
+                  display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0,
+                  fontSize: 11, fontWeight: 700, color: C.blue,
+                  textDecoration: 'none',
+                  padding: '4px 8px', borderRadius: 6,
+                  background: C.blueDim, border: `1px solid ${C.blueBd}`,
+                }}>
+                  <ExternalLink size={10} />
+                  View on Arc
+                </a>
+              )}
+            </div>
+          )}
+          {!item.txHash && (
+            <div style={{ fontSize: 11, color: C.t3, fontStyle: 'italic' }}>No transaction hash available</div>
+          )}
+        </div>
+      )}
     </div>
   )
 }
@@ -431,9 +537,20 @@ export function HomePage() {
   // the user has no handle (nanHandle === '' not just undefined/loading).
   const hasHandle = !!nanHandle || !hydrated
 
-  const recent = [...activity]
+  const [txFilter, setTxFilter] = useState<TxFilter>('all')
+
+  const allSorted = [...activity]
     .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-    .slice(0, 4)
+
+  const filterFn = (item: ActivityItem): boolean => {
+    if (txFilter === 'sent')     return item.sign === '-' && !item.agentInitiated && item.type !== 'swap' && item.type !== 'bridge'
+    if (txFilter === 'received') return item.sign === '+'
+    if (txFilter === 'swaps')    return item.type === 'swap' || item.type === 'bridge'
+    if (txFilter === 'agent')    return !!item.agentInitiated || item.type === 'agent_purchase'
+    return true
+  }
+
+  const recent = allSorted.filter(filterFn).slice(0, 6)
 
   // Positions filtered by token for the sheet
   const positionsFor = (sym: 'USDC' | 'EURC' | 'USDT') =>
@@ -720,8 +837,9 @@ export function HomePage() {
 
       {/* ── 6. RECENT ACTIVITY ── */}
       <div>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-          <span style={{ fontSize: 13, fontWeight: 700, color: C.text }}>Recent Activity</span>
+        {/* Header row */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+          <span style={{ fontSize: 15, fontWeight: 700, color: C.text, letterSpacing: '-0.01em' }}>Recent Activity</span>
           <button
             onClick={() => setActiveView('activity')}
             style={{
@@ -735,22 +853,62 @@ export function HomePage() {
           </button>
         </div>
 
-        <div style={{ background: C.surf, border: `1px solid ${C.bdr}`, borderRadius: 16, padding: '0 14px' }}>
+        {/* Filter pills */}
+        <div style={{
+          display: 'flex', gap: 6, marginBottom: 12,
+          overflowX: 'auto', paddingBottom: 2,
+          msOverflowStyle: 'none', scrollbarWidth: 'none',
+        }}>
+          {([
+            { key: 'all',      label: 'All' },
+            { key: 'sent',     label: 'Sent' },
+            { key: 'received', label: 'Received' },
+            { key: 'swaps',    label: 'Swaps' },
+            { key: 'agent',    label: 'Agent' },
+          ] as { key: TxFilter; label: string }[]).map(({ key, label }) => {
+            const active = txFilter === key
+            return (
+              <button
+                key={key}
+                onClick={() => setTxFilter(key)}
+                style={{
+                  flexShrink: 0, padding: '5px 12px', borderRadius: 20,
+                  border: `1px solid ${active ? C.blue : C.bdr}`,
+                  background: active ? C.blue : C.surf,
+                  color: active ? '#fff' : C.t2,
+                  fontSize: 12, fontWeight: 600, cursor: 'pointer',
+                  fontFamily: F, transition: 'all 0.12s',
+                  WebkitTapHighlightColor: 'transparent',
+                }}
+              >
+                {label}
+              </button>
+            )
+          })}
+        </div>
+
+        {/* Transaction list */}
+        <div style={{
+          background: C.surf,
+          border: `1px solid ${C.bdr}`,
+          borderRadius: 16,
+          overflow: 'hidden',
+        }}>
           {recent.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '28px 16px' }}>
+            <div style={{ textAlign: 'center', padding: '32px 16px' }}>
               <div style={{
-                width: 40, height: 40, borderRadius: 12,
+                width: 40, height: 40, borderRadius: '50%',
                 background: C.surf2,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 margin: '0 auto 10px',
               }}>
-                <ActivityIcon size={18} color={C.t3} />
+                <ActivityIcon size={17} color={C.t3} />
               </div>
               <div style={{ fontSize: 13, fontWeight: 600, color: C.text, marginBottom: 4 }}>
-                No activity yet
+                {txFilter === 'all' ? 'No activity yet' : `No ${txFilter} transactions`}
               </div>
               <div style={{ fontSize: 12, color: C.t3 }}>
-                Your transactions will appear here
+                {txFilter === 'all' ? 'Your transactions will appear here' : 'Try a different filter'}
               </div>
             </div>
           ) : (
