@@ -368,23 +368,18 @@ export function InvoicePage() {
   }
 
   const renderHeader = (title: string, onBack?: () => void) => (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '20px 0 18px', borderBottom: `1px solid ${BDR}`, marginBottom: 18 }}>
-      {onBack ? (
-        <button onClick={onBack} style={{ width: 34, height: 34, borderRadius: 9, background: SURF2, border: `1px solid ${BDR}`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0 }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '16px 0 14px', marginBottom: 16 }}>
+      {onBack && (
+        <button onClick={onBack} style={{ width: 32, height: 32, borderRadius: 8, background: SURF2, border: `1px solid ${BDR}`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0 }}>
           <ArrowRight size={14} color={T2} style={{ transform: 'rotate(180deg)' }} />
         </button>
-      ) : (
-        <div style={{ width: 38, height: 38, borderRadius: 11, background: BLUE, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-          <FileText size={18} color="#fff" />
-        </div>
       )}
       <div style={{ flex: 1 }}>
-        <div style={{ fontSize: 17, fontWeight: 700, color: TEXT, letterSpacing: '-0.02em' }}>{title}</div>
-        {view === 'list' && <div style={{ fontSize: 12, color: T2, marginTop: 1 }}>Invoices and payment requests in one place</div>}
+        <div style={{ fontSize: 18, fontWeight: 700, color: TEXT, letterSpacing: '-0.02em' }}>{title}</div>
       </div>
       {view === 'list' && (
-        <button onClick={openNew} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0 14px', height: 36, background: BLUE, color: '#fff', border: 'none', borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: F, flexShrink: 0 }}>
-          <Plus size={15} /> New
+        <button onClick={openNew} style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '0 14px', height: 34, background: BLUE, color: '#fff', border: 'none', borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: F, flexShrink: 0 }}>
+          <Plus size={14} /> New
         </button>
       )}
     </div>
@@ -410,18 +405,18 @@ export function InvoicePage() {
         ]
         return (
           <>
-            <div style={{ background: SURF, border: `1px solid ${BDR}`, borderRadius: 14, padding: '16px 16px 14px', marginBottom: 16 }}>
-              <div style={{ fontSize: 11, fontWeight: 600, color: T3, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Waiting to be paid</div>
-              <div style={{ marginTop: 6, display: 'flex', alignItems: 'baseline', gap: 7, flexWrap: 'wrap' }}>
-                <span style={{ fontSize: 'clamp(22px, 7vw, 28px)', fontWeight: 800, color: TEXT, letterSpacing: '-0.03em', lineHeight: 1.1, fontVariantNumeric: 'tabular-nums' }}>{fmt0(outstanding)}</span>
-                <span style={{ fontSize: 13, fontWeight: 600, color: T3 }}>USDC</span>
+            <div style={{ background: SURF, border: `1px solid ${BDR}`, borderRadius: 14, padding: '14px 16px 12px', marginBottom: 14 }}>
+              <div style={{ fontSize: 12, fontWeight: 500, color: T2 }}>Waiting to be paid</div>
+              <div style={{ marginTop: 4, display: 'flex', alignItems: 'baseline', gap: 6 }}>
+                <span style={{ fontSize: 24, fontWeight: 800, color: TEXT, letterSpacing: '-0.03em', lineHeight: 1.15, fontVariantNumeric: 'tabular-nums' }}>{fmt0(outstanding)}</span>
+                <span style={{ fontSize: 12, fontWeight: 600, color: T3 }}>USDC</span>
               </div>
-              <div style={{ marginTop: 12, paddingTop: 12, borderTop: `1px solid ${BDR}`, display: 'flex', gap: 18, flexWrap: 'wrap', fontSize: 13, color: T2 }}>
-                <span><b style={{ color: TEXT }}>{stats.unpaid}</b> unpaid</span>
-                <span><b style={{ color: stats.overdue > 0 ? RED : TEXT }}>{stats.overdue}</b> overdue</span>
-                <span><b style={{ color: TEXT }}>{fmt0(stats.revenue)}</b> collected</span>
+              <div style={{ marginTop: 10, paddingTop: 10, borderTop: `1px solid ${BDR}`, display: 'flex', gap: 16, flexWrap: 'wrap', fontSize: 12, color: T2 }}>
+                <span><b style={{ color: TEXT, fontWeight: 700 }}>{stats.unpaid}</b> unpaid</span>
+                <span><b style={{ color: stats.overdue > 0 ? RED : TEXT, fontWeight: 700 }}>{stats.overdue}</b> overdue</span>
+                <span><b style={{ color: TEXT, fontWeight: 700 }}>{fmt0(stats.revenue)}</b> collected</span>
               </div>
-              <button onClick={() => showIncomeStatement(invoices)} style={{ marginTop: 12, height: 34, padding: '0 12px', borderRadius: 10, border: `1px solid ${BDR}`, background: SURF2, color: T2, fontSize: 12, fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: 6, cursor: 'pointer', fontFamily: F }}><FileText size={14} /> Income statement</button>
+              <button onClick={() => showIncomeStatement(invoices)} style={{ marginTop: 10, height: 30, padding: '0 10px', borderRadius: 8, border: `1px solid ${BDR}`, background: SURF2, color: T2, fontSize: 11, fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: 5, cursor: 'pointer', fontFamily: F }}><FileText size={12} /> Income statement</button>
             </div>
 
             <div role="tablist" aria-label="Filter" style={{ display: 'flex', gap: 8, overflowX: 'auto', margin: '0 -16px 14px', padding: '0 16px', scrollbarWidth: 'none' }}>
@@ -429,9 +424,8 @@ export function InvoicePage() {
                 const on = filterStatus === c.id
                 return (
                   <button key={c.id} role="tab" aria-selected={on} onClick={() => setFilterStatus(c.id)}
-                    style={{ flexShrink: 0, height: 32, padding: '0 12px', borderRadius: 999, border: `1px solid ${on ? BLUE : BDR}`, background: on ? BLUE : SURF2, color: on ? '#fff' : T2, fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: F, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-                    {c.label}
-                    <span style={{ fontSize: 11, fontWeight: 700, opacity: on ? 0.85 : 0.6 }}>{c.n}</span>
+                    style={{ flexShrink: 0, height: 30, padding: '0 12px', borderRadius: 999, border: `1px solid ${on ? BLUE : BDR}`, background: on ? BLUE : 'transparent', color: on ? '#fff' : T2, fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: F, display: 'inline-flex', alignItems: 'center', gap: 5, whiteSpace: 'nowrap' }}>
+                    {c.label} {c.n > 0 && <span style={{ fontSize: 11, fontWeight: 700, opacity: on ? 0.85 : 0.55 }}>{c.n}</span>}
                   </button>
                 )
               })}
@@ -477,7 +471,7 @@ export function InvoicePage() {
           return (
             <div key={inv.id} style={{
               background: SURF, border: `1px solid ${BDR}`,
-              borderRadius: 16, overflow: 'hidden',
+              borderRadius: 14, overflow: 'hidden',
             }}>
               {/* ── Clickable row ── */}
               <button
@@ -506,9 +500,9 @@ export function InvoicePage() {
               </button>
 
               {/* ── Amount + due row ── */}
-              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 10, padding: '0 14px 12px', flexWrap: 'wrap' }}>
-                <div style={{ fontSize: 20, fontWeight: 800, color: inv.status === 'paid' ? GREEN : TEXT, letterSpacing: '-0.03em', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>
-                  {amountStr} <span style={{ fontSize: 11, fontWeight: 600, color: T3 }}>{inv.currency}</span>
+              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 10, padding: '0 14px 10px', flexWrap: 'wrap' }}>
+                <div style={{ fontSize: 17, fontWeight: 700, color: inv.status === 'paid' ? GREEN : TEXT, letterSpacing: '-0.02em', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>
+                  {amountStr} <span style={{ fontSize: 11, fontWeight: 500, color: T3 }}>{inv.currency}</span>
                 </div>
                 <div style={{ fontSize: 11, color: inv.status === 'overdue' ? RED : T3 }}>
                   {inv.amountDue > 0 && inv.amountDue < inv.total ? `${fmtAmt(inv.amountDue, inv.currency)} left · ` : ''}Due {fmtDate(inv.dueDate)}
@@ -516,7 +510,7 @@ export function InvoicePage() {
               </div>
 
               {/* ── Action row ── */}
-              <div style={{ display: 'flex', alignItems: 'center', flexWrap: delConfirm === inv.id ? 'wrap' : 'nowrap', gap: 6, padding: '10px 14px 12px', borderTop: `1px solid ${BDR}` }}>
+              <div style={{ display: 'flex', alignItems: 'center', flexWrap: delConfirm === inv.id ? 'wrap' : 'nowrap', gap: 6, padding: '8px 14px 10px', borderTop: `1px solid ${BDR}` }}>
                 <button onClick={() => copyLink(inv)} style={{ ...actionBtn, flex: 1, padding: '0 6px', justifyContent: 'center', background: C.blueDim, borderColor: C.blueBd, color: BLUE }}>
                   <Copy size={13} style={{ flexShrink: 0 }} /> Copy link
                 </button>
