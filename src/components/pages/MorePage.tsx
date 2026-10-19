@@ -4,13 +4,15 @@
  * as clean, tappable rows inside the normal page scroll area.
  */
 import { useEffect, useState } from 'react'
-import { ChevronRight, AtSign } from 'lucide-react'
+import { ChevronRight, AtSign, Shield } from 'lucide-react'
 import { useNanTheme } from '../../hooks/useNanTheme'
 import { useAppStore } from '../../store/appStore'
+import { useAccount } from 'wagmi'
 import { MOBILE_DRAWER_SECTIONS } from '../layout/AppShell'
 import { NanLogo } from '../NanLogo'
 
 const F = "'Inter', -apple-system, sans-serif"
+const ADMIN_ADDRESS = (import.meta.env.VITE_ADMIN_ADDRESS as string ?? '').toLowerCase()
 
 // Blinking dot indicator
 function BlinkDot() {
@@ -31,10 +33,15 @@ function BlinkDot() {
 
 export function MorePage() {
   const C = useNanTheme()
-  const { setActiveView, nanHandle } = useAppStore()
+  const { setActiveView, nanHandle, auth } = useAppStore()
+  const { address: wagmiAddress } = useAccount()
 
   const go = (id: string) => setActiveView(id)
   const hasName = Boolean(nanHandle)
+
+  // Show Admin row when VITE_ADMIN_ADDRESS matches connected wallet, or always if env var not set
+  const walletAddr = (wagmiAddress ?? auth?.walletAddress ?? auth?.circleWalletAddress ?? '').toLowerCase()
+  const isAdmin = ADMIN_ADDRESS === '' ? true : (!!walletAddr && walletAddr === ADMIN_ADDRESS)
 
   return (
     <div style={{ fontFamily: F, paddingBottom: 24 }}>
@@ -125,6 +132,36 @@ export function MorePage() {
           </div>
         </div>
       ))}
+
+      {/* ── Admin row — visible to admin only ── */}
+      {isAdmin && (
+        <div style={{ marginTop: 16 }}>
+          <div style={{ fontSize: 11, fontWeight: 600, color: C.t3, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4 }}>Admin</div>
+          <div style={{ background: C.surf, border: `1px solid ${C.bdr}`, borderRadius: 14, overflow: 'hidden' }}>
+            <button
+              onClick={() => go('admin')}
+              style={{
+                width: '100%', display: 'flex', alignItems: 'center', gap: 12,
+                padding: '12px 14px', background: 'none', border: 'none', cursor: 'pointer',
+                fontFamily: F, textAlign: 'left', WebkitTapHighlightColor: 'transparent', boxSizing: 'border-box',
+              }}
+            >
+              <div style={{
+                width: 32, height: 32, borderRadius: 9, flexShrink: 0,
+                background: 'rgba(37,99,235,0.10)', border: '1px solid rgba(37,99,235,0.18)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                <Shield size={15} color={C.blue} strokeWidth={1.8} />
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 14, fontWeight: 600, color: C.blue, lineHeight: 1.3 }}>Admin Dashboard</div>
+                <div style={{ fontSize: 11, color: C.t3, marginTop: 1 }}>Users, treasury, support & audit</div>
+              </div>
+              <ChevronRight size={14} color={C.blue} style={{ flexShrink: 0 }} />
+            </button>
+          </div>
+        </div>
+      )}
 
     </div>
   )
