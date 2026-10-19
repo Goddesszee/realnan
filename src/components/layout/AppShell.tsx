@@ -737,48 +737,147 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
       {/* Mobile side drawer */}
       <div style={{
-        position: 'fixed', top: 0, right: 0, bottom: 0, width: 'min(272px, calc(100vw - 56px))', zIndex: 110,
-        background: C.surf,
-        borderLeft: `1px solid ${C.bdr}`,
-        boxShadow: C.isDark ? '-16px 0 48px rgba(0,0,0,0.6)' : '-16px 0 48px rgba(0,0,0,0.12)',
+        position: 'fixed', top: 0, right: 0, bottom: 0,
+        width: 'min(272px, calc(100vw - 40px))', zIndex: 110,
+        background: C.isDark ? '#0F1420' : '#FFFFFF',
+        boxShadow: C.isDark ? '-20px 0 60px rgba(0,0,0,0.7)' : '-4px 0 32px rgba(0,0,0,0.12)',
         transform: drawerOpen ? 'translateX(0)' : 'translateX(100%)',
-        transition: 'transform 0.24s cubic-bezier(0.4,0,0.2,1)',
+        transition: 'transform 0.26s cubic-bezier(0.4,0,0.2,1)',
         display: 'flex', flexDirection: 'column',
+        borderLeft: `1px solid ${C.bdr}`,
       }}>
-        {/* Mobile drawer header */}
-        <div style={{ height: 52, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingLeft: 16, paddingRight: 12, borderBottom: `1px solid ${C.bdr}`, userSelect: 'none' }}>
-          <button onClick={handleLogoTap} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', display: 'flex', alignItems: 'center', WebkitTapHighlightColor: 'transparent' }}>
-            <NanLogo height={28} />
-          </button>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <NetworkPill compact />
-            <NotificationBell color={C.t2} />
-            <button onClick={() => setDrawerOpen(false)} aria-label="Close menu" style={{ width: 30, height: 30, borderRadius: 8, background: C.surf2, border: `1px solid ${C.bdr2}`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
-              <X size={14} color={C.t2} />
-            </button>
-          </div>
-        </div>
-        <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', WebkitOverflowScrolling: 'touch', padding: '8px 10px', paddingBottom: 'max(100px,calc(env(safe-area-inset-bottom) + 80px))', scrollbarWidth: 'none' }}>
-          {MOBILE_DRAWER_SECTIONS.map(section => (
-            <div key={section.title} style={{ marginBottom: 8 }}>
-              <div style={{ fontSize: 10, fontWeight: 700, color: C.t3, textTransform: 'uppercase', letterSpacing: '0.09em', padding: '12px 8px 5px' }}>{section.title}</div>
-              {section.items.map(({ id, label, Icon, desc }) => {
+        {/* ── Profile header ── */}
+        {(() => {
+          const drawerAuth = useAppStore.getState().auth
+          const drawerProfile = useAppStore.getState().profile
+          const drawerHandle = useAppStore.getState().nanHandle
+          const name = drawerProfile?.displayName || drawerAuth?.email?.split('@')[0] || 'Your account'
+          const handle = drawerHandle ? `@${drawerHandle}` : drawerAuth?.email ?? ''
+          const avatar = drawerProfile?.avatarUrl
+          const initials = name.slice(0, 2).toUpperCase()
+          return (
+            <div style={{
+              flexShrink: 0,
+              padding: '20px 16px 16px',
+              borderBottom: `1px solid ${C.bdr}`,
+            }}>
+              {/* Top row: close button */}
+              <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 14 }}>
+                <button onClick={() => setDrawerOpen(false)} aria-label="Close menu" style={{
+                  width: 28, height: 28, borderRadius: 8,
+                  background: C.surf2, border: `1px solid ${C.bdr}`,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  cursor: 'pointer',
+                }}>
+                  <X size={13} color={C.t2} />
+                </button>
+              </div>
+              {/* Avatar + name */}
+              <button onClick={() => go('profile')} style={{
+                display: 'flex', alignItems: 'center', gap: 12,
+                background: 'none', border: 'none', cursor: 'pointer',
+                fontFamily: F, textAlign: 'left', padding: 0,
+                width: '100%', WebkitTapHighlightColor: 'transparent',
+              }}>
+                <div style={{
+                  width: 48, height: 48, borderRadius: 24, flexShrink: 0,
+                  background: C.isDark ? 'rgba(37,99,235,0.12)' : 'rgba(37,99,235,0.08)',
+                  border: `2px solid ${C.bdr}`,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  overflow: 'hidden',
+                }}>
+                  {avatar
+                    ? <img src={avatar} alt={name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    : <span style={{ fontSize: 17, fontWeight: 700, color: C.blue }}>{initials}</span>
+                  }
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: C.text, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{name}</div>
+                  <div style={{ fontSize: 12, color: C.t2, marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{handle}</div>
+                </div>
+                <ChevronRight size={14} color={C.t3} style={{ flexShrink: 0 }} />
+              </button>
+            </div>
+          )
+        })()}
+
+        {/* ── Nav sections ── */}
+        <div style={{
+          flex: 1, overflowY: 'auto', overflowX: 'hidden',
+          WebkitOverflowScrolling: 'touch',
+          padding: '8px 8px 16px',
+          scrollbarWidth: 'none',
+        }}>
+          {MOBILE_DRAWER_SECTIONS.map((section, si) => (
+            <div key={section.title} style={{ marginTop: si === 0 ? 4 : 8 }}>
+              {/* Section label */}
+              <div style={{
+                fontSize: 10, fontWeight: 600, color: C.t3,
+                textTransform: 'uppercase', letterSpacing: '0.07em',
+                padding: '4px 10px 4px',
+                marginBottom: 2,
+              }}>{section.title}</div>
+
+              {/* Items */}
+              {section.items.map(({ id, label, Icon }) => {
                 const isActive = activeView === id
                 return (
-                  <button key={`${id}-${label}`} onClick={() => go(id)} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 11, padding: '9px 10px', borderRadius: 10, border: `1px solid ${isActive ? C.blueBd : 'transparent'}`, background: isActive ? C.blueDim : 'transparent', cursor: 'pointer', transition: 'all 0.12s', fontFamily: F, marginBottom: 2, WebkitTapHighlightColor: 'transparent' }}>
-                    <div style={{ width: 32, height: 32, borderRadius: 8, flexShrink: 0, background: isActive ? 'rgba(37,99,235,0.15)' : C.surf2, border: `1px solid ${isActive ? C.blueBd : C.bdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <Icon size={15} color={isActive ? C.blue : C.t2} />
+                  <button key={`${id}-${label}`} onClick={() => go(id)} style={{
+                    width: '100%', display: 'flex', alignItems: 'center', gap: 10,
+                    padding: '8px 10px', borderRadius: 10,
+                    border: 'none',
+                    background: isActive ? C.blueDim : 'transparent',
+                    cursor: 'pointer', transition: 'background 0.12s',
+                    fontFamily: F, marginBottom: 1,
+                    WebkitTapHighlightColor: 'transparent',
+                    boxSizing: 'border-box',
+                  }}>
+                    {/* Small icon */}
+                    <div style={{
+                      width: 30, height: 30, borderRadius: 8, flexShrink: 0,
+                      background: isActive ? C.blue : C.isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      transition: 'background 0.12s',
+                    }}>
+                      <Icon size={15} color={isActive ? '#fff' : C.t2} strokeWidth={isActive ? 2.2 : 1.8} />
                     </div>
-                    <div style={{ flex: 1, textAlign: 'left', minWidth: 0 }}>
-                      <div style={{ fontSize: 13, fontWeight: 600, color: isActive ? C.blue : C.text, lineHeight: 1.2 }}>{label}</div>
-                      <div style={{ fontSize: 11, color: C.t3, marginTop: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{desc}</div>
-                    </div>
-                    <ChevronRight size={12} color={isActive ? C.blueBd : C.t3} />
+                    {/* Label only — no description */}
+                    <span style={{
+                      flex: 1, textAlign: 'left', fontSize: 13,
+                      fontWeight: isActive ? 700 : 500,
+                      color: isActive ? C.blue : C.text,
+                    }}>{label}</span>
+                    {isActive && <div style={{ width: 5, height: 5, borderRadius: '50%', background: C.blue, flexShrink: 0 }} />}
                   </button>
                 )
               })}
             </div>
           ))}
+        </div>
+
+        {/* ── Drawer footer ── */}
+        <div style={{
+          flexShrink: 0,
+          borderTop: `1px solid ${C.bdr}`,
+          padding: '8px 8px 12px',
+        }}>
+          <button onClick={() => go('settings')} style={{
+            width: '100%', display: 'flex', alignItems: 'center', gap: 10,
+            padding: '8px 10px', borderRadius: 10,
+            border: 'none', background: 'transparent',
+            cursor: 'pointer', fontFamily: F,
+            WebkitTapHighlightColor: 'transparent', boxSizing: 'border-box',
+          }}>
+            <div style={{
+              width: 30, height: 30, borderRadius: 8, flexShrink: 0,
+              background: C.isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <Settings size={15} color={C.t2} strokeWidth={1.8} />
+            </div>
+            <span style={{ flex: 1, fontSize: 13, fontWeight: 500, color: C.text }}>Settings</span>
+            <ChevronRight size={14} color={C.t3} />
+          </button>
         </div>
       </div>
 
