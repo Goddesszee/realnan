@@ -814,50 +814,51 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         borderTop: `1px solid ${C.bdr}`,
         transition: 'background 0.25s',
         display: (activeView === 'agent' || activeView === 'agent-wallet') ? 'none' : undefined,
-        boxShadow: C.isDark ? 'none' : '0 -1px 0 rgba(0,0,0,0.06)',
-        paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 8px)',
+        boxShadow: C.isDark ? 'none' : '0 -1px 8px rgba(0,0,0,0.06)',
       }}>
-        <div style={{ display: 'flex', maxWidth: 480, margin: '0 auto', paddingTop: 8 }}>
+        <div style={{ display: 'flex', maxWidth: 480, margin: '0 auto' }}>
           {NAV_ITEMS.map(({ id, label, Icon }) => {
             const isActive = navActive(id)
             return (
               <button key={id} onClick={() => go(id)} aria-label={label} style={{
                 flex: 1, display: 'flex', flexDirection: 'column',
-                alignItems: 'center', justifyContent: 'center', gap: 3,
-                padding: '0 2px',
-                height: 46, border: 'none', background: 'transparent',
+                alignItems: 'center', justifyContent: 'flex-start', gap: 3,
+                paddingTop: 10, paddingBottom: 12,
+                border: 'none', background: 'transparent',
                 cursor: 'pointer', transition: 'all 0.12s',
                 fontFamily: F, WebkitTapHighlightColor: 'transparent',
+                minWidth: 0,
               }}>
                 <div style={{
                   width: 36, height: 28, borderRadius: 14,
                   background: isActive ? C.blue : 'transparent',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  transition: 'background 0.15s',
+                  transition: 'background 0.15s', flexShrink: 0,
                 }}>
                   <Icon size={17} color={isActive ? '#fff' : C.t3} strokeWidth={isActive ? 2.2 : 1.7} />
                 </div>
-                <span style={{ fontSize: 9, fontWeight: isActive ? 700 : 500, color: isActive ? C.blue : C.t3, lineHeight: 1 }}>{label}</span>
+                <span style={{ fontSize: 10, fontWeight: isActive ? 700 : 500, color: isActive ? C.blue : C.t3, lineHeight: 1 }}>{label}</span>
               </button>
             )
           })}
           <button onClick={() => setDrawerOpen(v => !v)} aria-label="More" style={{
             flex: 1, display: 'flex', flexDirection: 'column',
-            alignItems: 'center', justifyContent: 'center', gap: 3,
-            padding: '0 2px',
-            height: 46, border: 'none', background: 'transparent',
+            alignItems: 'center', justifyContent: 'flex-start', gap: 3,
+            paddingTop: 10, paddingBottom: 12,
+            border: 'none', background: 'transparent',
             cursor: 'pointer', transition: 'all 0.12s',
             fontFamily: F, WebkitTapHighlightColor: 'transparent',
+            minWidth: 0,
           }}>
             <div style={{
               width: 36, height: 28, borderRadius: 14,
               background: drawerOpen ? C.blue : 'transparent',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              transition: 'background 0.15s',
+              transition: 'background 0.15s', flexShrink: 0,
             }}>
               <Menu size={17} color={drawerOpen ? '#fff' : C.t3} strokeWidth={drawerOpen ? 2.2 : 1.7} />
             </div>
-            <span style={{ fontSize: 9, fontWeight: drawerOpen ? 700 : 500, color: drawerOpen ? C.blue : C.t3, lineHeight: 1 }}>More</span>
+            <span style={{ fontSize: 10, fontWeight: drawerOpen ? 700 : 500, color: drawerOpen ? C.blue : C.t3, lineHeight: 1 }}>More</span>
           </button>
         </div>
       </nav>
