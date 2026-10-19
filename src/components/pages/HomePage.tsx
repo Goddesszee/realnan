@@ -349,7 +349,7 @@ function TokenCard({
 }) {
   const isEurc     = symbol === 'EURC'
   const flag       = symbol === 'USDC' ? '🇺🇸' : '🇪🇺'
-  const isZero     = !isLoading && parseFloat(quantity) === 0
+
   const isInert    = !onClick || onClick.toString() === '() => {}'
   return (
     <div
@@ -391,7 +391,7 @@ function TokenCard({
           <path d="M6 14h2M10 14h4" stroke={C.t3} strokeWidth="1.4" strokeLinecap="round"/>
         </svg>
         <span style={{ fontSize: 10, fontWeight: 600, color: C.t2, whiteSpace: 'nowrap' }}>
-          {isZero && symbol === 'USDC' ? 'Get account' : `${symbol} · Arc`}
+          {`${symbol} · Arc`}
         </span>
       </div>
     </div>
