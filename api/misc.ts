@@ -104,6 +104,63 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(200).json({ success: true, translations: out })
   }
 
+  // ── GET p2p-rate?fiat=NGN ─────────────────────────────────────────────────
+  // Display only: the live USDT peer-to-peer price in a local currency, taken as the median of the
+  // top adverts on each side. Tries Binance P2P, then Bybit P2P. Cached for a minute. Moves no money.
+  if (route === 'p2p-rate') {
+    const fiat = String(req.query.fiat ?? '').toUpperCase()
+    if (!/^[A-Z]{3}$/.test(fiat)) return res.status(400).json({ success: false, error: 'bad fiat' })
+    const kv = getRedis()
+    const ckey = `p2p1:${fiat}`
+    res.setHeader('Cache-Control', 'public, s-maxage=30, stale-while-revalidate=60')
+    if (kv) {
+      try {
+        const hit = await kv.get<unknown>(ckey)
+        const obj = typeof hit === 'string' ? JSON.parse(hit) : hit
+        if (obj && typeof obj === 'object') return res.status(200).json({ success: true, ...(obj as object), cached: true })
+      } catch { /* fetch fresh */ }
+    }
+    const median = (xs: number[]) => {
+      const a = xs.filter(n => Number.isFinite(n) && n > 0).sort((x, y) => x - y)
+      if (a.length < 3) return null
+      const m = Math.floor(a.length / 2)
+      return a.length % 2 ? a[m] : (a[m - 1] + a[m]) / 2
+    }
+    const post = async (url: string, body: unknown) => {
+      const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), 6000)
+      try {
+        const r = await fetch(url, { method: 'POST', headers: { 'content-type': 'application/json', accept: 'application/json' }, body: JSON.stringify(body), signal: ctl.signal })
+        if (!r.ok) throw new Error(String(r.status))
+        return await r.json() as any
+      } finally { clearTimeout(t) }
+    }
+    const binance = async (side: 'BUY' | 'SELL') => {
+      const j = await post('https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search', {
+        fiat, page: 1, rows: 10, tradeType: side, asset: 'USDT', countries: [], proMerchantAds: false, shieldMerchantAds: false, publisherType: null, payTypes: [], classifies: ['mass', 'profession'],
+      })
+      return median((j?.data ?? []).map((d: any) => parseFloat(d?.adv?.price)))
+    }
+    const bybit = async (side: '0' | '1') => {
+      const j = await post('https://api2.bybit.com/fiat/otc/item/online', { userId: '', tokenId: 'USDT', currencyId: fiat, payment: [], side, size: '10', page: '1', amount: '' })
+      return median((j?.result?.items ?? []).map((d: any) => parseFloat(d?.price)))
+    }
+    const attempts: Array<[string, () => Promise<[number | null, number | null]>]> = [
+      ['Binance P2P', async () => Promise.all([binance('BUY'), binance('SELL')])],
+      ['Bybit P2P',   async () => Promise.all([bybit('1'), bybit('0')])],
+    ]
+    for (const [source, go] of attempts) {
+      try {
+        const [x, y] = await go()
+        if (x && y) {
+          const out = { fiat, buy: Math.max(x, y), sell: Math.min(x, y), source, at: Date.now() } // buy = what you pay per USDT, sell = what you get
+          if (kv) { try { await kv.set(ckey, JSON.stringify(out), { ex: 60 }) } catch { /* ignore */ } }
+          return res.status(200).json({ success: true, ...out })
+        }
+      } catch { /* try next source */ }
+    }
+    return res.status(502).json({ success: false, error: 'P2P rate unavailable' })
+  }
+
   // ── GET naira-ramp?action=status ─────────────────────────────────────────
   // Naira deposits and cash-outs go through a licensed partner. Until one is connected
   // (NAIRA_RAMP_PROVIDER set and implemented), the app keeps the screens in "launching soon" mode.

@@ -2,7 +2,7 @@
  * Live currency converter for every currency we have a rate for.
  * Estimate only: rates are mid-market and refresh about every minute while this screen is open.
  */
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { ArrowUpDown, ChevronDown } from 'lucide-react'
 import { useFxRates, currencyList, currencyFlag, type DisplayCurrency } from '../../lib/display-currency'
 import { openCurrencyPicker } from '../../lib/currency-picker'
@@ -34,6 +34,30 @@ function money(n: number): string {
   return n.toLocaleString('en', { maximumFractionDigits: d, minimumFractionDigits: abs >= 1 && abs < 1000 ? 2 : 0 })
 }
 
+interface P2P { buy: number; sell: number; source: string; at: number }
+
+/** Live USDT peer-to-peer price for a currency, refreshed every minute. Null when unavailable. */
+function useP2P(fiat: string | null): P2P | null {
+  const [data, setData] = useState<P2P | null>(null)
+  useEffect(() => {
+    setData(null)
+    if (!fiat) return
+    let live = true
+    const load = async () => {
+      try {
+        const r = await fetch(`/api/p2p-rate?fiat=${fiat}`)
+        const j = await r.json() as { success?: boolean } & Partial<P2P>
+        if (live && j.success && j.buy && j.sell) setData({ buy: j.buy, sell: j.sell, source: j.source ?? 'P2P', at: j.at ?? Date.now() })
+        else if (live) setData(null)
+      } catch { if (live) setData(null) }
+    }
+    void load()
+    const t = setInterval(() => { if (document.visibilityState === 'visible') void load() }, 60000)
+    return () => { live = false; clearInterval(t) }
+  }, [fiat])
+  return data
+}
+
 export function CurrencyConverterPage() {
   const { rates, updatedAt, sourceAt } = useFxRates()
   const [[from, to], setPair] = useState<[string, string]>(loadPair)
@@ -50,6 +74,12 @@ export function CurrencyConverterPage() {
   const value = parseFloat(amount.replace(/,/g, ''))
   const result = ready && Number.isFinite(value) ? (value / rFrom!) * rTo! : null
   const unit = ready ? rTo! / rFrom! : null
+
+  // P2P applies when one side is US dollars and the other is the local currency.
+  const p2pFiat = from === 'USD' && to !== 'USD' ? to : to === 'USD' && from !== 'USD' ? from : null
+  const p2p = useP2P(p2pFiat)
+  const p2pUsd = p2pFiat && Number.isFinite(value) ? (from === 'USD' ? value : null) : null
+  const p2pLocal = p2pFiat && Number.isFinite(value) ? (to === 'USD' ? value : null) : null
 
   const save = (a: string, b: string) => {
     setPair([a, b])
@@ -109,6 +139,27 @@ export function CurrencyConverterPage() {
           <div>Mid-market rate, not a bank or transfer rate</div>
         </div>}
       </div>
+
+      {p2p && p2pFiat && (
+        <div style={{ background: SURF, border: `1px solid ${BDR}`, borderRadius: 16, padding: 16, marginBottom: 14 }}>
+          <div style={{ fontSize: 11, fontWeight: 600, color: T3, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 10 }}>P2P market rate (USDT)</div>
+          {([
+            { label: 'Selling dollars', rate: p2p.sell, note: 'what you get' },
+            { label: 'Buying dollars', rate: p2p.buy, note: 'what you pay' },
+          ]).map(r => (
+            <div key={r.label} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 0', borderTop: `1px solid ${BDR}` }}>
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 700 }}>{r.label}</div>
+                <div style={{ fontSize: 11, color: T3 }}>1 USD = {money(r.rate)} {p2pFiat}</div>
+              </div>
+              <div style={{ fontSize: 16, fontWeight: 800, textAlign: 'right' }}>
+                {p2pUsd !== null ? `${money(p2pUsd * r.rate)} ${p2pFiat}` : p2pLocal !== null ? `${money(p2pLocal / r.rate)} USD` : ''}
+              </div>
+            </div>
+          ))}
+          <div style={{ fontSize: 11, color: T3, marginTop: 8 }}>Median of top {p2p.source} adverts, updated {new Date(p2p.at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}. Street rate for USDT, not an official rate, and not a payout quote.</div>
+        </div>
+      )}
 
       {ready && Number.isFinite(value) && (
         <div style={{ background: SURF, border: `1px solid ${BDR}`, borderRadius: 16, padding: '6px 16px' }}>

@@ -112,6 +112,7 @@
     { "source": "/api/invoices/:id",                              "destination": "/api/payments-data?type=invoices&id=:id" },
     { "source": "/api/invoice-claim",                             "destination": "/api/payments-data?type=invoice-claim" },
     { "source": "/api/translate",                                   "destination": "/api/misc?route=translate" },
+    { "source": "/api/p2p-rate",                                     "destination": "/api/misc?route=p2p-rate" },
     { "source": "/api/naira-ramp",                                  "destination": "/api/misc?route=naira-ramp" },
     { "source": "/api/about",                                     "destination": "/api/misc?route=about" },
     { "source": "/api/faqs",                                     "destination": "/api/misc?route=faqs" },
