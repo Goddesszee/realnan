@@ -35,7 +35,7 @@ function money(n: number): string {
 }
 
 export function CurrencyConverterPage() {
-  const { rates, updatedAt } = useFxRates()
+  const { rates, updatedAt, sourceAt } = useFxRates()
   const [[from, to], setPair] = useState<[string, string]>(loadPair)
   const [amount, setAmount] = useState('100')
 
@@ -102,7 +102,12 @@ export function CurrencyConverterPage() {
 
       <div style={{ fontSize: 13, color: T2, textAlign: 'center', marginBottom: 18 }}>
         {unit !== null ? <>1 {from} = <b style={{ color: TEXT }}>{money(unit)} {to}</b></> : (rates ? 'No rate for this pair' : 'Getting live rates…')}
-        {updatedAt && unit !== null && <div style={{ fontSize: 11, color: T3, marginTop: 3 }}>Updated {updatedAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>}
+        {unit !== null && (sourceAt || updatedAt) && <div style={{ fontSize: 11, color: T3, marginTop: 3 }}>
+          {sourceAt
+            ? <>Market rate set {sourceAt.toLocaleString([], { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</>
+            : <>Checked {updatedAt!.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</>}
+          <div>Mid-market rate, not a bank or transfer rate</div>
+        </div>}
       </div>
 
       {ready && Number.isFinite(value) && (

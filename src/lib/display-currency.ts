@@ -31,7 +31,7 @@ const KEY_CODE  = 'nan_display_currency'
 const KEY_RATES = 'nan_fx_rates_v1'
 const MAX_AGE   = 60 * 1000 // rates are re-checked every minute
 
-interface RateCache { at: number; rates: Record<string, number> }
+interface RateCache { at: number; rates: Record<string, number>; src?: number }
 
 function readCode(): string {
   try {
@@ -51,25 +51,26 @@ function readCache(): RateCache | null {
 }
 
 /** Rates per 1 USD from the first source that answers; each is tried in turn. */
-async function fetchRates(): Promise<Record<string, number> | null> {
-  const attempts: Array<() => Promise<Record<string, number>>> = [
+async function fetchRates(): Promise<{ rates: Record<string, number>; src?: number } | null> {
+  const attempts: Array<() => Promise<{ rates: Record<string, number>; src?: number }>> = [
     async () => {
       const r = await fetch('https://open.er-api.com/v6/latest/USD')
-      const j = await r.json() as { result?: string; rates?: Record<string, number> }
+      const j = await r.json() as { result?: string; rates?: Record<string, number>; time_last_update_unix?: number }
       if (j.result !== 'success' || !j.rates) throw new Error('bad')
-      return j.rates
+      return { rates: j.rates, src: j.time_last_update_unix ? j.time_last_update_unix * 1000 : undefined }
     },
     async () => {
       const r = await fetch('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json')
-      const j = await r.json() as { usd?: Record<string, number> }
+      const j = await r.json() as { date?: string; usd?: Record<string, number> }
       if (!j.usd) throw new Error('bad')
-      return Object.fromEntries(Object.entries(j.usd).map(([k, v]) => [k.toUpperCase(), v]))
+      const d = j.date ? Date.parse(j.date) : NaN
+      return { rates: Object.fromEntries(Object.entries(j.usd).map(([k, v]) => [k.toUpperCase(), v])), src: Number.isFinite(d) ? d : undefined }
     },
   ]
   for (const go of attempts) {
     try {
-      const rates = await go()
-      if (rates && typeof rates.NGN === 'number' && rates.NGN > 0) return rates
+      const got = await go()
+      if (got.rates && typeof got.rates.NGN === 'number' && got.rates.NGN > 0) return got
     } catch { /* try next */ }
   }
   return null
@@ -83,9 +84,9 @@ async function ensureRates(): Promise<RateCache | null> {
   const cached = readCache()
   if (cached && Date.now() - cached.at < MAX_AGE) return cached
   if (!inflight) {
-    inflight = fetchRates().then(rates => {
-      if (rates) {
-        const c = { at: Date.now(), rates }
+    inflight = fetchRates().then(got => {
+      if (got) {
+        const c: RateCache = { at: Date.now(), rates: got.rates, src: got.src }
         try { localStorage.setItem(KEY_RATES, JSON.stringify(c)) } catch { /* ignore */ }
         return c
       }
@@ -220,5 +221,5 @@ export function useFxRates() {
     startPolling()
     return () => { live = false; listeners.delete(sync); stopPolling() }
   }, [])
-  return { rates: cache?.rates, updatedAt: cache ? new Date(cache.at) : null }
+  return { rates: cache?.rates, updatedAt: cache ? new Date(cache.at) : null, sourceAt: cache?.src ? new Date(cache.src) : null }
 }
