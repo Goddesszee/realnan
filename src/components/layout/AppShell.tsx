@@ -758,11 +758,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           return (
             <div style={{
               flexShrink: 0,
-              padding: '20px 16px 16px',
+              padding: '10px 14px 12px',
               borderBottom: `1px solid ${C.bdr}`,
             }}>
               {/* Top row: logo (admin tap) + close */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
                 <button onClick={handleLogoTap} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', display: 'flex', alignItems: 'center', WebkitTapHighlightColor: 'transparent' }}>
                   <NanLogo height={24} />
                 </button>
@@ -783,7 +783,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 width: '100%', WebkitTapHighlightColor: 'transparent',
               }}>
                 <div style={{
-                  width: 48, height: 48, borderRadius: 24, flexShrink: 0,
+                  width: 40, height: 40, borderRadius: 20, flexShrink: 0,
                   background: C.isDark ? 'rgba(37,99,235,0.12)' : 'rgba(37,99,235,0.08)',
                   border: `2px solid ${C.bdr}`,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -791,7 +791,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 }}>
                   {avatar
                     ? <img src={avatar} alt={name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    : <span style={{ fontSize: 17, fontWeight: 700, color: C.blue }}>{initials}</span>
+                    : <span style={{ fontSize: 15, fontWeight: 700, color: C.blue }}>{initials}</span>
                   }
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
@@ -808,17 +808,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <div style={{
           flex: 1, overflowY: 'auto', overflowX: 'hidden',
           WebkitOverflowScrolling: 'touch',
-          padding: '8px 8px 16px',
+          padding: '4px 8px 8px',
           scrollbarWidth: 'none',
         }}>
           {MOBILE_DRAWER_SECTIONS.map((section, si) => (
-            <div key={section.title} style={{ marginTop: si === 0 ? 4 : 8 }}>
+            <div key={section.title} style={{ marginTop: si === 0 ? 2 : 4 }}>
               {/* Section label */}
               <div style={{
                 fontSize: 10, fontWeight: 600, color: C.t3,
                 textTransform: 'uppercase', letterSpacing: '0.07em',
-                padding: '4px 10px 4px',
-                marginBottom: 2,
+                padding: '4px 10px 2px',
               }}>{section.title}</div>
 
               {/* Items */}
@@ -826,8 +825,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 const isActive = activeView === id
                 return (
                   <button key={`${id}-${label}`} onClick={() => go(id)} style={{
-                    width: '100%', display: 'flex', alignItems: 'center', gap: 10,
-                    padding: '8px 10px', borderRadius: 10,
+                    width: '100%', display: 'flex', alignItems: 'center', gap: 9,
+                    padding: '5px 10px', borderRadius: 9,
                     border: 'none',
                     background: isActive ? C.blueDim : 'transparent',
                     cursor: 'pointer', transition: 'background 0.12s',
@@ -835,22 +834,20 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                     WebkitTapHighlightColor: 'transparent',
                     boxSizing: 'border-box',
                   }}>
-                    {/* Small icon */}
                     <div style={{
-                      width: 30, height: 30, borderRadius: 8, flexShrink: 0,
+                      width: 26, height: 26, borderRadius: 7, flexShrink: 0,
                       background: isActive ? C.blue : C.isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)',
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       transition: 'background 0.12s',
                     }}>
-                      <Icon size={15} color={isActive ? '#fff' : C.t2} strokeWidth={isActive ? 2.2 : 1.8} />
+                      <Icon size={13} color={isActive ? '#fff' : C.t2} strokeWidth={isActive ? 2.2 : 1.8} />
                     </div>
-                    {/* Label only — no description */}
                     <span style={{
                       flex: 1, textAlign: 'left', fontSize: 13,
                       fontWeight: isActive ? 700 : 500,
                       color: isActive ? C.blue : C.text,
                     }}>{label}</span>
-                    {isActive && <div style={{ width: 5, height: 5, borderRadius: '50%', background: C.blue, flexShrink: 0 }} />}
+                    {isActive && <div style={{ width: 4, height: 4, borderRadius: '50%', background: C.blue, flexShrink: 0 }} />}
                   </button>
                 )
               })}
@@ -858,14 +855,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           ))}
         </div>
 
-        {/* ── Drawer footer — version hint ── */}
-        <div style={{
-          flexShrink: 0, padding: '8px 16px 12px',
-          borderTop: `1px solid ${C.bdr}`,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-        }}>
-          <span style={{ fontSize: 11, color: C.t3 }}>NAN · Arc · Circle</span>
-        </div>
+        {/* safe-area bottom pad */}
+        <div style={{ flexShrink: 0, height: 'max(8px, env(safe-area-inset-bottom))' }} />
       </div>
 
       {paletteOpen && <CommandPalette onClose={() => setPaletteOpen(false)} onGo={go} />}
