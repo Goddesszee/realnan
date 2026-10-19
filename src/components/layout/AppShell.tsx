@@ -528,11 +528,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   // Web Push subscription — registers this device with the server chain watcher
   // so notifications arrive even when the tab is closed.
   usePushNotifications()
-  // If VITE_ADMIN_ADDRESS is set, only that wallet can access admin.
-  // If it is not set (empty), any connected wallet — or no wallet — can access admin via 5-tap.
-  const isAdmin = ADMIN_ADDRESS === ''
-    ? true
-    : (!!address && address.toLowerCase() === ADMIN_ADDRESS)
+  // Show admin access only when VITE_ADMIN_ADDRESS is set AND the connected wallet matches it
+  const isAdmin = ADMIN_ADDRESS !== '' && !!address && address.toLowerCase() === ADMIN_ADDRESS
   const [adminToast, setAdminToast] = useState(false)
   const mq = typeof window !== 'undefined' ? window.matchMedia('(min-width: 769px)') : null
   const [isDesktop, setIsDesktop] = useState(mq ? mq.matches : false)

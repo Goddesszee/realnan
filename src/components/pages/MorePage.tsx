@@ -39,9 +39,9 @@ export function MorePage() {
   const go = (id: string) => setActiveView(id)
   const hasName = Boolean(nanHandle)
 
-  // Show Admin row when VITE_ADMIN_ADDRESS matches connected wallet, or always if env var not set
+  // Show Admin row only when VITE_ADMIN_ADDRESS is set AND the connected wallet matches it
   const walletAddr = (wagmiAddress ?? auth?.walletAddress ?? auth?.circleWalletAddress ?? '').toLowerCase()
-  const isAdmin = ADMIN_ADDRESS === '' ? true : (!!walletAddr && walletAddr === ADMIN_ADDRESS)
+  const isAdmin = ADMIN_ADDRESS !== '' && !!walletAddr && walletAddr === ADMIN_ADDRESS
 
   return (
     <div style={{ fontFamily: F, paddingBottom: 24 }}>
