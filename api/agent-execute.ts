@@ -123,10 +123,9 @@ async function executeNanopayment(
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         action: 'spend',
-        recipient: payment_address,
-        amount_usdc: cost_usdc.toFixed(6),
-        service_id,
-        memo: `NAN Agent — ${service_id} — ${randomUUID().slice(0, 8)}`,
+        toAddress: payment_address,
+        amount: cost_usdc.toFixed(6),
+        note: `NAN Agent — ${service_id} — ${randomUUID().slice(0, 8)}`,
       }),
     })
     const d = await r.json() as { ok?: boolean; txId?: string; error?: string }
@@ -471,6 +470,45 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       // ── Supplier search ───────────────────────────────────────────────────
       case 'alibaba-suppliers': {
         result = `**Supplier search for "${query}":**\n\nTop platforms:\n1. **Alibaba.com** — largest B2B marketplace, MOQ from 50–500 units\n2. **Global Sources** — verified Asian manufacturers\n3. **Made-in-China.com** — factory direct pricing\n4. **DHgate** — smaller MOQs, faster shipping\n\nTips: Request samples, verify certifications, use escrow payments.\n\n_Add ALIBABA_APP_KEY for live supplier data in NAN._`
+        break
+      }
+
+      // ── Weather data ──────────────────────────────────────────────────────
+      case 'openweather-data': {
+        const key = process.env.OPENWEATHER_API_KEY
+        const city = (extractCity(query) ?? params.city ?? query.replace(/weather|forecast|temperature|today|in|for/gi, '').trim()) || 'Lagos'
+        if (!key) {
+          result = `**Weather in ${city}** (knowledge estimate, late 2026):\n\nAdd OPENWEATHER_API_KEY to NAN for live conditions.\n\nTypical conditions: Lagos is tropical — 26–33°C year-round with high humidity. Rainy season Apr–Oct.`
+          break
+        }
+        try {
+          const r = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${key}&units=metric`)
+          if (!r.ok) { result = `Weather data unavailable for "${city}". Check openweathermap.org.`; break }
+          const d = await r.json() as {
+            main?: { temp?: number; feels_like?: number; humidity?: number }
+            weather?: Array<{ description?: string }>
+            wind?: { speed?: number }
+            name?: string
+          }
+          raw = d
+          const temp = d.main?.temp?.toFixed(1) ?? 'N/A'
+          const feels = d.main?.feels_like?.toFixed(1) ?? 'N/A'
+          const humidity = d.main?.humidity ?? 'N/A'
+          const desc = d.weather?.[0]?.description ?? 'unknown'
+          const wind = d.wind?.speed?.toFixed(1) ?? 'N/A'
+          result = `**Weather in ${d.name ?? city}:**\n\n🌡️ Temperature: **${temp}°C** (feels like ${feels}°C)\n☁️ Conditions: **${desc}**\n💧 Humidity: **${humidity}%**\n💨 Wind: **${wind} m/s**\n\n_Live via OpenWeatherMap._`
+        } catch { result = `Weather data unavailable for "${city}". Check openweathermap.org.` }
+        break
+      }
+
+      // ── LinkedIn jobs ─────────────────────────────────────────────────────
+      // LinkedIn's public API requires partner approval; fall back to curated guidance
+      case 'linkedin-jobs': {
+        const jobQuery = query.replace(/find|search|look for|jobs?|positions?|roles?|linkedin/gi, '').trim() || query
+        const city = extractCity(query)
+        const locationHint = city ? ` in ${city}` : ''
+        result = `**Jobs for "${jobQuery}"${locationHint}:**\n\nSearch live on:\n1. **LinkedIn** — linkedin.com/jobs\n2. **Indeed** — indeed.com\n3. **Jobberman** (Nigeria) — jobberman.com\n4. **MyJobMag** — myjobmag.com\n\n**Search tip:** Use exact job title + location filters for best results.\n\n_LinkedIn's API requires partner access. Add LINKEDIN_ACCESS_TOKEN for live job listings in NAN._`
+        raw = { query: jobQuery, location: city, source: 'knowledge' }
         break
       }
 

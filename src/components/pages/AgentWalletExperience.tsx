@@ -1354,6 +1354,45 @@ function DashboardScreen({ C, onDisconnect }: { C: ReturnType<typeof useNanTheme
         )
       })()}
 
+      {/* ── Daily budget meter ────────────────────────────────────────────── */}
+      {(() => {
+        const DAY_MS = 86_400_000
+        const nowMs = new Date().getTime()
+        const cutoff = nowMs - DAY_MS
+        const daySpent = agentSpendLog
+          .filter(e => new Date(e.timestamp ?? 0).getTime() >= cutoff)
+          .reduce((s, e) => s + (e.amount_usdc ?? 0), 0)
+        // Read daily limit from appStore policy — default 20 USDC if not set
+        const dailyLimit = 20 // TODO: read from policy when store exposes it
+        const pct = Math.min(100, dailyLimit > 0 ? (daySpent / dailyLimit) * 100 : 0)
+        const barColor = pct >= 90 ? RED : pct >= 70 ? AMBER : GREEN
+        if (daySpent === 0 && balance === 0) return null
+        return (
+          <div style={{ marginBottom: 14, padding: '12px 14px', background: C.surf, border: `1px solid ${C.bdr}`, borderRadius: 14, boxSizing: 'border-box' as const }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+              <span style={{ fontSize: 11, fontWeight: 700, color: C.t2, textTransform: 'uppercase' as const, letterSpacing: '0.06em' }}>Daily spending</span>
+              <span style={{ fontSize: 11, fontFamily: MONO, color: pct >= 90 ? RED : C.t2 }}>
+                {daySpent.toFixed(2)} / {dailyLimit} USDC
+              </span>
+            </div>
+            <div style={{ height: 6, borderRadius: 999, background: C.surf2, overflow: 'hidden', border: `1px solid ${C.bdr}` }}>
+              <div style={{
+                height: '100%', borderRadius: 999,
+                width: `${pct}%`,
+                background: barColor,
+                transition: 'width 0.4s ease',
+              }} />
+            </div>
+            {pct >= 80 && (
+              <div style={{ fontSize: 10, color: pct >= 90 ? RED : AMBER, marginTop: 5, display: 'flex', alignItems: 'center', gap: 4 }}>
+                <AlertTriangle size={10} />
+                {pct >= 100 ? 'Daily limit reached' : `${(100 - pct).toFixed(0)}% remaining today`}
+              </div>
+            )}
+          </div>
+        )
+      })()}
+
       {/* ── Action buttons ────────────────────────────────────────────────── */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 8, marginBottom: 16 }}>
         {([

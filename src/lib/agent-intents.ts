@@ -82,9 +82,10 @@ export function detectDirectAction(message: string): { reply: string; action: Re
     const dest = text.match(/(?:\bto\b|->|→)\s+(.+?)[.!?\s]*$/i)
     const chain = dest ? normalizeChain(dest[1]) : null
     if (chain) {
+      const fromAgent = /(?:agent wallet|from agent|from my agent)/i.test(lower)
       return {
-        reply: `Ready to bridge ${bridge[1]} USDC from Arc to ${chain}. Please confirm below.`,
-        action: { action: 'bridge_start', params: { amount: bridge[1], toChain: chain } },
+        reply: `Ready to bridge ${bridge[1]} USDC from Arc to ${chain}${fromAgent ? ' from your Agent Wallet' : ''}. Please confirm below.`,
+        action: { action: 'bridge_start', params: { amount: bridge[1], toChain: chain, source: fromAgent ? 'agent' : 'main' } },
       }
     }
   }

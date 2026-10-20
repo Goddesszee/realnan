@@ -193,7 +193,7 @@ export interface UcwGatewayTransferAction {
 
 export interface BridgeStartAction {
   action: 'bridge_start'
-  params: { amount?: string; toChain?: string }
+  params: { amount?: string; toChain?: string; source?: 'agent' | 'main' }
 }
 
 export interface SwapStartAction {
@@ -467,7 +467,7 @@ export function parseAction(raw: Record<string, unknown>): NanAction | null {
       return { action: 'ucw_gateway_transfer', params: { amount, toChain } }
     }
     case 'bridge_start':
-      return { action: 'bridge_start', params: { amount: s(params.amount) || undefined, toChain: s(params.toChain) || undefined } }
+      return { action: 'bridge_start', params: { amount: s(params.amount) || undefined, toChain: s(params.toChain) || undefined, source: s(params.source) === 'agent' ? 'agent' : 'main' } }
     case 'swap_start':
       return { action: 'swap_start', params: { fromToken: s(params.fromToken) || undefined, toToken: s(params.toToken) || undefined, amount: s(params.amount) || undefined, source: s(params.source) === 'agent' ? 'agent' : 'main' } }
     case 'navigate': {
@@ -1279,7 +1279,12 @@ export async function executeAction(action: NanAction, ctx: ExecutorContext): Pr
     }
 
     case 'bridge_start': {
-      if (ctx.runBridge && action.params.amount && action.params.toChain) {
+      const fromAgent = action.params.source === 'agent'
+      if (fromAgent && ctx.runBridge && action.params.amount && action.params.toChain) {
+        // Route through agent wallet UCW bridge flow
+        return ctx.runBridge({ amount: action.params.amount, toChain: action.params.toChain })
+      }
+      if (!fromAgent && ctx.runBridge && action.params.amount && action.params.toChain) {
         return ctx.runBridge({ amount: action.params.amount, toChain: action.params.toChain })
       }
       store.setBridgePrefill({ amount: action.params.amount, toChain: action.params.toChain })

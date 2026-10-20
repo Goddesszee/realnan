@@ -22,6 +22,7 @@ import { requireCircleKey } from './_circle-key.js'
 import { execFile } from 'child_process'
 import { promisify } from 'util'
 import { randomUUID } from 'crypto'
+import { reserveSpend, confirmSpend, cancelSpend, type SpendingPolicy } from './spending-guard.js'
 
 // Arc USDC ERC-20 contract address
 const ARC_USDC = '0x3600000000000000000000000000000000000000'
@@ -461,7 +462,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const {
       endpoint: svcEndpoint, service_id, query: svcQuery,
       userToken: bodyToken,
-      dailyLimit, dailyUsed, perServiceLimit,
+      dailyLimit, perServiceLimit,
       requireApproval, requireApprovalAbove,
     } = body
     const userToken = (req.headers['x-user-token'] as string) ?? bodyToken
@@ -497,24 +498,57 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (serviceCard?.price_raw) cost_usdc = parseInt(serviceCard.price_raw, 10) / 1e6
     if (service_id && STATIC_COSTS[service_id]) cost_usdc = cost_usdc || STATIC_COSTS[service_id]
 
-    // Step 4: policy check
+    // Step 4: server-side spending guard (authoritative, Redis-backed)
     const dLimit   = parseFloat(dailyLimit  ?? '0') || 20
-    const dUsed    = parseFloat(dailyUsed   ?? '0') || 0
     const perSvc   = parseFloat(perServiceLimit ?? '0') || 5
     const reqAbove = parseFloat(requireApprovalAbove ?? '5') || 5
     const reqApproval = requireApproval === 'true' || requireApproval === '1'
-    const remaining = dLimit - dUsed
 
-    if (cost_usdc > remaining)
-      return res.status(200).json({ ok: false, blocked: true, reason: `Service costs ${cost_usdc.toFixed(4)} USDC but only ${remaining.toFixed(2)} USDC left in daily budget.`, cost_usdc, real_balance: realBalance.toFixed(6) })
-    if (cost_usdc > perSvc)
-      return res.status(200).json({ ok: false, blocked: true, reason: `Service costs ${cost_usdc.toFixed(4)} USDC which exceeds per-service limit of ${perSvc} USDC.`, cost_usdc, real_balance: realBalance.toFixed(6) })
     if (cost_usdc > 0 && realBalance < cost_usdc)
       return res.status(200).json({ ok: false, blocked: true, reason: `Agent Wallet balance (${realBalance.toFixed(6)} USDC) is below service cost (${cost_usdc.toFixed(4)} USDC).`, cost_usdc, real_balance: realBalance.toFixed(6) })
+    if (cost_usdc > perSvc && perSvc > 0)
+      return res.status(200).json({ ok: false, blocked: true, reason: `Service costs ${cost_usdc.toFixed(4)} USDC which exceeds per-service limit of ${perSvc} USDC.`, cost_usdc, real_balance: realBalance.toFixed(6) })
+
+    // Authoritative guard via Redis spending ledger
+    let reservationId: string | undefined
+    if (cost_usdc > 0) {
+      let agentWalletId = ''
+      if (userToken) {
+        try {
+          const wList = await client.listWallets({ userToken })
+          const aw = (wList.data?.wallets ?? []).find(w => w.refId === 'agent')
+          agentWalletId = aw?.id ?? ''
+        } catch { /* ignore */ }
+      }
+      if (agentWalletId) {
+        const policy: SpendingPolicy = {
+          perTxLimit:   perSvc > 0 ? perSvc : 0,
+          dailyLimit:   dLimit,
+          weeklyLimit:  0,
+          monthlyLimit: 0,
+          overallLimit: 0,
+        }
+        const guardResult = await reserveSpend(agentWalletId, cost_usdc, policy, `${service_id ?? 'service'} call`)
+        if (!guardResult.allowed) {
+          return res.status(200).json({ ok: false, blocked: true, reason: guardResult.reason, cost_usdc, real_balance: realBalance.toFixed(6), spending: guardResult.spent })
+        }
+        reservationId = guardResult.reservationId
+      }
+    }
 
     // Step 5: confirmation gate
     const confirmed = body.confirmed === 'true' || body.confirmed === '1'
     if ((reqApproval || cost_usdc > reqAbove) && !confirmed && cost_usdc > 0) {
+      // Release reservation since we're not executing yet
+      if (reservationId) {
+        let agentWalletId = ''
+        try {
+          const wList = await client.listWallets({ userToken })
+          const aw = (wList.data?.wallets ?? []).find(w => w.refId === 'agent')
+          agentWalletId = aw?.id ?? ''
+        } catch { /* ignore */ }
+        if (agentWalletId) await cancelSpend(agentWalletId, reservationId)
+      }
       return res.status(200).json({
         ok: true,
         awaiting_confirmation: true,
@@ -542,11 +576,29 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         const d = await execRes.json() as { result?: string; error?: string; nanopayment?: typeof nanopayment }
         executeResult = d.result ?? null
         if (d.error && !d.result) executeError = d.error
+        if (d.nanopayment) Object.assign(nanopayment, d.nanopayment)
       } else {
         executeError = `Service returned HTTP ${execRes.status}`
       }
     } catch (e) {
       executeError = e instanceof Error ? e.message : 'Service call failed'
+    }
+
+    // Confirm or cancel the spending reservation
+    if (reservationId) {
+      let agentWalletId2 = ''
+      try {
+        const wList2 = await client.listWallets({ userToken })
+        const aw2 = (wList2.data?.wallets ?? []).find(w => w.refId === 'agent')
+        agentWalletId2 = aw2?.id ?? ''
+      } catch { /* ignore */ }
+      if (agentWalletId2) {
+        if (!executeError || executeResult) {
+          await confirmSpend(agentWalletId2, reservationId, nanopayment.txId ?? `svc-${Date.now().toString(36)}`)
+        } else {
+          await cancelSpend(agentWalletId2, reservationId)
+        }
+      }
     }
 
     if (executeError && !executeResult) {
@@ -710,6 +762,56 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(200).json({ ok: true, step: 'burn', challengeId })
     } catch (e) {
       return err(res, 500, e instanceof Error ? e.message : 'Bridge burn failed')
+    }
+  }
+
+  // ── spend — nanopayment Path B fallback: direct USDC transfer from agent wallet ─
+  // Called by api/agent-execute.ts when x402 handshake fails and the service has a payment_address.
+  if (action === 'spend') {
+    const userToken = (req.headers['x-user-token'] as string) ?? body.userToken
+    const { toAddress: spendTo, amount: spendAmount, walletId: spendWalletId, note: spendNote } = body
+    if (!userToken) return err(res, 401, 'userToken required')
+    if (!spendTo || !spendAmount) return err(res, 400, 'toAddress and amount required')
+    const parsedSpend = parseFloat(spendAmount)
+    if (!parsedSpend || parsedSpend <= 0) return err(res, 400, 'amount must be greater than 0')
+    if (!/^0x[0-9a-fA-F]{40}$/.test(spendTo)) return err(res, 400, 'Invalid payment address')
+    try {
+      // Resolve walletId if not provided
+      let resolvedSpendWalletId = spendWalletId
+      if (!resolvedSpendWalletId) {
+        const walletList = await client.listWallets({ userToken })
+        const aw = walletList.data?.wallets?.find(w => w.refId === 'agent')
+        if (!aw) return err(res, 404, 'Agent wallet not found for userToken')
+        resolvedSpendWalletId = aw.id
+        // Balance pre-check
+        const balRes = await client.getWalletTokenBalance({ walletId: aw.id, userToken })
+        const usdcBal = (balRes.data?.tokenBalances ?? []).find(b => b.token?.symbol === 'USDC')
+        const available = parseFloat(usdcBal?.amount ?? '0')
+        if (available < parsedSpend) {
+          return res.status(200).json({ ok: false, error: `Insufficient agent wallet balance: ${available.toFixed(4)} USDC available, ${spendAmount} requested.` })
+        }
+      }
+      const response = await client.createTransaction({
+        userToken,
+        walletId: resolvedSpendWalletId,
+        amounts: [spendAmount],
+        destinationAddress: spendTo,
+        tokenAddress: ARC_USDC,
+        blockchain: Blockchain.Arc,
+        fee: { type: 'level', config: { feeLevel: 'MEDIUM' } },
+        idempotencyKey: randomUUID(),
+      })
+      const challengeId = response.data?.challengeId
+      if (!challengeId) throw new Error('No challengeId returned from Circle')
+      return res.status(200).json({
+        ok: true,
+        challengeId,
+        note: spendNote ?? 'Agent wallet nanopayment fallback',
+        amount_usdc: parsedSpend,
+        to: spendTo,
+      })
+    } catch (e) {
+      return err(res, 500, e instanceof Error ? e.message : 'spend failed')
     }
   }
 

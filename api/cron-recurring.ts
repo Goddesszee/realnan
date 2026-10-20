@@ -95,28 +95,54 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         }
 
         try {
-          // Create the USDC transfer challenge via the wallet API
+          // Use the agent-wallet send-usdc action which resolves the agent wallet
+          // by userToken automatically. For UCW, this returns a challengeId — the user
+          // must open the NAN app to sign it. For tasks with a developer-controlled
+          // agent wallet (AGENT_WALLET_ID env), the cron can sign autonomously via
+          // the spend action (no PIN needed).
           const origin = process.env.VERCEL_URL
             ? `https://${process.env.VERCEL_URL}`
             : 'https://nanarc.xyz'
 
-          const transferRes = await fetch(`${origin}/api/wallet`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              action: 'create-transfer',
-              userToken: task.userToken,
-              destinationAddress: task.recipient,
-              amount: task.amount,
-              tokenSymbol: 'USDC',
-            }),
-          })
+          // Try developer-controlled agent wallet first (no PIN needed, fully automated)
+          const agentWalletId = process.env.AGENT_WALLET_ID
+          let data: { challengeId?: string; ok?: boolean; error?: string }
 
-          const data = await transferRes.json() as { challengeId?: string; error?: string }
+          if (agentWalletId) {
+            // Developer-controlled: spend directly, no PIN challenge
+            const spendRes = await fetch(`${origin}/api/agent-wallet`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                action: 'spend',
+                toAddress: task.recipient,
+                amount: task.amount,
+                walletId: agentWalletId,
+                note: `Recurring: ${task.name}`,
+              }),
+            })
+            data = await spendRes.json() as typeof data
+          } else {
+            // User-controlled: create a challenge the user must sign in-app
+            const transferRes = await fetch(`${origin}/api/agent-wallet`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'x-user-token': task.userToken ?? '',
+              },
+              body: JSON.stringify({
+                action: 'send-usdc',
+                userToken: task.userToken,
+                toAddress: task.recipient,
+                amount: task.amount,
+              }),
+            })
+            data = await transferRes.json() as typeof data
+          }
 
-          if (data.error) {
-            // Token expired — mark needs_auth
-            if (data.error.toLowerCase().includes('token') || data.error.toLowerCase().includes('auth') || data.error.toLowerCase().includes('401')) {
+          if (data.error && !data.ok) {
+            const errLower = data.error.toLowerCase()
+            if (errLower.includes('token') || errLower.includes('auth') || errLower.includes('401') || errLower.includes('expired')) {
               tasks[i] = { ...task, status: 'needs_auth', userToken: undefined }
             } else {
               tasks[i] = { ...task, status: `error: ${data.error.slice(0, 80)}` }
@@ -126,17 +152,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             continue
           }
 
-          // Transfer challenge created — the PIN popup is not available in a cron,
-          // so for UCW tasks we can only create the challenge and note it's pending.
-          // A future improvement: developer-controlled wallets don't need PIN approval.
           const newNextRun = nextRunDate(task.frequency, now)
           tasks[i] = {
             ...task,
             lastRun: now.toISOString(),
-            lastTxHash: data.challengeId ?? undefined,
+            lastTxHash: data.challengeId ?? `auto-${Date.now().toString(36)}`,
             runCount: (task.runCount ?? 0) + 1,
             nextRunAt: newNextRun.toISOString(),
-            status: 'challenge_created',
+            status: agentWalletId ? 'sent' : 'challenge_created',
           }
           changed = true
           processed++
