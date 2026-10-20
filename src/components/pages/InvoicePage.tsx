@@ -7,15 +7,15 @@
  * Both save as Invoice records (mode: 'quick' | 'full').
  * Payment Requests page is retired; this page replaces it entirely.
  */
-import { useState, useMemo, useRef, useEffect } from 'react'
+import { useState, useMemo, useRef, useEffect, useCallback } from 'react'
 import {
   FileText, Plus, Download, Share2, Printer, Copy,
   Trash2, ChevronRight, X, Check, AlertCircle,
   ArrowRight, CheckCircle2, Clock, ExternalLink,
-  ChevronDown, Eye, Zap, MessageCircle,
+  ChevronDown, Eye, Zap, MessageCircle, RefreshCw,
 } from 'lucide-react'
 import { toast } from 'sonner'
-import { useAppStore, type Invoice, type InvoiceLineItem, type InvoiceStatus } from '../../store/appStore'
+import { useAppStore, type Invoice, type InvoiceLineItem, type InvoiceStatus, type RecurringTask } from '../../store/appStore'
 import { downloadInvoicePdf, shareInvoice, printInvoice, invoicePaymentLink } from '../../lib/invoice-pdf'
 import { useDisplayCurrency } from '../../lib/display-currency'
 import { showIncomeStatement } from '../../lib/income-statement'
@@ -132,6 +132,56 @@ function CurrencyPicker({ value, onChange }: { value: string; onChange: (v: stri
   )
 }
 
+// ── Autopay toggle component ─────────────────────────────────────────────────
+function AutopayToggle({ invoice, recurringTasks, addRecurringTask, updateRecurringTask, surf, surf2, bdr, blue, text, t3 }: {
+  invoice: Invoice
+  recurringTasks: RecurringTask[]
+  addRecurringTask: (t: Omit<RecurringTask, 'id' | 'createdAt' | 'runCount'>) => string
+  updateRecurringTask: (id: string, patch: Partial<RecurringTask>) => void
+  surf: string; surf2: string; bdr: string; blue: string; text: string; t3: string
+}) {
+  // RecurringTask uses `name` as the identifier — encode invoice ID in name with a prefix
+  const autopayTask = recurringTasks.find(t => t.name === `autopay:${invoice.id}`)
+  const isEnabled = !!autopayTask && autopayTask.active === true
+
+  const toggle = useCallback(() => {
+    if (autopayTask) {
+      updateRecurringTask(autopayTask.id, { active: !isEnabled })
+      toast.success(isEnabled ? 'Autopay paused' : 'Autopay resumed')
+    } else {
+      if (!invoice.dueDate) { toast.error('Set a due date on this invoice first'); return }
+      addRecurringTask({
+        name: `autopay:${invoice.id}`,
+        recipient: invoice.payToAddress ?? (invoice as Invoice & { payToNanHandle?: string }).payToNanHandle ?? '',
+        amount: String(invoice.amountDue),
+        active: true,
+        frequency: 'monthly', // 'once' not a valid frequency — use monthly and cancel after first run
+        nextRunAt: invoice.dueDate,
+      })
+      toast.success('Autopay enabled — agent wallet will pay on the due date')
+    }
+  }, [autopayTask, isEnabled, invoice, addRecurringTask, updateRecurringTask])
+
+  return (
+    <div style={{ background: surf, border: `1px solid ${isEnabled ? 'rgba(37,99,235,0.3)' : bdr}`, borderRadius: 14, padding: '14px 16px', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 12 }}>
+      <div style={{ width: 38, height: 38, borderRadius: 11, background: isEnabled ? 'rgba(37,99,235,0.08)' : surf2, border: `1px solid ${isEnabled ? 'rgba(37,99,235,0.2)' : bdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+        <RefreshCw size={17} color={isEnabled ? blue : t3} />
+      </div>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ fontSize: 14, fontWeight: 700, color: text }}>Autopay</div>
+        <div style={{ fontSize: 12, color: t3, marginTop: 1 }}>
+          {isEnabled
+            ? `Scheduled: ${invoice.amountDue.toFixed(2)} ${invoice.currency} on ${fmtDate(invoice.dueDate)}`
+            : 'Auto-pay this invoice from your Agent Wallet on the due date'}
+        </div>
+      </div>
+      <button onClick={toggle} style={{ flexShrink: 0, width: 44, height: 26, borderRadius: 13, border: 'none', cursor: 'pointer', background: isEnabled ? blue : t3, position: 'relative', transition: 'background 0.2s' }}>
+        <div style={{ position: 'absolute', top: 3, left: isEnabled ? 21 : 3, width: 20, height: 20, borderRadius: '50%', background: '#fff', transition: 'left 0.2s', boxShadow: '0 1px 4px rgba(0,0,0,0.2)' }} />
+      </button>
+    </div>
+  )
+}
+
 // ── Form state ────────────────────────────────────────────────────────────────
 interface DraftForm {
   businessName: string; businessEmail: string; businessAddress: string
@@ -193,7 +243,7 @@ export function InvoicePage() {
 
   const localCcy = useDisplayCurrency()
   const { address: wagmiAddress } = useAccount()
-  const { auth, profile, invoices, addInvoice, updateInvoice, removeInvoice, addContact } = useAppStore()
+  const { auth, profile, invoices, addInvoice, updateInvoice, removeInvoice, addContact, recurringTasks, addRecurringTask, updateRecurringTask } = useAppStore()
   const walletAddress = wagmiAddress ?? auth?.circleWalletAddress ?? auth?.walletAddress ?? ''
 
   type View = 'list' | 'new' | 'detail' | 'edit'
@@ -613,6 +663,17 @@ export function InvoicePage() {
             <div style={{ fontSize: 13, fontWeight: 600, color: T2, marginBottom: 4 }}>Note</div>
             <div style={{ fontSize: 13, color: T2, lineHeight: 1.5 }}>{selected.notes}</div>
           </div>
+        )}
+
+        {/* ── Autopay toggle ── */}
+        {['sent', 'viewed', 'partially_paid', 'overdue'].includes(selected.status) && (
+          <AutopayToggle
+            invoice={selected}
+            recurringTasks={recurringTasks}
+            addRecurringTask={addRecurringTask}
+            updateRecurringTask={updateRecurringTask}
+            surf={SURF} surf2={SURF2} bdr={BDR} blue={BLUE} text={TEXT} t3={T3}
+          />
         )}
 
         {!isQuick && selected.items.length > 0 && (

@@ -8,12 +8,12 @@ import React, { useState, useMemo } from 'react'
 import {
   Plus, Search, ChevronRight, Copy, Share2, Printer,
   X, Check, Clock, CheckCircle2, XCircle, Eye,
-  Link2, FileText,
+  Link2, FileText, Users, Trash2,
   AlertCircle, CalendarDays, DollarSign, User, MessageCircle,
 } from 'lucide-react'
 import { shareOnWhatsApp } from '../../lib/whatsapp'
 import { toast } from 'sonner'
-import { useAppStore, PaymentRequest, PaymentRequestStatus } from '../../store/appStore'
+import { useAppStore, PaymentRequest, PaymentRequestStatus, GroupPaymentRequest, GroupPaymentSplit } from '../../store/appStore'
 import { useNanTheme } from '../../hooks/useNanTheme'
 import { useAccount } from 'wagmi'
 import { syncPrCreate, syncPrUpdate, syncPrDelete } from '../../hooks/useBackendSync'
@@ -99,18 +99,22 @@ function Field({ label, error, labelColor = '#6B7280', children }: {
 }
 
 // ── sub-views ──────────────────────────────────────────────────────────────────
-type SubView = 'list' | 'create' | 'detail'
+type SubView = 'list' | 'create' | 'detail' | 'split-create' | 'split-detail'
 
 // ── List view ─────────────────────────────────────────────────────────────────
 function ListView({
   onNew,
   onOpen,
+  onSplit,
+  onOpenGroup,
 }: {
   onNew: () => void
   onOpen: (req: PaymentRequest) => void
+  onSplit: () => void
+  onOpenGroup: (g: GroupPaymentRequest) => void
 }) {
   const C = useNanTheme()
-  const { paymentRequests, updatePaymentRequest } = useAppStore()
+  const { paymentRequests, updatePaymentRequest, groupPaymentRequests, removeGroupPaymentRequest } = useAppStore()
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState<PaymentRequestStatus | 'all'>('all')
 
@@ -172,20 +176,68 @@ function ListView({
             Create, share and track payment requests
           </p>
         </div>
-        <button
-          onClick={onNew}
-          style={{
-            display: 'flex', alignItems: 'center', gap: 6,
-            padding: '10px 16px', borderRadius: 12,
-            background: BLUE, border: 'none', color: '#fff',
-            fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: F,
-            boxShadow: '0 4px 16px rgba(37,99,235,0.28)', flexShrink: 0,
-            WebkitTapHighlightColor: 'transparent',
-          }}
-        >
-          <Plus size={15} /> New
-        </button>
+        <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+          <button
+            onClick={onSplit}
+            style={{
+              display: 'flex', alignItems: 'center', gap: 6,
+              padding: '10px 14px', borderRadius: 12,
+              background: C.surf, border: `1px solid ${C.bdr}`, color: C.text,
+              fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: F,
+              WebkitTapHighlightColor: 'transparent',
+            }}
+          >
+            <Users size={15} /> Split
+          </button>
+          <button
+            onClick={onNew}
+            style={{
+              display: 'flex', alignItems: 'center', gap: 6,
+              padding: '10px 14px', borderRadius: 12,
+              background: BLUE, border: 'none', color: '#fff',
+              fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: F,
+              boxShadow: '0 4px 16px rgba(37,99,235,0.28)',
+              WebkitTapHighlightColor: 'transparent',
+            }}
+          >
+            <Plus size={15} /> New
+          </button>
+        </div>
       </div>
+
+      {/* ── Group/Split requests ── */}
+      {groupPaymentRequests.length > 0 && (
+        <div style={{ marginBottom: 16 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: C.t3, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>Split Bills</div>
+          <div style={{ background: C.surf, border: `1px solid ${C.bdr}`, borderRadius: 18, overflow: 'hidden' }}>
+            {groupPaymentRequests.map((g, idx) => {
+              const paidCount = g.splits.filter(s => s.status === 'paid').length
+              return (
+                <div key={g.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px', borderBottom: idx < groupPaymentRequests.length - 1 ? `1px solid ${C.bdr}` : 'none', cursor: 'pointer', WebkitTapHighlightColor: 'transparent' }}
+                  onClick={() => onOpenGroup(g)}>
+                  <div style={{ width: 40, height: 40, borderRadius: 12, background: 'rgba(37,99,235,0.08)', border: '1px solid rgba(37,99,235,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <Users size={18} color={BLUE} />
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: C.text, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{g.title}</div>
+                    <div style={{ fontSize: 11, color: C.t3, marginTop: 2 }}>{paidCount}/{g.splits.length} paid · {g.totalAmount.toFixed(2)} {g.currency}</div>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4 }}>
+                    <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20, background: g.status === 'completed' ? 'rgba(16,185,129,0.10)' : 'rgba(37,99,235,0.08)', color: g.status === 'completed' ? GREEN : BLUE }}>
+                      {g.status === 'completed' ? 'Completed' : `${g.splits.length - paidCount} pending`}
+                    </span>
+                    <button onClick={e => { e.stopPropagation(); removeGroupPaymentRequest(g.id); toast.success('Split deleted') }}
+                      style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2 }}>
+                      <Trash2 size={13} color={C.t3} />
+                    </button>
+                  </div>
+                  <ChevronRight size={14} color={C.t3} />
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
 
       {/* ── Summary cards ── */}
       {paymentRequests.length > 0 && (
@@ -778,33 +830,249 @@ function DetailView({
   )
 }
 
+// ── Split bill create form ─────────────────────────────────────────────────────
+function SplitCreateForm({ onBack, onCreated }: { onBack: () => void; onCreated: (g: GroupPaymentRequest) => void }) {
+  const C = useNanTheme()
+  const { addGroupPaymentRequest, mainWalletAddress, auth } = useAppStore()
+  const { address: wagmiAddress } = useAccount()
+  const ownAddress = wagmiAddress ?? (auth?.circleWalletAddress) ?? mainWalletAddress
+
+  const [title, setTitle]       = useState('')
+  const [currency, setCurrency] = useState<'USDC' | 'EURC'>('USDC')
+  const [dueDate, setDueDate]   = useState('')
+  const [nanHandle, setNanHandle] = useState('')
+  const [splits, setSplits]     = useState<{ id: string; name: string; email: string; amount: string }[]>([
+    { id: '1', name: '', email: '', amount: '' },
+    { id: '2', name: '', email: '', amount: '' },
+  ])
+  const [errors, setErrors]     = useState<Record<string, string>>({})
+
+  const addSplit    = () => setSplits(s => [...s, { id: Date.now().toString(), name: '', email: '', amount: '' }])
+  const removeSplit = (id: string) => setSplits(s => s.filter(sp => sp.id !== id))
+  const updateSplit = (id: string, patch: Partial<typeof splits[0]>) =>
+    setSplits(s => s.map(sp => sp.id === id ? { ...sp, ...patch } : sp))
+
+  const totalAmt = splits.reduce((s, sp) => s + (parseFloat(sp.amount) || 0), 0)
+
+  const handleCreate = () => {
+    const e: Record<string, string> = {}
+    if (!title.trim()) e.title = 'Required'
+    splits.forEach((sp, i) => {
+      if (!sp.name.trim()) e[`name-${i}`] = 'Required'
+      if (!sp.amount || parseFloat(sp.amount) <= 0) e[`amount-${i}`] = 'Enter amount'
+    })
+    setErrors(e)
+    if (Object.keys(e).length > 0) return
+    if (!ownAddress) { toast.error('Connect a wallet first'); return }
+
+    const g = addGroupPaymentRequest({
+      title: title.trim(),
+      currency,
+      dueDate: dueDate || undefined,
+      creatorAddress: ownAddress,
+      creatorNanHandle: nanHandle.trim().replace(/^@/, '') || undefined,
+      splits: splits.map(sp => ({
+        id: sp.id,
+        name: sp.name.trim(),
+        email: sp.email.trim() || undefined,
+        amount: parseFloat(sp.amount),
+        status: 'pending' as const,
+        uniqueToken: Math.random().toString(36).slice(2, 10),
+      })),
+    })
+    toast.success('Split bill created')
+    onCreated(g)
+  }
+
+  const inp: React.CSSProperties = { width: '100%', padding: '10px 12px', boxSizing: 'border-box', background: C.surf, border: `1px solid ${C.bdr}`, borderRadius: 10, fontSize: 14, fontFamily: F, color: C.text, outline: 'none' }
+  const errInp = (key: string): React.CSSProperties => errors[key] ? { ...inp, borderColor: RED } : inp
+
+  return (
+    <div style={{ width: '100%', paddingBottom: 100 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '20px 0 20px' }}>
+        <button onClick={onBack} style={{ width: 36, height: 36, borderRadius: 10, background: C.surf, border: `1px solid ${C.bdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0 }}>
+          <X size={16} color={C.t2} />
+        </button>
+        <div>
+          <h2 style={{ fontSize: 19, fontWeight: 800, color: C.text, margin: 0, letterSpacing: '-0.025em' }}>Split Bill</h2>
+          <p style={{ fontSize: 12, color: C.t3, margin: 0 }}>Each person gets their own unique pay link</p>
+        </div>
+      </div>
+
+      <div style={{ background: C.surf, border: `1px solid ${C.bdr}`, borderRadius: 18, padding: 20, display: 'flex', flexDirection: 'column', gap: 14 }}>
+        <Field labelColor={C.t2} label="What's this for? *" error={errors.title}>
+          <input value={title} onChange={e => { setTitle(e.target.value); setErrors(p => ({ ...p, title: '' })) }} placeholder="e.g. Dinner, team trip, shared subscription" style={errInp('title')} />
+        </Field>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 120px', gap: 10 }}>
+          <Field labelColor={C.t2} label="Currency">
+            <select value={currency} onChange={e => setCurrency(e.target.value as 'USDC' | 'EURC')} style={{ ...inp, cursor: 'pointer' }}>
+              <option value="USDC">USDC</option>
+              <option value="EURC">EURC</option>
+            </select>
+          </Field>
+          <Field labelColor={C.t2} label="Due date">
+            <input type="date" value={dueDate} onChange={e => setDueDate(e.target.value)} min={new Date().toISOString().slice(0, 10)} style={{ ...inp, colorScheme: C.isDark ? 'dark' : 'light' }} />
+          </Field>
+        </div>
+        <Field labelColor={C.t2} label="Your NAN handle (optional)">
+          <input value={nanHandle} onChange={e => setNanHandle(e.target.value)} placeholder="@yourname" style={inp} />
+        </Field>
+      </div>
+
+      <div style={{ margin: '16px 0 8px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <span style={{ fontSize: 14, fontWeight: 700, color: C.text }}>People · {splits.length}</span>
+        <button onClick={addSplit} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 13, fontWeight: 600, color: BLUE, background: 'none', border: 'none', cursor: 'pointer', fontFamily: F }}>
+          <Plus size={14} /> Add person
+        </button>
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        {splits.map((sp, i) => (
+          <div key={sp.id} style={{ background: C.surf, border: `1px solid ${C.bdr}`, borderRadius: 14, padding: '14px 16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+              <span style={{ fontSize: 12, fontWeight: 700, color: C.t3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Person {i + 1}</span>
+              {splits.length > 2 && (
+                <button onClick={() => removeSplit(sp.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2 }}>
+                  <Trash2 size={13} color={C.t3} />
+                </button>
+              )}
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <Field labelColor={C.t2} label="Name *" error={errors[`name-${i}`]}>
+                <input value={sp.name} onChange={e => { updateSplit(sp.id, { name: e.target.value }); setErrors(p => ({ ...p, [`name-${i}`]: '' })) }} placeholder="Full name" style={errInp(`name-${i}`)} />
+              </Field>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                <Field labelColor={C.t2} label={`Amount (${currency})`} error={errors[`amount-${i}`]}>
+                  <input type="number" min="0" step="0.01" value={sp.amount} onChange={e => { updateSplit(sp.id, { amount: e.target.value }); setErrors(p => ({ ...p, [`amount-${i}`]: '' })) }} placeholder="0.00" style={errInp(`amount-${i}`)} />
+                </Field>
+                <Field labelColor={C.t2} label="Email (optional)">
+                  <input type="email" value={sp.email} onChange={e => updateSplit(sp.id, { email: e.target.value })} placeholder="email@example.com" style={inp} />
+                </Field>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {totalAmt > 0 && (
+        <div style={{ margin: '12px 0', padding: '12px 16px', background: 'rgba(37,99,235,0.06)', border: '1px solid rgba(37,99,235,0.12)', borderRadius: 12, display: 'flex', justifyContent: 'space-between' }}>
+          <span style={{ fontSize: 13, color: C.t2 }}>Total</span>
+          <span style={{ fontSize: 14, fontWeight: 800, color: BLUE }}>{totalAmt.toFixed(2)} {currency}</span>
+        </div>
+      )}
+
+      <button onClick={handleCreate} style={{ width: '100%', padding: '14px', borderRadius: 12, background: BLUE, border: 'none', color: '#fff', fontSize: 15, fontWeight: 700, cursor: 'pointer', fontFamily: F, marginTop: 8, boxShadow: '0 4px 16px rgba(37,99,235,0.28)' }}>
+        <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7 }}><Users size={16} /> Create Split Bill</span>
+      </button>
+    </div>
+  )
+}
+
+// ── Split bill detail view ─────────────────────────────────────────────────────
+function SplitDetailView({ group, onBack }: { group: GroupPaymentRequest; onBack: () => void }) {
+  const C = useNanTheme()
+  const { groupPaymentRequests } = useAppStore()
+  const g = groupPaymentRequests.find(r => r.id === group.id) ?? group
+  const [copiedId, setCopiedId] = useState<string | null>(null)
+
+  const buildSplitLink = (split: GroupPaymentSplit) => {
+    const base = window.location.origin
+    const params = new URLSearchParams()
+    params.set('pay', g.creatorAddress ?? '')
+    params.set('amount', String(split.amount))
+    params.set('note', `${g.title} — ${split.name}`)
+    params.set('split', split.uniqueToken)
+    if (g.creatorNanHandle) params.set('nan', g.creatorNanHandle)
+    return `${base}?${params.toString()}`
+  }
+
+  const copyLink = (split: GroupPaymentSplit) => {
+    void navigator.clipboard.writeText(buildSplitLink(split))
+    setCopiedId(split.id)
+    toast.success(`Link copied for ${split.name}`)
+    setTimeout(() => setCopiedId(null), 2000)
+  }
+
+  const shareAll = () => {
+    const lines = g.splits.map(sp => `${sp.name}: ${buildSplitLink(sp)}`).join('\n')
+    void navigator.share?.({ title: g.title, text: `Pay your share:\n${lines}` })
+      .catch(() => { void navigator.clipboard.writeText(lines); toast.success('All links copied') })
+  }
+
+  const paidCount = g.splits.filter(s => s.status === 'paid').length
+
+  return (
+    <div style={{ width: '100%', paddingBottom: 100 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '20px 0 16px' }}>
+        <button onClick={onBack} style={{ width: 36, height: 36, borderRadius: 10, background: C.surf, border: `1px solid ${C.bdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0 }}>
+          <X size={16} color={C.t2} />
+        </button>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <h2 style={{ fontSize: 18, fontWeight: 800, color: C.text, margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{g.title}</h2>
+          <div style={{ fontSize: 11, color: C.t3, marginTop: 2 }}>{paidCount}/{g.splits.length} paid · {g.totalAmount.toFixed(2)} {g.currency}</div>
+        </div>
+      </div>
+
+      <div style={{ background: C.surf, border: `1px solid ${C.bdr}`, borderRadius: 18, padding: '16px 20px', marginBottom: 12, textAlign: 'center' }}>
+        <div style={{ fontSize: 10, fontWeight: 700, color: C.t3, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 8 }}>Total Split</div>
+        <div style={{ fontSize: 40, fontWeight: 800, color: C.text, fontFamily: "'JetBrains Mono', monospace", letterSpacing: '-0.04em' }}>
+          {g.totalAmount.toFixed(2)} <span style={{ fontSize: 16, color: C.t3, fontWeight: 600 }}>{g.currency}</span>
+        </div>
+        <div style={{ marginTop: 8, fontSize: 13, color: paidCount === g.splits.length ? GREEN : GOLD, fontWeight: 600 }}>
+          {paidCount === g.splits.length ? '✓ All paid' : `${g.splits.length - paidCount} still pending`}
+        </div>
+      </div>
+
+      <button onClick={shareAll} style={{ width: '100%', marginBottom: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7, padding: '13px', borderRadius: 13, background: BLUE, border: 'none', color: '#fff', fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: F, boxShadow: '0 4px 14px rgba(37,99,235,0.25)' }}>
+        <Share2 size={15} /> Share all links
+      </button>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        {g.splits.map(sp => (
+          <div key={sp.id} style={{ background: C.surf, border: `1px solid ${sp.status === 'paid' ? 'rgba(16,185,129,0.3)' : C.bdr}`, borderRadius: 14, padding: '14px 16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+              <div>
+                <div style={{ fontSize: 15, fontWeight: 700, color: C.text }}>{sp.name}</div>
+                {sp.email && <div style={{ fontSize: 11, color: C.t3, marginTop: 1 }}>{sp.email}</div>}
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ fontSize: 16, fontWeight: 800, color: sp.status === 'paid' ? GREEN : C.text, fontFamily: "'JetBrains Mono', monospace" }}>{sp.amount.toFixed(2)}</div>
+                <span style={{ fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 20, background: sp.status === 'paid' ? 'rgba(16,185,129,0.10)' : 'rgba(245,158,11,0.10)', color: sp.status === 'paid' ? GREEN : GOLD }}>
+                  {sp.status === 'paid' ? 'Paid' : 'Pending'}
+                </span>
+              </div>
+            </div>
+            {sp.status !== 'paid' && (
+              <button onClick={() => copyLink(sp)} style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, padding: '10px', borderRadius: 10, background: 'rgba(37,99,235,0.06)', border: '1px solid rgba(37,99,235,0.15)', color: BLUE, fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: F }}>
+                {copiedId === sp.id ? <Check size={14} /> : <Copy size={14} />}
+                {copiedId === sp.id ? 'Copied!' : 'Copy pay link'}
+              </button>
+            )}
+            {sp.paidAt && <div style={{ fontSize: 11, color: C.t3, marginTop: 6, textAlign: 'right' }}>Paid {new Date(sp.paidAt).toLocaleDateString('en', { month: 'short', day: 'numeric' })}</div>}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 // ── Root ──────────────────────────────────────────────────────────────────────
 export function PaymentRequestsPage() {
   const [subView, setSubView] = useState<SubView>('list')
   const [selectedReq, setSelectedReq] = useState<PaymentRequest | null>(null)
+  const [selectedGroup, setSelectedGroup] = useState<GroupPaymentRequest | null>(null)
 
-  if (subView === 'create') {
-    return (
-      <CreateForm
-        onBack={() => setSubView('list')}
-        onCreated={req => { setSelectedReq(req); setSubView('detail') }}
-      />
-    )
-  }
-
-  if (subView === 'detail' && selectedReq) {
-    return (
-      <DetailView
-        req={selectedReq}
-        onBack={() => setSubView('list')}
-      />
-    )
-  }
+  if (subView === 'create') return <CreateForm onBack={() => setSubView('list')} onCreated={req => { setSelectedReq(req); setSubView('detail') }} />
+  if (subView === 'detail' && selectedReq) return <DetailView req={selectedReq} onBack={() => setSubView('list')} />
+  if (subView === 'split-create') return <SplitCreateForm onBack={() => setSubView('list')} onCreated={g => { setSelectedGroup(g); setSubView('split-detail') }} />
+  if (subView === 'split-detail' && selectedGroup) return <SplitDetailView group={selectedGroup} onBack={() => setSubView('list')} />
 
   return (
     <ListView
       onNew={() => setSubView('create')}
       onOpen={req => { setSelectedReq(req); setSubView('detail') }}
+      onSplit={() => setSubView('split-create')}
+      onOpenGroup={g => { setSelectedGroup(g); setSubView('split-detail') }}
     />
   )
 }

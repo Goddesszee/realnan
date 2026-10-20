@@ -135,6 +135,33 @@ export interface PaymentRequest {
   creatorNanHandle?: string
 }
 
+// ── Group Payment Request (split bill) ───────────────────────────────────────
+export interface GroupPaymentSplit {
+  id: string
+  name: string
+  email?: string
+  amount: number
+  status: PaymentRequestStatus
+  paidAt?: string
+  paidTxHash?: string
+  uniqueToken: string   // appended to pay link so each split is uniquely addressable
+}
+
+export interface GroupPaymentRequest {
+  id: string
+  refNumber: string
+  title: string
+  note?: string
+  currency: string
+  totalAmount: number
+  splits: GroupPaymentSplit[]
+  creatorAddress?: string
+  creatorNanHandle?: string
+  dueDate?: string
+  createdAt: string
+  status: 'active' | 'completed' | 'cancelled'
+}
+
 // ── Favorite type ────────────────────────────────────────────────────────────
 export interface FavoriteItem {
   id: string
@@ -281,6 +308,7 @@ const USER_DEFAULTS = {
   agentExecutionLog: [] as AgentExecutionLog[],
   recurringTasks:   [] as RecurringTask[],
   paymentRequests:  [] as PaymentRequest[],
+  groupPaymentRequests: [] as GroupPaymentRequest[],
   a2aPayments:      [] as A2APaymentRecord[],
   a2aTasks:         [] as A2ATask[],
   agentWallet:      { provisioned: false, balance_usdc: '0' } as AgentWalletState,
@@ -375,6 +403,12 @@ export interface AppState {
   updatePaymentRequest: (id: string, patch: Partial<PaymentRequest>) => void
   removePaymentRequest: (id: string) => void
   markPaymentRequestPaid: (id: string, txHash: string, amount: number, activityId?: string) => void
+
+  groupPaymentRequests: GroupPaymentRequest[]
+  addGroupPaymentRequest: (req: Omit<GroupPaymentRequest, 'id' | 'createdAt' | 'refNumber' | 'status' | 'totalAmount'>) => GroupPaymentRequest
+  updateGroupPaymentRequest: (id: string, patch: Partial<GroupPaymentRequest>) => void
+  removeGroupPaymentRequest: (id: string) => void
+  markGroupSplitPaid: (groupId: string, splitId: string, txHash: string) => void
 
   a2aPayments: A2APaymentRecord[]
   addA2APayment: (record: A2APaymentRecord) => void
@@ -729,6 +763,33 @@ export const useAppStore = create<AppState>()(
           : r
         )})),
 
+      groupPaymentRequests: [],
+      addGroupPaymentRequest: (req) => {
+        const id = `gpr-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`
+        const seq = (get().groupPaymentRequests.length + 1).toString().padStart(4, '0')
+        const refNumber = `NAN-SPL-${seq}`
+        const totalAmount = req.splits.reduce((s, sp) => s + sp.amount, 0)
+        const gpr: GroupPaymentRequest = { ...req, id, refNumber: refNumber, totalAmount, status: 'active', createdAt: new Date().toISOString() }
+        set((s) => ({ groupPaymentRequests: [gpr, ...s.groupPaymentRequests] }))
+        return gpr
+      },
+      updateGroupPaymentRequest: (id, patch) =>
+        set((s) => ({ groupPaymentRequests: s.groupPaymentRequests.map(r => r.id === id ? { ...r, ...patch } : r) })),
+      removeGroupPaymentRequest: (id) =>
+        set((s) => ({ groupPaymentRequests: s.groupPaymentRequests.filter(r => r.id !== id) })),
+      markGroupSplitPaid: (groupId, splitId, txHash) =>
+        set((s) => ({
+          groupPaymentRequests: s.groupPaymentRequests.map(g => {
+            if (g.id !== groupId) return g
+            const splits = g.splits.map(sp => sp.id === splitId
+              ? { ...sp, status: 'paid' as const, paidAt: new Date().toISOString(), paidTxHash: txHash }
+              : sp
+            )
+            const allPaid = splits.every(sp => sp.status === 'paid')
+            return { ...g, splits, status: allPaid ? 'completed' : g.status }
+          }),
+        })),
+
       a2aPayments: [],
       addA2APayment: (record) => set((s) => ({ a2aPayments: [record, ...s.a2aPayments].slice(0, 200) })),
       a2aTasks: [],
@@ -968,6 +1029,7 @@ export const useAppStore = create<AppState>()(
           profile: p.profile ?? current.profile,
           recurringTasks: p.recurringTasks ?? current.recurringTasks ?? [],
           paymentRequests: p.paymentRequests ?? current.paymentRequests ?? [],
+          groupPaymentRequests: p.groupPaymentRequests ?? current.groupPaymentRequests ?? [],
           a2aPayments: p.a2aPayments ?? current.a2aPayments ?? [],
           a2aTasks: p.a2aTasks ?? current.a2aTasks ?? [],
           agentWallet: p.agentWallet ?? current.agentWallet ?? { provisioned: false, balance_usdc: '0' },
