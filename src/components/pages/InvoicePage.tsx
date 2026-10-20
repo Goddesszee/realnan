@@ -10,12 +10,12 @@
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react'
 import {
   FileText, Plus, Download, Share2, Printer, Copy,
-  Trash2, ChevronRight, X, Check, AlertCircle,
+  Trash2, ChevronRight, X, Check, AlertCircle, Users,
   ArrowRight, CheckCircle2, Clock, ExternalLink,
   ChevronDown, Eye, Zap, MessageCircle, RefreshCw,
 } from 'lucide-react'
 import { toast } from 'sonner'
-import { useAppStore, type Invoice, type InvoiceLineItem, type InvoiceStatus, type RecurringTask } from '../../store/appStore'
+import { useAppStore, type Invoice, type InvoiceLineItem, type InvoiceStatus, type RecurringTask, type GroupPaymentRequest, type GroupPaymentSplit } from '../../store/appStore'
 import { downloadInvoicePdf, shareInvoice, printInvoice, invoicePaymentLink } from '../../lib/invoice-pdf'
 import { useDisplayCurrency } from '../../lib/display-currency'
 import { showIncomeStatement } from '../../lib/income-statement'
@@ -207,7 +207,149 @@ function emptyForm(defaultAddress = ''): DraftForm {
   }
 }
 
-// ── Main component ────────────────────────────────────────────────────────────
+// ── Split Bill form (embedded in InvoicePage) ─────────────────────────────────
+function InvoiceSplitForm({ walletAddress, groupPaymentRequests: _gpr, addGroupPaymentRequest, onBack, C }: {
+  walletAddress: string
+  groupPaymentRequests: GroupPaymentRequest[]
+  addGroupPaymentRequest: (g: Omit<GroupPaymentRequest, 'id' | 'createdAt' | 'refNumber' | 'status' | 'totalAmount'>) => GroupPaymentRequest
+  onBack: () => void
+  C: { SURF: string; SURF2: string; BDR: string; TEXT: string; T2: string; T3: string; BLUE: string; GREEN: string; RED: string }
+}) {
+  const [title, setTitle]       = useState('')
+  const [currency, setCurrency] = useState('USDC')
+  const [dueDate, setDueDate]   = useState('')
+  const [splits, setSplits]     = useState([
+    { id: '1', name: '', email: '', amount: '' },
+    { id: '2', name: '', email: '', amount: '' },
+  ])
+  const [created, setCreated]   = useState<GroupPaymentRequest | null>(null)
+
+  const addSplit    = () => setSplits(s => [...s, { id: Date.now().toString(), name: '', email: '', amount: '' }])
+  const removeSplit = (id: string) => setSplits(s => s.filter(sp => sp.id !== id))
+  const updateSplit = (id: string, patch: Partial<typeof splits[0]>) =>
+    setSplits(s => s.map(sp => sp.id === id ? { ...sp, ...patch } : sp))
+
+  const total = splits.reduce((s, sp) => s + (parseFloat(sp.amount) || 0), 0)
+
+  const buildPayLink = (sp: { id: string; amount: string }, token: string) =>
+    `${window.location.origin}?split=${token}&to=${encodeURIComponent(walletAddress)}&amount=${sp.amount}&note=${encodeURIComponent(title)}`
+
+  const handleCreate = () => {
+    if (!title.trim()) { toast.error('Add a title'); return }
+    const valid = splits.filter(sp => sp.name.trim() && parseFloat(sp.amount) > 0)
+    if (valid.length < 2) { toast.error('Add at least 2 people with amounts'); return }
+    const g = addGroupPaymentRequest({
+      title: title.trim(), currency, dueDate,
+      creatorAddress: walletAddress,
+      splits: valid.map(sp => ({
+        id: sp.id, name: sp.name.trim(), email: sp.email.trim() || undefined,
+        amount: parseFloat(sp.amount), status: 'pending' as GroupPaymentSplit['status'],
+        uniqueToken: `${sp.id}-${Date.now()}`,
+      })),
+    })
+    setCreated(g)
+    toast.success('Split bill created!')
+  }
+
+  const copyAll = () => {
+    if (!created) return
+    const text = created.splits.map(s => `${s.name}: ${buildPayLink({ id: s.id, amount: String(s.amount) }, s.uniqueToken)}`).join('\n')
+    navigator.clipboard.writeText(text).then(() => toast.success('All links copied'))
+  }
+
+  if (created) return (
+    <div style={{ fontFamily: "'Inter', sans-serif", paddingBottom: 96 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '16px 0 14px' }}>
+        <button onClick={onBack} style={{ width: 32, height: 32, borderRadius: 8, background: C.SURF2, border: `1px solid ${C.BDR}`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+          <ArrowRight size={14} color={C.T2} style={{ transform: 'rotate(180deg)' }} />
+        </button>
+        <div style={{ fontSize: 18, fontWeight: 700, color: C.TEXT }}>Split Created</div>
+      </div>
+      <div style={{ background: 'rgba(16,185,129,0.06)', border: '1px solid rgba(16,185,129,0.2)', borderRadius: 14, padding: '16px', marginBottom: 14, textAlign: 'center' }}>
+        <CheckCircle2 size={32} color={C.GREEN} style={{ marginBottom: 8 }} />
+        <div style={{ fontSize: 16, fontWeight: 700, color: C.TEXT }}>{created.title}</div>
+        <div style={{ fontSize: 13, color: C.T3, marginTop: 4 }}>{created.splits.length} people · {total.toFixed(2)} {currency}</div>
+      </div>
+      {created.splits.map(s => (
+        <div key={s.id} style={{ background: C.SURF, border: `1px solid ${C.BDR}`, borderRadius: 12, padding: '12px 14px', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 14, fontWeight: 600, color: C.TEXT }}>{s.name}</div>
+            <div style={{ fontSize: 12, color: C.T3, marginTop: 2 }}>{s.amount.toFixed(2)} {currency}</div>
+          </div>
+          <button onClick={() => navigator.clipboard.writeText(buildPayLink({ id: s.id, amount: String(s.amount) }, s.uniqueToken)).then(() => toast.success(`${s.name}'s link copied`))}
+            style={{ padding: '6px 12px', borderRadius: 8, background: C.SURF2, border: `1px solid ${C.BDR}`, fontSize: 12, fontWeight: 600, color: C.TEXT, cursor: 'pointer' }}>
+            Copy link
+          </button>
+        </div>
+      ))}
+      <button onClick={copyAll} style={{ width: '100%', padding: '14px', borderRadius: 12, background: C.BLUE, color: '#fff', border: 'none', fontSize: 15, fontWeight: 700, cursor: 'pointer', marginTop: 8 }}>
+        Share all links
+      </button>
+    </div>
+  )
+
+  return (
+    <div style={{ fontFamily: "'Inter', sans-serif", paddingBottom: 96 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '16px 0 14px', marginBottom: 4 }}>
+        <button onClick={onBack} style={{ width: 32, height: 32, borderRadius: 8, background: C.SURF2, border: `1px solid ${C.BDR}`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+          <ArrowRight size={14} color={C.T2} style={{ transform: 'rotate(180deg)' }} />
+        </button>
+        <div style={{ fontSize: 18, fontWeight: 700, color: C.TEXT }}>Split Bill</div>
+      </div>
+
+      {/* Title */}
+      <div style={{ background: C.SURF, border: `1px solid ${C.BDR}`, borderRadius: 14, padding: '14px 16px', marginBottom: 12 }}>
+        <label style={{ fontSize: 12, fontWeight: 600, color: C.T3, display: 'block', marginBottom: 6 }}>WHAT'S IT FOR?</label>
+        <input value={title} onChange={e => setTitle(e.target.value)} placeholder="Dinner, trip, rent..." style={{ width: '100%', border: 'none', outline: 'none', fontSize: 16, fontWeight: 600, color: C.TEXT, background: 'transparent', boxSizing: 'border-box' }} />
+      </div>
+
+      {/* Currency + Due date */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 12 }}>
+        <div style={{ background: C.SURF, border: `1px solid ${C.BDR}`, borderRadius: 12, padding: '12px 14px' }}>
+          <label style={{ fontSize: 11, fontWeight: 600, color: C.T3, display: 'block', marginBottom: 4 }}>CURRENCY</label>
+          <select value={currency} onChange={e => setCurrency(e.target.value)} style={{ border: 'none', outline: 'none', fontSize: 14, fontWeight: 600, color: C.TEXT, background: 'transparent', width: '100%' }}>
+            <option>USDC</option><option>EURC</option>
+          </select>
+        </div>
+        <div style={{ background: C.SURF, border: `1px solid ${C.BDR}`, borderRadius: 12, padding: '12px 14px' }}>
+          <label style={{ fontSize: 11, fontWeight: 600, color: C.T3, display: 'block', marginBottom: 4 }}>DUE DATE</label>
+          <input type="date" value={dueDate} onChange={e => setDueDate(e.target.value)} style={{ border: 'none', outline: 'none', fontSize: 13, color: C.TEXT, background: 'transparent', width: '100%' }} />
+        </div>
+      </div>
+
+      {/* People */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+        <span style={{ fontSize: 13, fontWeight: 700, color: C.TEXT }}>People · {splits.length}</span>
+        <button onClick={addSplit} style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '5px 10px', borderRadius: 8, background: C.SURF2, border: `1px solid ${C.BDR}`, fontSize: 12, fontWeight: 600, color: C.BLUE, cursor: 'pointer' }}>
+          <Plus size={12} /> Add person
+        </button>
+      </div>
+      {splits.map((sp, idx) => (
+        <div key={sp.id} style={{ background: C.SURF, border: `1px solid ${C.BDR}`, borderRadius: 12, padding: '12px 14px', marginBottom: 8 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+            <span style={{ fontSize: 12, fontWeight: 600, color: C.T3 }}>PERSON {idx + 1}</span>
+            {splits.length > 2 && <button onClick={() => removeSplit(sp.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}><X size={14} color={C.T3} /></button>}
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 80px', gap: 8 }}>
+            <input value={sp.name} onChange={e => updateSplit(sp.id, { name: e.target.value })} placeholder="Name" style={{ border: `1px solid ${C.BDR}`, borderRadius: 8, padding: '8px 10px', fontSize: 13, color: C.TEXT, background: C.SURF2, outline: 'none', width: '100%', boxSizing: 'border-box' }} />
+            <input value={sp.amount} onChange={e => updateSplit(sp.id, { amount: e.target.value })} placeholder="0.00" type="number" min="0" style={{ border: `1px solid ${C.BDR}`, borderRadius: 8, padding: '8px 10px', fontSize: 13, color: C.TEXT, background: C.SURF2, outline: 'none', width: '100%', boxSizing: 'border-box' }} />
+          </div>
+        </div>
+      ))}
+
+      {/* Total */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 4px', marginBottom: 16 }}>
+        <span style={{ fontSize: 13, color: C.T3 }}>Total</span>
+        <span style={{ fontSize: 15, fontWeight: 700, color: C.TEXT }}>{total.toFixed(2)} {currency}</span>
+      </div>
+
+      <button onClick={handleCreate} style={{ width: '100%', padding: '15px', borderRadius: 14, background: C.BLUE, color: '#fff', border: 'none', fontSize: 15, fontWeight: 700, cursor: 'pointer' }}>
+        Create split bill
+      </button>
+    </div>
+  )
+}
+
 export function InvoicePage() {
   const C = useNanTheme()
   // Theme-reactive shorthand locals (replaces module-level static vars)
@@ -243,10 +385,10 @@ export function InvoicePage() {
 
   const localCcy = useDisplayCurrency()
   const { address: wagmiAddress } = useAccount()
-  const { auth, profile, invoices, addInvoice, updateInvoice, removeInvoice, addContact, recurringTasks, addRecurringTask, updateRecurringTask } = useAppStore()
+  const { auth, profile, invoices, addInvoice, updateInvoice, removeInvoice, addContact, recurringTasks, addRecurringTask, updateRecurringTask, groupPaymentRequests, addGroupPaymentRequest } = useAppStore()
   const walletAddress = wagmiAddress ?? auth?.circleWalletAddress ?? auth?.walletAddress ?? ''
 
-  type View = 'list' | 'new' | 'detail' | 'edit'
+  type View = 'list' | 'new' | 'detail' | 'edit' | 'split'
   type NewMode = 'choose' | 'quick' | 'full'
 
   const [view,        setView]        = useState<View>('list')
@@ -428,9 +570,14 @@ export function InvoicePage() {
         <div style={{ fontSize: 18, fontWeight: 700, color: TEXT, letterSpacing: '-0.02em' }}>{title}</div>
       </div>
       {view === 'list' && (
-        <button onClick={openNew} style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '0 14px', height: 34, background: BLUE, color: '#fff', border: 'none', borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: F, flexShrink: 0 }}>
-          <Plus size={14} /> New
-        </button>
+        <div style={{ display: 'flex', gap: 6 }}>
+          <button onClick={() => setView('split')} style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '0 12px', height: 34, background: SURF2, color: TEXT, border: `1px solid ${BDR}`, borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: F, flexShrink: 0 }}>
+            <Users size={14} /> Split
+          </button>
+          <button onClick={openNew} style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '0 14px', height: 34, background: BLUE, color: '#fff', border: 'none', borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: F, flexShrink: 0 }}>
+            <Plus size={14} /> New
+          </button>
+        </div>
       )}
     </div>
   )
@@ -438,6 +585,16 @@ export function InvoicePage() {
   // ═══════════════════════════════════════════════════════════════════════════
   // VIEW: LIST
   // ═══════════════════════════════════════════════════════════════════════════
+  if (view === 'split') return (
+    <InvoiceSplitForm
+      walletAddress={walletAddress}
+      groupPaymentRequests={groupPaymentRequests}
+      addGroupPaymentRequest={(g) => addGroupPaymentRequest(g)}
+      onBack={() => setView('list')}
+      C={{ SURF, SURF2, BDR, TEXT, T2, T3, BLUE, GREEN, RED }}
+    />
+  )
+
   if (view === 'list') return (
     <div style={{ fontFamily: F, width: '100%', paddingBottom: 96 }}>
       {renderHeader('Invoices & Requests')}

@@ -831,7 +831,7 @@ function DetailView({
 }
 
 // ── Split bill create form ─────────────────────────────────────────────────────
-function SplitCreateForm({ onBack, onCreated }: { onBack: () => void; onCreated: (g: GroupPaymentRequest) => void }) {
+export function SplitCreateForm({ onBack, onCreated }: { onBack: () => void; onCreated: (g: GroupPaymentRequest) => void }) {
   const C = useNanTheme()
   const { addGroupPaymentRequest, mainWalletAddress, auth } = useAppStore()
   const { address: wagmiAddress } = useAccount()
@@ -969,7 +969,7 @@ function SplitCreateForm({ onBack, onCreated }: { onBack: () => void; onCreated:
 }
 
 // ── Split bill detail view ─────────────────────────────────────────────────────
-function SplitDetailView({ group, onBack }: { group: GroupPaymentRequest; onBack: () => void }) {
+export function SplitDetailView({ group, onBack }: { group: GroupPaymentRequest; onBack: () => void }) {
   const C = useNanTheme()
   const { groupPaymentRequests } = useAppStore()
   const g = groupPaymentRequests.find(r => r.id === group.id) ?? group
