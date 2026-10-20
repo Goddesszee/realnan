@@ -6,7 +6,7 @@ import React, { useState, useEffect } from 'react'
 import {
   CheckCircle2, AlertCircle, Clock, XCircle,
   ArrowUpRight, ExternalLink, Copy, Check,
-  Wallet, Smartphone, CreditCard, Share2, ChevronRight,
+  Wallet, Smartphone, CreditCard, Share2, ChevronRight, Globe,
 } from 'lucide-react'
 import { useWriteContract, useWaitForTransactionReceipt, useAccount, useChainId, useSwitchChain } from 'wagmi'
 import { erc20Abi, isAddress } from 'viem'
@@ -17,6 +17,7 @@ import { useAppStore, PaymentRequest } from '../../store/appStore'
 import { NanLogo } from '../NanLogo'
 import { usePublicPage } from '../../hooks/usePublicPage'
 import { OnrampCardPanel } from './OnrampCardPanel'
+import { UniversalPayPanel } from './UniversalPayPanel'
 
 const F    = "'Inter', -apple-system, sans-serif"
 const MONO = "'JetBrains Mono', Menlo, monospace"
@@ -571,7 +572,7 @@ export function PaymentRequestPayPage({
       : null
     )
 
-  type Method = 'wallet' | 'qr' | 'copy' | 'card' | 'nan'
+  type Method = 'wallet' | 'qr' | 'copy' | 'card' | 'nan' | 'universal'
   const [method, setMethod] = useState<Method>('card')
   const [successHash, setSuccessHash] = useState<string | null>(null)
 
@@ -752,8 +753,9 @@ export function PaymentRequestPayPage({
 
             {/* Method tabs — 3 primary */}
             <div style={{ display: 'flex', gap: 6, background: '#F3F4F6', borderRadius: 14, padding: 4, marginBottom: 14 }}>
-              <MethodTab icon={<CreditCard size={18} />} label="Card"       active={method === 'card'}   onClick={() => setMethod('card')} />
-              <MethodTab icon={<Wallet size={18} />}     label="Wallet"     active={method === 'wallet'} onClick={() => setMethod('wallet')} />
+              <MethodTab icon={<CreditCard size={18} />} label="Card"       active={method === 'card'}      onClick={() => setMethod('card')} />
+              <MethodTab icon={<Wallet size={18} />}     label="Wallet"     active={method === 'wallet'}   onClick={() => setMethod('wallet')} />
+              <MethodTab icon={<Globe size={18} />}      label="Any chain"  active={method === 'universal'} onClick={() => setMethod('universal')} />
               <MethodTab icon={<span style={{ fontSize: 14, fontWeight: 800, lineHeight: 1 }}>N</span>} label="NAN" active={method === 'nan'} onClick={() => setMethod('nan')} />
             </div>
 
@@ -779,6 +781,9 @@ export function PaymentRequestPayPage({
 
             {/* Panel content */}
             {method === 'card'   && <CardPanel req={req} />}
+            {method === 'universal' && req.creatorAddress && (
+              <UniversalPayPanel toAddress={req.creatorAddress} amount={req.amount} handle={req.creatorName || req.title} />
+            )}
             {method === 'qr'     && <QrPanel req={req} />}
             {method === 'copy'   && <CopyPanel req={req} />}
             {method === 'wallet' && <WalletPanel req={req} onSuccess={setSuccessHash} />}

@@ -7,13 +7,14 @@ import { QRCodeSVG } from 'qrcode.react'
 import {
   FileText, CreditCard, CheckCircle2, ExternalLink,
   Copy, Check, AlertCircle, Loader, QrCode,
-  ChevronRight, Share2, Wallet,
+  ChevronRight, Share2, Wallet, Globe,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { useAppStore, type Invoice } from '../../store/appStore'
 import { buildTxExplorerUrl } from '@/onchain-facts'
 import { usePublicPage } from '../../hooks/usePublicPage'
 import { OnrampCardPanel } from './OnrampCardPanel'
+import { UniversalPayPanel } from './UniversalPayPanel'
 
 const F     = "'Inter', -apple-system, sans-serif"
 const MONO  = "'JetBrains Mono', 'SF Mono', Menlo, monospace"
@@ -77,7 +78,7 @@ function LoadingScreen() {
   )
 }
 
-type Tab = 'card' | 'address' | 'nan'
+type Tab = 'card' | 'address' | 'nan' | 'universal'
 
 export function PayByInvoicePage({ invoiceId, isRequest = false }: Props) {
   usePublicPage()
@@ -346,11 +347,12 @@ export function PayByInvoicePage({ invoiceId, isRequest = false }: Props) {
           <div style={{ padding: '20px 20px 16px', borderBottom: `1px solid ${BORDER}` }}>
             <div style={{ fontSize: 15, fontWeight: 700, color: '#111827', marginBottom: 14 }}>Pay with</div>
             {/* Tab bar */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 6 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: 6 }}>
               {([
-                ['card',    <CreditCard key="c" size={14} />, 'Card'],
-                ['address', <QrCode     key="q" size={14} />, 'Crypto'],
-                ['nan',     <Wallet     key="n" size={14} />, 'NAN'],
+                ['card',      <CreditCard key="c" size={14} />, 'Card'],
+                ['address',   <QrCode     key="q" size={14} />, 'Crypto'],
+                ['universal', <Globe      key="u" size={14} />, 'Any chain'],
+                ['nan',       <Wallet     key="n" size={14} />, 'NAN'],
               ] as const).map(([id, icon, label]) => (
                 <button key={id} onClick={() => setTab(id)} style={{
                   height: 46, borderRadius: 12,
@@ -378,6 +380,19 @@ export function PayByInvoicePage({ invoiceId, isRequest = false }: Props) {
                   amount={invoice.amountDue}
                   recipientLabel={invoice.businessName || 'merchant'}
                   currency={invoice.currency}
+                />
+              ) : (
+                <div style={{ fontSize: 13, color: RED, textAlign: 'center', padding: '12px 0' }}>No wallet address on this invoice.</div>
+              )
+            )}
+
+            {/* ── Any chain tab ── */}
+            {tab === 'universal' && (
+              invoice.payToAddress ? (
+                <UniversalPayPanel
+                  toAddress={invoice.payToAddress}
+                  amount={invoice.amountDue}
+                  handle={invoice.businessName || `Invoice ${invoice.number}`}
                 />
               ) : (
                 <div style={{ fontSize: 13, color: RED, textAlign: 'center', padding: '12px 0' }}>No wallet address on this invoice.</div>

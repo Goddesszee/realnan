@@ -15,9 +15,10 @@ import React, { useState, useEffect } from 'react'
 import {
   Wallet, ArrowUpRight, AlertCircle,
   CheckCircle2, ExternalLink, Copy, Check, Loader2,
-  Smartphone, AtSign, Share2, ChevronDown, ChevronUp,
+  Smartphone, AtSign, Share2, ChevronDown, ChevronUp, Globe, CreditCard,
 } from 'lucide-react'
 import { OnrampCardPanel } from './OnrampCardPanel'
+import { UniversalPayPanel } from './UniversalPayPanel'
 import {
   useWriteContract, useWaitForTransactionReceipt,
   useAccount, useChainId, useSwitchChain,
@@ -555,7 +556,7 @@ function CopyConfirmSuccess({ handle, amount }: { handle: string; amount: number
 }
 
 // ── Main page ──────────────────────────────────────────────────────────────────
-type PayMethod = 'card' | 'wallet' | 'qr' | 'copy'
+type PayMethod = 'card' | 'wallet' | 'universal' | 'qr' | 'copy'
 type ResolveState = 'loading' | 'found' | 'notfound' | 'noregistry'
 
 function getUrlAmount(): { amount: number; fixed: boolean } {
@@ -675,6 +676,9 @@ export function PayByNamePage({ handle }: { handle: string }) {
         {method === 'wallet' && (
           <WalletPayPanel toAddress={toAddress} amount={amount} handle={cleanHandle} note={note} onSuccess={setSuccessHash} />
         )}
+        {method === 'universal' && (
+          <UniversalPayPanel toAddress={toAddress} amount={amount} handle={cleanHandle} onSuccess={setSuccessHash} />
+        )}
         {method === 'qr' && (
           <QrTab toAddress={toAddress} amount={amount} onConfirm={() => setCopyConfirmed(true)} />
         )}
@@ -682,26 +686,30 @@ export function PayByNamePage({ handle }: { handle: string }) {
           <CopyAddressPanel toAddress={toAddress} amount={amount} handle={cleanHandle} onConfirm={() => setCopyConfirmed(true)} />
         )}
 
-        {/* Primary method pills: Card + Wallet */}
-        {method !== 'card' && method !== 'wallet' ? null : (
+        {/* Primary method pills: Card + Wallet + Any Chain */}
+        {method !== 'card' && method !== 'wallet' && method !== 'universal' ? null : (
           <div style={{ display: 'flex', gap: 6, marginTop: 14 }}>
-            {(['card', 'wallet'] as PayMethod[]).map(id => (
+            {(['card', 'wallet', 'universal'] as PayMethod[]).map(id => (
               <button key={id} onClick={() => setMethod(id)}
                 style={{ flex: 1, height: 40, borderRadius: 10,
                   background: method === id ? BLUE : SURF2,
                   color: method === id ? '#fff' : TEXT2,
                   border: `1px solid ${method === id ? BLUE : BDR}`,
-                  fontWeight: 700, fontSize: 13, cursor: 'pointer', fontFamily: F,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                  fontWeight: 700, fontSize: 12, cursor: 'pointer', fontFamily: F,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5,
                   transition: 'all 0.12s' }}>
-                {id === 'card' ? <><CreditCard size={14} />Card</> : <><Wallet size={14} />Wallet</>}
+                {id === 'card'
+                  ? <><CreditCard size={13} />Card</>
+                  : id === 'wallet'
+                    ? <><Wallet size={13} />Arc</>
+                    : <><Globe size={13} />Any chain</>}
               </button>
             ))}
           </div>
         )}
 
         {/* "More options" toggle */}
-        {(method === 'card' || method === 'wallet') && (
+        {(method === 'card' || method === 'wallet' || method === 'universal') && (
           <button onClick={() => setShowMore(v => !v)}
             style={{ width: '100%', marginTop: 10, height: 36, borderRadius: 10, background: 'none',
               border: `1px solid ${BDR}`, color: TEXT3, fontSize: 12, fontWeight: 600,
@@ -712,7 +720,7 @@ export function PayByNamePage({ handle }: { handle: string }) {
         )}
 
         {/* Secondary options: QR + Copy */}
-        {showMore && (method === 'card' || method === 'wallet') && (
+        {showMore && (method === 'card' || method === 'wallet' || method === 'universal') && (
           <div style={{ display: 'flex', gap: 6, marginTop: 8 }}>
             {(['qr', 'copy'] as PayMethod[]).map(id => (
               <button key={id} onClick={() => setMethod(id)}
