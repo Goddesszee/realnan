@@ -15,7 +15,7 @@
  */
 import { useEffect, useRef } from 'react'
 import { useAccount } from 'wagmi'
-import { useAppStore, type PaymentRequest, type RecurringTask } from '../store/appStore'
+import { useAppStore, type PaymentRequest, type RecurringTask, type GroupPaymentRequest, type AgentWalletState } from '../store/appStore'
 
 function walletHeader(address: string) {
   return { 'x-wallet-address': address.toLowerCase(), 'content-type': 'application/json' }
@@ -89,6 +89,55 @@ export async function syncRtDelete(address: string, id: string) {
   } catch { /* fire-and-forget */ }
 }
 
+// ── Group Payment Request sync ───────────────────────────────────────────────
+
+export async function syncGprCreate(address: string, gpr: GroupPaymentRequest) {
+  if (!address) return
+  try {
+    await fetch('/api/payments-data?type=group-payment-requests', {
+      method: 'POST',
+      headers: walletHeader(address),
+      body: JSON.stringify(gpr),
+    })
+  } catch { /* fire-and-forget */ }
+}
+
+export async function syncGprUpdate(address: string, id: string, patch: Partial<GroupPaymentRequest>) {
+  if (!address) return
+  try {
+    await fetch(`/api/payments-data?type=group-payment-requests&id=${id}`, {
+      method: 'PATCH',
+      headers: walletHeader(address),
+      body: JSON.stringify(patch),
+    })
+  } catch { /* fire-and-forget */ }
+}
+
+export async function syncGprDelete(address: string, id: string) {
+  if (!address) return
+  try {
+    await fetch(`/api/payments-data?type=group-payment-requests&id=${id}`, {
+      method: 'DELETE',
+      headers: walletHeader(address),
+    })
+  } catch { /* fire-and-forget */ }
+}
+
+// ── Agent Wallet State sync ──────────────────────────────────────────────────
+
+export async function syncAgentWallet(address: string, state: Partial<AgentWalletState>) {
+  if (!address) return
+  try {
+    // Never send encryptionKey to server
+    const { encryptionKey: _drop, ...safe } = state as AgentWalletState & { encryptionKey?: unknown }
+    await fetch('/api/payments-data?type=agent-wallet-state', {
+      method: 'PATCH',
+      headers: walletHeader(address),
+      body: JSON.stringify(safe),
+    })
+  } catch { /* fire-and-forget */ }
+}
+
 // ── Pull-on-mount hook ────────────────────────────────────────────────────────
 // Mounted once in AppShell. Pulls both collections from the backend and merges
 // into the store without replacing locally-created items.
@@ -140,6 +189,38 @@ export function useBackendSync() {
             }))
           }
         })
+      })
+      .catch(() => {})
+
+    // Pull group payment requests
+    fetch('/api/payments-data?type=group-payment-requests', { headers })
+      .then(r => r.ok ? r.json() : null)
+      .then((data: { success: boolean; groups?: GroupPaymentRequest[] } | null) => {
+        if (!data?.success || !data.groups?.length) return
+        const store = useAppStore.getState()
+        const existingIds = new Set(store.groupPaymentRequests.map(g => g.id))
+        data.groups.forEach(gpr => {
+          if (!existingIds.has(gpr.id)) {
+            useAppStore.setState(s => ({
+              groupPaymentRequests: [gpr, ...s.groupPaymentRequests],
+            }))
+          }
+        })
+      })
+      .catch(() => {})
+
+    // Pull agent wallet state
+    fetch('/api/payments-data?type=agent-wallet-state', { headers })
+      .then(r => r.ok ? r.json() : null)
+      .then((data: { success: boolean; state?: AgentWalletState | null } | null) => {
+        if (!data?.success || !data.state) return
+        // Only restore if not already provisioned locally
+        const store = useAppStore.getState()
+        if (!store.agentWallet?.provisioned) {
+          useAppStore.setState(s => ({
+            agentWallet: { ...s.agentWallet, ...data.state },
+          }))
+        }
       })
       .catch(() => {})
 

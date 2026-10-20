@@ -29,6 +29,7 @@ import { executeWithGuard } from '../../lib/circle-execute'
 import { useNanTheme } from '../../hooks/useNanTheme'
 import { AgentRecurringTab } from './AgentRecurringTab'
 import { OnrampCardPanel } from './OnrampCardPanel'
+import { syncAgentWallet } from '../../hooks/useBackendSync'
 
 // ── design tokens ─────────────────────────────────────────────────────────────
 
@@ -1285,7 +1286,7 @@ function DashboardScreen({ C, onDisconnect }: { C: ReturnType<typeof useNanTheme
         provisioned?: boolean; address?: string; walletId?: string; balance_usdc?: string
         blockchain?: string; accountType?: string; custodyType?: string; createDate?: string | null; walletState?: string
       }
-      setAgentWallet({
+      const patch = {
         provisioned: d.provisioned ?? false,
         address: d.address, walletId: d.walletId,
         balance_usdc: d.balance_usdc ?? '0',
@@ -1295,7 +1296,9 @@ function DashboardScreen({ C, onDisconnect }: { C: ReturnType<typeof useNanTheme
         custodyType: d.custodyType,
         createDate: d.createDate,
         walletState: d.walletState,
-      })
+      }
+      setAgentWallet(patch)
+      if (d.address) syncAgentWallet(d.address, patch)
     } catch { /* keep stale state */ }
     setRefreshing(false)
   }, [agentWallet.userToken, setAgentWallet])
@@ -1896,7 +1899,7 @@ export function AgentWalletExperience({ backView = 'home' }: AgentWalletExperien
           })
           const d = await r.json() as { provisioned?: boolean; address?: string; walletId?: string; error?: string }
           if (d.provisioned && d.address) {
-            setAgentWallet({
+            const provisionPatch = {
               provisioned: true,
               address: d.address,
               walletId: d.walletId,
@@ -1904,7 +1907,9 @@ export function AgentWalletExperience({ backView = 'home' }: AgentWalletExperien
               lastRefreshed: new Date().toISOString(),
               userToken: loginRes.userToken,
               encryptionKey: loginRes.encryptionKey,
-            })
+            }
+            setAgentWallet(provisionPatch)
+            syncAgentWallet(d.address, provisionPatch)
             setNewAddress(d.address)
             setNewWalletId(d.walletId ?? '')
             try { sessionStorage.removeItem('aw_login_res') } catch { /* ignore */ }

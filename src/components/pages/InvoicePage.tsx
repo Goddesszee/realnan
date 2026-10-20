@@ -18,6 +18,7 @@ import { toast } from 'sonner'
 import { useAppStore, type Invoice, type InvoiceLineItem, type InvoiceStatus, type RecurringTask, type GroupPaymentRequest, type GroupPaymentSplit } from '../../store/appStore'
 import { downloadInvoicePdf, shareInvoice, printInvoice, invoicePaymentLink } from '../../lib/invoice-pdf'
 import { NanDatePicker } from '../ui/NanSelect'
+import { syncGprCreate } from '../../hooks/useBackendSync'
 import { useDisplayCurrency } from '../../lib/display-currency'
 import { showIncomeStatement } from '../../lib/income-statement'
 import { shareOnWhatsApp, invoiceChaseText, isInvoiceOverdue } from '../../lib/whatsapp'
@@ -250,6 +251,7 @@ function InvoiceSplitForm({ walletAddress, groupPaymentRequests: _gpr, addGroupP
       })),
     })
     setCreated(g)
+    syncGprCreate(walletAddress, g)
     toast.success('Split bill created!')
   }
 

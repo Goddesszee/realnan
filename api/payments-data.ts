@@ -380,5 +380,82 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.json({ success: true, claimId, matched, txHash: resolvedTxHash, aiSummary })
   }
 
-  return res.status(400).json({ success: false, error: 'type param required: payment-requests | recurring-tasks | invoices | invoice-claim' })
+  // ── GROUP PAYMENT REQUESTS ───────────────────────────────────────────────────
+  if (type === 'group-payment-requests') {
+    const storeKey = `gpr:${wallet}`
+
+    if (!kv) {
+      if (req.method === 'GET') return res.json({ success: true, groups: [], warning: 'storage_not_configured' })
+      return res.json({ success: true, warning: 'storage_not_configured' })
+    }
+
+    if (req.method === 'GET') {
+      const list = (await kv.get<unknown[]>(storeKey)) ?? []
+      return res.json({ success: true, groups: list })
+    }
+
+    if (req.method === 'POST') {
+      const body = req.body as Record<string, unknown>
+      if (!body.id || !body.title) return res.status(400).json({ success: false, error: 'id and title required' })
+      const list = (await kv.get<unknown[]>(storeKey)) ?? []
+      const existing = list.findIndex((g: unknown) => (g as Record<string, unknown>).id === body.id)
+      if (existing >= 0) list[existing] = body
+      else list.unshift(body)
+      await kv.set(storeKey, list.slice(0, 200), { ex: 60 * 60 * 24 * 90 })
+      return res.json({ success: true, group: body })
+    }
+
+    if (req.method === 'PATCH') {
+      const id = req.query.id as string
+      const list = (await kv.get<Record<string, unknown>[]>(storeKey)) ?? []
+      const idx = list.findIndex(g => g.id === id)
+      if (idx === -1) return res.status(404).json({ success: false, error: 'Not found' })
+      list[idx] = { ...list[idx], ...(req.body as Record<string, unknown>), id }
+      await kv.set(storeKey, list, { ex: 60 * 60 * 24 * 90 })
+      return res.json({ success: true, group: list[idx] })
+    }
+
+    if (req.method === 'DELETE') {
+      const id = req.query.id as string
+      const list = (await kv.get<Record<string, unknown>[]>(storeKey)) ?? []
+      await kv.set(storeKey, list.filter(g => g.id !== id), { ex: 60 * 60 * 24 * 90 })
+      return res.json({ success: true })
+    }
+
+    return res.status(405).json({ success: false, error: 'Method not allowed' })
+  }
+
+  // ── AGENT WALLET STATE ────────────────────────────────────────────────────────
+  if (type === 'agent-wallet-state') {
+    const storeKey = `aws:${wallet}`
+
+    if (!kv) {
+      if (req.method === 'GET') return res.json({ success: true, state: null, warning: 'storage_not_configured' })
+      return res.json({ success: true, warning: 'storage_not_configured' })
+    }
+
+    if (req.method === 'GET') {
+      const state = await kv.get<Record<string, unknown>>(storeKey)
+      return res.json({ success: true, state: state ?? null })
+    }
+
+    if (req.method === 'POST' || req.method === 'PATCH') {
+      const body = req.body as Record<string, unknown>
+      // Never persist encryptionKey server-side
+      const { encryptionKey: _drop, ...safe } = body as Record<string, unknown> & { encryptionKey?: unknown }
+      const existing = (await kv.get<Record<string, unknown>>(storeKey)) ?? {}
+      const merged = { ...existing, ...safe, updatedAt: new Date().toISOString() }
+      await kv.set(storeKey, merged, { ex: 60 * 60 * 24 * 365 })
+      return res.json({ success: true, state: merged })
+    }
+
+    if (req.method === 'DELETE') {
+      await kv.del(storeKey)
+      return res.json({ success: true })
+    }
+
+    return res.status(405).json({ success: false, error: 'Method not allowed' })
+  }
+
+  return res.status(400).json({ success: false, error: 'type param required: payment-requests | recurring-tasks | invoices | invoice-claim | group-payment-requests | agent-wallet-state' })
 }
