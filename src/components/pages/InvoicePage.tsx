@@ -7,7 +7,7 @@
  * Both save as Invoice records (mode: 'quick' | 'full').
  * Payment Requests page is retired; this page replaces it entirely.
  */
-import { useState, useMemo, useRef, useEffect, useCallback } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import {
   FileText, Plus, Download, Share2, Printer, Copy,
   Trash2, ChevronRight, X, Check, AlertCircle, Users,
@@ -17,6 +17,7 @@ import {
 import { toast } from 'sonner'
 import { useAppStore, type Invoice, type InvoiceLineItem, type InvoiceStatus, type RecurringTask, type GroupPaymentRequest, type GroupPaymentSplit } from '../../store/appStore'
 import { downloadInvoicePdf, shareInvoice, printInvoice, invoicePaymentLink } from '../../lib/invoice-pdf'
+import { NanDatePicker } from '../ui/NanSelect'
 import { useDisplayCurrency } from '../../lib/display-currency'
 import { showIncomeStatement } from '../../lib/income-statement'
 import { shareOnWhatsApp, invoiceChaseText, isInvoiceOverdue } from '../../lib/whatsapp'
@@ -99,36 +100,34 @@ const CURRENCIES = ['USDC', 'EURC']
 
 function CurrencyPicker({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   const [open, setOpen] = useState(false)
-  const ref = useRef<HTMLDivElement>(null)
-  useEffect(() => {
-    if (!open) return
-    function handler(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
-    }
-    document.addEventListener('mousedown', handler)
-    return () => document.removeEventListener('mousedown', handler)
-  }, [open])
   return (
-    <div ref={ref} style={{ position: 'relative' }}>
-      <button type="button" onClick={() => setOpen(o => !o)}
-        style={{ width: '100%', boxSizing: 'border-box', padding: '8px 12px', border: '1px solid var(--nan-border)', borderRadius: 10, fontFamily: F, fontSize: 14, outline: 'none', color: 'var(--nan-text)', background: 'var(--nan-surface-2)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8 }}>
+    <>
+      <button type="button" onClick={() => setOpen(true)}
+        style={{ width: '100%', boxSizing: 'border-box', padding: '8px 12px', border: '1px solid var(--nan-border)', borderRadius: 10, fontFamily: F, fontSize: 14, outline: 'none', color: 'var(--nan-text)', background: 'var(--nan-surface-2)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, WebkitTapHighlightColor: 'transparent' }}>
         <TokenLogo symbol={value} size={20} />
         <span style={{ flex: 1, textAlign: 'left', fontWeight: 600 }}>{value}</span>
-        <ChevronDown size={14} color="var(--nan-text-2)" style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s', flexShrink: 0 }} />
+        <ChevronDown size={14} color="var(--nan-text-2)" />
       </button>
       {open && (
-        <div style={{ position: 'absolute', top: 'calc(100% + 4px)', left: 0, right: 0, zIndex: 50, background: 'var(--nan-surface-2)', border: '1px solid var(--nan-border)', borderRadius: 12, overflow: 'hidden', boxShadow: '0 8px 24px rgba(0,0,0,0.18)' }}>
-          {CURRENCIES.map(c => (
-            <button key={c} type="button" onClick={() => { onChange(c); setOpen(false) }}
-              style={{ width: '100%', padding: '11px 14px', display: 'flex', alignItems: 'center', gap: 10, background: c === value ? 'rgba(37,99,235,0.10)' : 'transparent', border: 'none', cursor: 'pointer', fontFamily: F, borderBottom: c !== CURRENCIES[CURRENCIES.length - 1] ? '1px solid var(--nan-border)' : 'none' }}>
-              <TokenLogo symbol={c} size={22} />
-              <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--nan-text)', flex: 1, textAlign: 'left' }}>{c}</span>
-              {c === value && <div style={{ width: 18, height: 18, borderRadius: '50%', border: '2px solid var(--nan-blue)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><div style={{ width: 9, height: 9, borderRadius: '50%', background: 'var(--nan-blue)' }} /></div>}
-            </button>
-          ))}
+        <div style={{ position: 'fixed', inset: 0, zIndex: 10000, background: 'rgba(0,0,0,0.45)', display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }} onClick={() => setOpen(false)}>
+          <div onClick={e => e.stopPropagation()} style={{ width: '100%', maxWidth: 480, background: 'var(--nan-surface)', borderRadius: '20px 20px 0 0', padding: '0 0 max(20px, env(safe-area-inset-bottom)) 0', fontFamily: F }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px 12px' }}>
+              <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--nan-text)' }}>Currency</div>
+              <button type="button" onClick={() => setOpen(false)} style={{ width: 28, height: 28, borderRadius: 8, background: 'var(--nan-surface-2)', border: '1px solid var(--nan-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><X size={14} color="var(--nan-text-3)" /></button>
+            </div>
+            <div style={{ height: 1, background: 'var(--nan-border)' }} />
+            {CURRENCIES.map(c => (
+              <button key={c} type="button" onClick={() => { onChange(c); setOpen(false) }}
+                style={{ width: '100%', padding: '14px 20px', display: 'flex', alignItems: 'center', gap: 12, background: c === value ? 'rgba(37,99,235,0.08)' : 'transparent', border: 'none', borderBottom: '1px solid var(--nan-border)', cursor: 'pointer', fontFamily: F, WebkitTapHighlightColor: 'transparent' }}>
+                <TokenLogo symbol={c} size={24} />
+                <span style={{ fontSize: 15, fontWeight: 600, color: c === value ? 'var(--nan-blue)' : 'var(--nan-text)', flex: 1, textAlign: 'left' }}>{c}</span>
+                {c === value && <Check size={16} color="var(--nan-blue)" />}
+              </button>
+            ))}
+          </div>
         </div>
       )}
-    </div>
+    </>
   )
 }
 
@@ -206,6 +205,9 @@ function emptyForm(defaultAddress = ''): DraftForm {
     quickAmount: '', quickNote: '', quickRecipient: '',
   }
 }
+
+// ── Native-friendly date input (works on all Android/iOS browsers) ────────────
+// NativeDateInput replaced by NanDatePicker (mobile-friendly bottom sheet)
 
 // ── Split Bill form (embedded in InvoicePage) ─────────────────────────────────
 function InvoiceSplitForm({ walletAddress, groupPaymentRequests: _gpr, addGroupPaymentRequest, onBack, C }: {
@@ -306,14 +308,12 @@ function InvoiceSplitForm({ walletAddress, groupPaymentRequests: _gpr, addGroupP
       {/* Currency + Due date */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 12 }}>
         <div style={{ background: C.SURF, border: `1px solid ${C.BDR}`, borderRadius: 12, padding: '12px 14px' }}>
-          <label style={{ fontSize: 11, fontWeight: 600, color: C.T3, display: 'block', marginBottom: 4 }}>CURRENCY</label>
-          <select value={currency} onChange={e => setCurrency(e.target.value)} style={{ border: 'none', outline: 'none', fontSize: 14, fontWeight: 600, color: C.TEXT, background: 'transparent', width: '100%' }}>
-            <option>USDC</option><option>EURC</option>
-          </select>
+          <label style={{ fontSize: 11, fontWeight: 600, color: C.T3, display: 'block', marginBottom: 6 }}>CURRENCY</label>
+          <CurrencyPicker value={currency} onChange={setCurrency} />
         </div>
         <div style={{ background: C.SURF, border: `1px solid ${C.BDR}`, borderRadius: 12, padding: '12px 14px' }}>
-          <label style={{ fontSize: 11, fontWeight: 600, color: C.T3, display: 'block', marginBottom: 4 }}>DUE DATE</label>
-          <input type="date" value={dueDate} onChange={e => setDueDate(e.target.value)} style={{ border: 'none', outline: 'none', fontSize: 13, color: C.TEXT, background: 'transparent', width: '100%' }} />
+          <label style={{ fontSize: 11, fontWeight: 600, color: C.T3, display: 'block', marginBottom: 6 }}>DUE DATE</label>
+          <NanDatePicker value={dueDate} onChange={setDueDate} placeholder="Optional" />
         </div>
       </div>
 
@@ -1060,10 +1060,10 @@ export function InvoicePage() {
         <div style={{ background: SURF, border: `1px solid ${BDR}`, borderRadius: 18, padding: 18, display: 'flex', flexDirection: 'column', gap: 14 }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 12 }}>
             <Field t2={T2} red={RED} label="Issue date">
-              <input type="date" value={form.issueDate} onChange={e => setForm(f => ({ ...f, issueDate: e.target.value }))} style={inputBase} />
+              <NanDatePicker value={form.issueDate} onChange={v => setForm(f => ({ ...f, issueDate: v }))} placeholder="Select date" />
             </Field>
             <Field t2={T2} red={RED} label="Due date *" error={errors.dueDate}>
-              <input type="date" value={form.dueDate} onChange={e => setForm(f => ({ ...f, dueDate: e.target.value }))} style={{ ...inputBase, borderColor: errors.dueDate ? 'rgba(239,68,68,0.5)' : BDR }} />
+              <NanDatePicker value={form.dueDate} onChange={v => setForm(f => ({ ...f, dueDate: v }))} placeholder="Select date" />
             </Field>
           </div>
           <Field t2={T2} red={RED} label="Currency">
