@@ -212,26 +212,61 @@ function ListView({
           <div style={{ background: C.surf, border: `1px solid ${C.bdr}`, borderRadius: 18, overflow: 'hidden' }}>
             {groupPaymentRequests.map((g, idx) => {
               const paidCount = g.splits.filter(s => s.status === 'paid').length
+              const allPaid = paidCount === g.splits.length
               return (
-                <div key={g.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px', borderBottom: idx < groupPaymentRequests.length - 1 ? `1px solid ${C.bdr}` : 'none', cursor: 'pointer', WebkitTapHighlightColor: 'transparent' }}
+                <div key={g.id} style={{ display: 'flex', borderBottom: idx < groupPaymentRequests.length - 1 ? `1px solid ${C.bdr}` : 'none', cursor: 'pointer', WebkitTapHighlightColor: 'transparent' }}
                   onClick={() => onOpenGroup(g)}>
-                  <div style={{ width: 40, height: 40, borderRadius: 12, background: 'rgba(37,99,235,0.08)', border: '1px solid rgba(37,99,235,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <Users size={18} color={BLUE} />
+                  {/* Left green strip for split bills */}
+                  <div style={{ width: 4, flexShrink: 0, background: allPaid ? GREEN : 'var(--nan-gold)', borderRadius: idx === 0 ? '0 0 0 0' : '0' }} />
+                  <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px' }}>
+                    {/* Stacked initials */}
+                    <div style={{ position: 'relative', width: 44, height: 44, flexShrink: 0 }}>
+                      {g.splits.slice(0, 3).map((sp, i) => {
+                        const colors = ['#DBEAFE','#D1FAE5','#FEF3C7','#FCE7F3']
+                        const textColors = ['#1D4ED8','#065F46','#92400E','#9D174D']
+                        return (
+                          <div key={sp.id} style={{
+                            position: 'absolute',
+                            left: i * 10, top: i * 6,
+                            width: 28, height: 28,
+                            borderRadius: '50%',
+                            background: colors[i % colors.length],
+                            border: `2px solid ${C.bg}`,
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            fontSize: 10, fontWeight: 800,
+                            color: textColors[i % textColors.length],
+                            zIndex: 3 - i,
+                          }}>
+                            {sp.name[0]?.toUpperCase() ?? '?'}
+                          </div>
+                        )
+                      })}
+                      {g.splits.length > 3 && (
+                        <div style={{ position: 'absolute', left: 30, top: 18, width: 22, height: 22, borderRadius: '50%', background: C.surf2, border: `2px solid ${C.bg}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, fontWeight: 800, color: C.t2, zIndex: 0 }}>
+                          +{g.splits.length - 3}
+                        </div>
+                      )}
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
+                        <span style={{ fontSize: 9, fontWeight: 800, letterSpacing: '0.08em', padding: '2px 7px', borderRadius: 99, background: 'rgba(245,158,11,0.10)', color: GOLD, whiteSpace: 'nowrap' }}>
+                          SPLIT BILL
+                        </span>
+                      </div>
+                      <div style={{ fontSize: 14, fontWeight: 700, color: C.text, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{g.title}</div>
+                      <div style={{ fontSize: 11, color: C.t3, marginTop: 2 }}>{paidCount}/{g.splits.length} paid · {g.totalAmount.toFixed(2)} {g.currency}</div>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4 }}>
+                      <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20, background: allPaid ? 'rgba(16,185,129,0.10)' : 'rgba(245,158,11,0.08)', color: allPaid ? GREEN : GOLD }}>
+                        {allPaid ? 'Completed' : `${g.splits.length - paidCount} pending`}
+                      </span>
+                      <button onClick={e => { e.stopPropagation(); removeGroupPaymentRequest(g.id); toast.success('Split deleted') }}
+                        style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2 }}>
+                        <Trash2 size={13} color={C.t3} />
+                      </button>
+                    </div>
+                    <ChevronRight size={14} color={C.t3} />
                   </div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 14, fontWeight: 700, color: C.text, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{g.title}</div>
-                    <div style={{ fontSize: 11, color: C.t3, marginTop: 2 }}>{paidCount}/{g.splits.length} paid · {g.totalAmount.toFixed(2)} {g.currency}</div>
-                  </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4 }}>
-                    <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20, background: g.status === 'completed' ? 'rgba(16,185,129,0.10)' : 'rgba(37,99,235,0.08)', color: g.status === 'completed' ? GREEN : BLUE }}>
-                      {g.status === 'completed' ? 'Completed' : `${g.splits.length - paidCount} pending`}
-                    </span>
-                    <button onClick={e => { e.stopPropagation(); removeGroupPaymentRequest(g.id); toast.success('Split deleted') }}
-                      style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2 }}>
-                      <Trash2 size={13} color={C.t3} />
-                    </button>
-                  </div>
-                  <ChevronRight size={14} color={C.t3} />
                 </div>
               )
             })}
@@ -353,22 +388,27 @@ function ListView({
                 WebkitTapHighlightColor: 'transparent',
               }}
             >
-              {/* Icon */}
+              {/* Icon — Link2 distinguishes pay-link requests from invoices */}
               <div style={{
                 width: 44, height: 44, borderRadius: 13, flexShrink: 0,
-                background: STATUS_META[req.status].bg,
-                border: `1px solid ${STATUS_META[req.status].color}22`,
+                background: 'rgba(37,99,235,0.07)',
+                border: '1px solid rgba(37,99,235,0.15)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>
-                <FileText size={18} color={STATUS_META[req.status].color} />
+                <Link2 size={18} color={BLUE} />
               </div>
 
               {/* Info */}
               <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
+                  <span style={{ fontSize: 9, fontWeight: 800, letterSpacing: '0.08em', padding: '2px 7px', borderRadius: 99, background: 'rgba(37,99,235,0.08)', color: BLUE, whiteSpace: 'nowrap' }}>
+                    PAY LINK
+                  </span>
+                </div>
                 <div style={{ fontSize: 14, fontWeight: 700, color: C.text, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {req.title}
                 </div>
-                <div style={{ fontSize: 11, color: C.t3, marginTop: 3, display: 'flex', alignItems: 'center', gap: 4, flexWrap: 'wrap' }}>
+                <div style={{ fontSize: 11, color: C.t3, marginTop: 2, display: 'flex', alignItems: 'center', gap: 4, flexWrap: 'wrap' }}>
                   <span style={{ fontFamily: MONO }}>{req.refNumber}</span>
                   {req.recipientName && <><span>·</span><span style={{ overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 80 }}>{req.recipientName}</span></>}
                   {req.dueDate && <><span>·</span><span>Due {new Date(req.dueDate).toLocaleDateString('en', { month: 'short', day: 'numeric' })}</span></>}

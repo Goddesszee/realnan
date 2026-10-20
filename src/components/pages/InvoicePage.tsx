@@ -681,7 +681,12 @@ export function InvoicePage() {
             <div key={inv.id} style={{
               background: SURF, border: `1px solid ${BDR}`,
               borderRadius: 14, overflow: 'hidden',
+              display: 'flex',
             }}>
+              {/* ── Left accent strip ── */}
+              <div style={{ width: 4, flexShrink: 0, background: isQuick ? 'var(--nan-green)' : BLUE }} />
+              {/* ── Card content ── */}
+              <div style={{ flex: 1, minWidth: 0 }}>
               {/* ── Clickable row ── */}
               <button
                 onClick={() => { setSelectedId(inv.id); setView('detail') }}
@@ -690,16 +695,16 @@ export function InvoicePage() {
                 {/* Avatar */}
                 <div style={{ position: 'relative', width: 38, height: 38, borderRadius: 10, flexShrink: 0, background: iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15, fontWeight: 700, color: iconColor }}>
                   {who[0]?.toUpperCase() ?? '?'}
-                  {isQuick && (
-                    <span style={{ position: 'absolute', right: -3, bottom: -3, width: 16, height: 16, borderRadius: '50%', background: BLUE, border: `2px solid ${SURF}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <Zap size={8} color="#fff" />
-                    </span>
-                  )}
                 </div>
-                {/* Name + ref */}
+                {/* Name + ref + type pill */}
                 <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
+                    <span style={{ fontSize: 9, fontWeight: 800, letterSpacing: '0.08em', padding: '2px 7px', borderRadius: 99, background: isQuick ? 'rgba(16,185,129,0.10)' : 'rgba(37,99,235,0.08)', color: isQuick ? 'var(--nan-green)' : BLUE, whiteSpace: 'nowrap', flexShrink: 0 }}>
+                      {isQuick ? 'REQUEST' : 'INVOICE'}
+                    </span>
+                  </div>
                   <div style={{ fontSize: 14, fontWeight: 700, color: TEXT, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{inv.customerName}</div>
-                  <div style={{ fontSize: 11, color: T3, marginTop: 1 }}>{isQuick ? 'Request' : 'Invoice'} {inv.number}</div>
+                  <div style={{ fontSize: 11, color: T3, marginTop: 1 }}>{inv.number}</div>
                 </div>
                 {/* Status dot */}
                 <span style={{ flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 11, fontWeight: 700, color: meta.color }}>
@@ -737,6 +742,7 @@ export function InvoicePage() {
                   <button onClick={() => setDelConfirm(inv.id)} aria-label="Delete" style={{ ...actionBtn, padding: 0, width: 32, justifyContent: 'center' }}><Trash2 size={13} /></button>
                 )}
               </div>
+              </div>{/* end flex-1 content wrapper */}
             </div>
           )
         })}
