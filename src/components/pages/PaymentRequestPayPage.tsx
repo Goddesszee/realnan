@@ -19,11 +19,14 @@ import { usePublicPage } from '../../hooks/usePublicPage'
 
 const F    = "'Inter', -apple-system, sans-serif"
 const MONO = "'JetBrains Mono', Menlo, monospace"
-const BLUE = 'var(--nan-blue)'
-const BG   = '#0A0C10'
-const SURF = '#13151A'
-const SURF2= '#1C1F28'
-const BDR  = 'rgba(255,255,255,0.08)'
+const BLUE  = '#2563EB'
+const BLUE_L = '#EFF4FF'
+const BLUE_M = '#DBEAFE'
+const BG    = '#F3F4F6'
+const SURF  = '#FFFFFF'
+const SURF2 = '#F9FAFB'
+const BDR   = '#E5E7EB'
+const GREEN = '#16A34A'
 const ARC_ID = 5042
 const USDC_ADDRESS   = '0x3600000000000000000000000000000000000000' as `0x${string}`
 const USDC_DECIMALS  = 6
@@ -160,13 +163,13 @@ function WalletPanel({
   if (!isConnected) {
     return (
       <div style={{ textAlign: 'center', padding: '8px 0 4px' }}>
-        <p style={{ fontSize: 13, color: '#8A8F9E', marginBottom: 16, lineHeight: 1.5 }}>
+        <p style={{ fontSize: 13, color: '#6B7280', marginBottom: 16, lineHeight: 1.5 }}>
           Connect any EVM wallet to pay instantly with USDC on Arc.
         </p>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <ConnectKitButton />
         </div>
-        <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', marginTop: 14 }}>
+        <p style={{ fontSize: 11, color: '#9CA3AF', marginTop: 14 }}>
           MetaMask, Coinbase Wallet, WalletConnect, and more
         </p>
       </div>
@@ -265,9 +268,9 @@ function QrPanel({ req }: { req: PaymentRequest }) {
               Tap <strong>Scan</strong> and point at this code.
             </div>
           </div>
-          <div style={{ background: SURF2, border: `1px solid ${BDR}`, borderRadius: 10, padding: '8px 14px', width: '100%', textAlign: 'center' }}>
-            <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)', marginBottom: 2, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Pre-fills amount</div>
-            <div style={{ fontSize: 13, fontWeight: 700, color: '#F2F3F5', fontFamily: MONO }}>
+          <div style={{ background: BLUE_L, border: `1px solid ${BLUE_M}`, borderRadius: 10, padding: '8px 14px', width: '100%', textAlign: 'center' }}>
+            <div style={{ fontSize: 10, color: '#3B82F6', marginBottom: 2, textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 600 }}>Pre-fills amount</div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: '#1E40AF', fontFamily: MONO }}>
               {fmt(req.amount)} {req.currency}
             </div>
           </div>
@@ -305,20 +308,20 @@ function CopyPanel({ req }: { req: PaymentRequest }) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
 
       {/* Instructions */}
-      <div style={{ background: SURF2, borderRadius: 12, padding: '14px 16px', border: `1px solid ${BDR}` }}>
+      <div style={{ background: SURF2, borderRadius: 12, padding: '14px 16px', border: `1px solid ${BDR}`, boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
         {steps.map(s => (
           <div key={s.n} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: s.n !== '3' ? 10 : 0 }}>
             <span style={{ width: 20, height: 20, borderRadius: '50%', background: BLUE, color: '#fff', fontSize: 11, fontWeight: 700, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>{s.n}</span>
-            <span style={{ fontSize: 13, color: '#8A8F9E', lineHeight: 1.4 }}>{s.text}</span>
+            <span style={{ fontSize: 13, color: '#6B7280', lineHeight: 1.4 }}>{s.text}</span>
           </div>
         ))}
       </div>
 
       {/* Amount row */}
       <div>
-        <div style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Amount</div>
+        <div style={{ fontSize: 11, fontWeight: 600, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Amount</div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <div style={{ flex: 1, background: SURF2, border: `1px solid ${BDR}`, borderRadius: 10, padding: '10px 14px', fontFamily: MONO, fontSize: 15, fontWeight: 700, color: '#F2F3F5' }}>
+          <div style={{ flex: 1, background: SURF2, border: `1px solid ${BDR}`, borderRadius: 10, padding: '10px 14px', fontFamily: MONO, fontSize: 15, fontWeight: 700, color: '#111827' }}>
             {fmt(req.amount)} {req.currency}
           </div>
           <button onClick={() => copy(`${req.amount}`, 'amt')}
@@ -333,10 +336,10 @@ function CopyPanel({ req }: { req: PaymentRequest }) {
 
       {/* Address row */}
       <div>
-        <div style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Recipient address (USDC · Arc)</div>
+        <div style={{ fontSize: 11, fontWeight: 600, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Recipient address (USDC · Arc)</div>
         {addr ? (
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <div style={{ flex: 1, background: SURF2, border: `1px solid ${BDR}`, borderRadius: 10, padding: '10px 14px', fontFamily: MONO, fontSize: 12, color: '#F2F3F5', wordBreak: 'break-all', lineHeight: 1.5 }}>
+            <div style={{ flex: 1, background: SURF2, border: `1px solid ${BDR}`, borderRadius: 10, padding: '10px 14px', fontFamily: MONO, fontSize: 12, color: '#111827', wordBreak: 'break-all', lineHeight: 1.5 }}>
               {addr}
             </div>
             <button onClick={() => copy(addr, 'addr')}
@@ -348,11 +351,11 @@ function CopyPanel({ req }: { req: PaymentRequest }) {
             </button>
           </div>
         ) : (
-          <div style={{ fontSize: 13, color: '#8A8F9E', padding: '10px 0' }}>No address provided on this request.</div>
+          <div style={{ fontSize: 13, color: '#6B7280', padding: '10px 0' }}>No address provided on this request.</div>
         )}
       </div>
 
-      <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', textAlign: 'center', paddingTop: 4 }}>
+      <div style={{ fontSize: 11, color: '#9CA3AF', textAlign: 'center', paddingTop: 4 }}>
         After sending, share the transaction hash with the requester to confirm payment.
       </div>
     </div>
@@ -368,16 +371,16 @@ function CardPanel({ req }: { req: PaymentRequest }) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      <div style={{ background: SURF2, borderRadius: 12, padding: '14px 16px', border: `1px solid ${BDR}` }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: '#F2F3F5', marginBottom: 6 }}>Pay with debit or credit card</div>
-        <div style={{ fontSize: 13, color: '#8A8F9E', lineHeight: 1.6 }}>
+      <div style={{ background: BLUE_L, border: `1px solid ${BLUE_M}`, borderRadius: 12, padding: '14px 16px' }}>
+        <div style={{ fontSize: 13, fontWeight: 700, color: '#1E40AF', marginBottom: 6 }}>Pay with debit or credit card</div>
+        <div style={{ fontSize: 13, color: '#3B82F6', lineHeight: 1.6 }}>
           Don't have USDC? Buy it instantly with your card and it will be sent directly to the recipient. No crypto wallet needed.
         </div>
       </div>
 
       <div style={{ background: SURF2, borderRadius: 12, padding: '12px 16px', border: `1px solid ${BDR}` }}>
-        <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>Amount</div>
-        <div style={{ fontSize: 22, fontWeight: 800, color: '#F2F3F5' }}>{req.amount.toLocaleString('en', { minimumFractionDigits: 2 })} {req.currency}</div>
+        <div style={{ fontSize: 11, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>Amount</div>
+        <div style={{ fontSize: 22, fontWeight: 800, color: '#111827' }}>{req.amount.toLocaleString('en', { minimumFractionDigits: 2 })} {req.currency}</div>
       </div>
 
       {addr ? (
@@ -389,12 +392,12 @@ function CardPanel({ req }: { req: PaymentRequest }) {
           <CreditCard size={18} /> Buy &amp; Pay with Card
         </a>
       ) : (
-        <div style={{ textAlign: 'center', fontSize: 13, color: '#8A8F9E', padding: '10px 0' }}>
+        <div style={{ textAlign: 'center', fontSize: 13, color: '#6B7280', padding: '10px 0' }}>
           No recipient address on this request.
         </div>
       )}
 
-      <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', textAlign: 'center', lineHeight: 1.5 }}>
+      <div style={{ fontSize: 11, color: '#9CA3AF', textAlign: 'center', lineHeight: 1.5 }}>
         Powered by Circle · Settles instantly as USDC on Arc.
       </div>
     </div>
@@ -413,13 +416,13 @@ function NanPanel({ req }: { req: PaymentRequest }) {
 
   if (paid) return (
     <div style={{ textAlign: 'center', padding: '24px 0' }}>
-      <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'rgba(16,185,129,0.12)',
-        border: '1px solid rgba(16,185,129,0.25)', display: 'flex', alignItems: 'center',
+      <div style={{ width: 56, height: 56, borderRadius: '50%', background: '#DCFCE7',
+        border: '1px solid #86EFAC', display: 'flex', alignItems: 'center',
         justifyContent: 'center', margin: '0 auto 14px' }}>
         <CheckCircle2 size={26} color='#10B981' />
       </div>
-      <div style={{ fontSize: 16, fontWeight: 700, color: '#F2F3F5', marginBottom: 6 }}>Thanks!</div>
-      <div style={{ fontSize: 13, color: '#8A8F9E', lineHeight: 1.5 }}>
+      <div style={{ fontSize: 16, fontWeight: 700, color: '#111827', marginBottom: 6 }}>Thanks!</div>
+      <div style={{ fontSize: 13, color: '#6B7280', lineHeight: 1.5 }}>
         Your payment is on its way to {req.creatorName || 'the recipient'}.
       </div>
     </div>
@@ -438,22 +441,22 @@ function NanPanel({ req }: { req: PaymentRequest }) {
           </svg>
         </div>
         <div>
-          <div style={{ fontSize: 14, fontWeight: 700, color: '#F2F3F5', marginBottom: 2 }}>Pay with your NAN wallet</div>
-          <div style={{ fontSize: 12, color: '#8A8F9E' }}>Send directly from your NAN account</div>
+          <div style={{ fontSize: 14, fontWeight: 700, color: '#111827', marginBottom: 2 }}>Pay with your NAN wallet</div>
+          <div style={{ fontSize: 12, color: '#6B7280' }}>Send directly from your NAN account</div>
         </div>
       </div>
 
       {/* Summary */}
-      <div style={{ background: SURF2, border: `1px solid ${BDR}`, borderRadius: 12, padding: '14px 16px' }}>
+      <div style={{ background: SURF2, border: `1px solid ${BDR}`, borderRadius: 12, padding: '14px 16px', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-          <span style={{ fontSize: 12, color: '#8A8F9E' }}>To</span>
-          <span style={{ fontSize: 13, fontWeight: 600, color: '#F2F3F5', overflow: 'hidden',
+          <span style={{ fontSize: 12, color: '#6B7280' }}>To</span>
+          <span style={{ fontSize: 13, fontWeight: 600, color: '#111827', overflow: 'hidden',
             textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '60%', textAlign: 'right' }}>
             {handle ? `@${handle}` : req.creatorName || (req.creatorAddress ? `${req.creatorAddress.slice(0,10)}…${req.creatorAddress.slice(-6)}` : 'Recipient')}
           </span>
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: 8, borderTop: `1px solid ${BDR}` }}>
-          <span style={{ fontSize: 12, color: '#8A8F9E' }}>Amount</span>
+          <span style={{ fontSize: 12, color: '#6B7280' }}>Amount</span>
           <span style={{ fontSize: 16, fontWeight: 800, color: BLUE }}>{fmt(req.amount)} {req.currency}</span>
         </div>
       </div>
@@ -470,7 +473,7 @@ function NanPanel({ req }: { req: PaymentRequest }) {
             <div style={{ width: 20, height: 20, borderRadius: '50%', background: BLUE, color: '#fff',
               fontSize: 11, fontWeight: 700, display: 'flex', alignItems: 'center',
               justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>{i + 1}</div>
-            <div style={{ fontSize: 13, color: '#8A8F9E', lineHeight: 1.4 }}>{step}</div>
+            <div style={{ fontSize: 13, color: '#6B7280', lineHeight: 1.4 }}>{step}</div>
           </div>
         ))}
       </div>
@@ -485,14 +488,14 @@ function NanPanel({ req }: { req: PaymentRequest }) {
           Open NAN to pay <ChevronRight size={17} />
         </a>
       ) : (
-        <div style={{ fontSize: 13, color: '#EF4444', textAlign: 'center' }}>No wallet address on this request.</div>
+        <div style={{ fontSize: 13, color: '#DC2626', textAlign: 'center' }}>No wallet address on this request.</div>
       )}
 
       {/* Already paid */}
       <button onClick={() => setPaid(true)}
         style={{ width: '100%', height: 44, background: 'rgba(16,185,129,0.08)',
           border: '1px solid rgba(16,185,129,0.20)', borderRadius: 12,
-          color: '#10B981', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: F,
+          color: '#16A34A', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: F,
           display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7 }}>
         <CheckCircle2 size={15} /> I've paid
       </button>
@@ -632,13 +635,13 @@ export function PaymentRequestPayPage({
   if (!req) {
     return (
       <div style={{ minHeight: '100dvh', background: BG, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '48px 16px', fontFamily: F, overflowY: 'auto', WebkitOverflowScrolling: 'touch' }}>
-        <div style={{ background: SURF, borderRadius: 20, border: `1px solid ${BDR}`, padding: '40px 28px', maxWidth: 400, width: '100%', textAlign: 'center', boxShadow: '0 8px 48px rgba(0,0,0,0.40)' }}>
-          <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'rgba(239,68,68,0.10)', border: '1px solid rgba(239,68,68,0.20)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+        <div style={{ background: SURF, borderRadius: 20, border: `1px solid ${BDR}`, padding: '40px 28px', maxWidth: 400, width: '100%', textAlign: 'center', boxShadow: '0 4px 24px rgba(0,0,0,0.08)' }}>
+          <div style={{ width: 56, height: 56, borderRadius: '50%', background: '#FEF2F2', border: '1px solid #FECACA', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
             <AlertCircle size={24} color='#EF4444' />
           </div>
           <div style={{ marginBottom: 16 }}><NanLogo height={20} /></div>
-          <h2 style={{ fontSize: 20, fontWeight: 800, color: '#F2F3F5', marginBottom: 8 }}>Request not found</h2>
-          <p style={{ fontSize: 14, color: '#8A8F9E', lineHeight: 1.6 }}>
+          <h2 style={{ fontSize: 20, fontWeight: 800, color: '#111827', marginBottom: 8 }}>Request not found</h2>
+          <p style={{ fontSize: 14, color: '#6B7280', lineHeight: 1.6 }}>
             This payment link is invalid or has expired. Contact the person who sent it.
           </p>
         </div>
@@ -652,14 +655,14 @@ export function PaymentRequestPayPage({
   if (successHash) {
     return (
       <div style={{ minHeight: '100dvh', background: BG, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '48px 16px', fontFamily: F, overflowY: 'auto', WebkitOverflowScrolling: 'touch' }}>
-        <div style={{ background: SURF, borderRadius: 24, border: `1px solid ${BDR}`, padding: '40px 32px', maxWidth: 420, width: '100%', textAlign: 'center', boxShadow: '0 8px 48px rgba(0,0,0,0.40)' }}>
+        <div style={{ background: SURF, borderRadius: 24, border: `1px solid ${BDR}`, padding: '40px 32px', maxWidth: 420, width: '100%', textAlign: 'center', boxShadow: '0 4px 24px rgba(0,0,0,0.08)' }}>
           <div style={{ marginBottom: 24 }}><NanLogo height={24} /></div>
-          <div style={{ width: 76, height: 76, borderRadius: '50%', background: 'rgba(16,185,129,0.12)', border: '2px solid rgba(16,185,129,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
+          <div style={{ width: 76, height: 76, borderRadius: '50%', background: '#DCFCE7', border: '2px solid #86EFAC', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
             <CheckCircle2 size={34} color='#10B981' />
           </div>
-          <h2 style={{ fontSize: 26, fontWeight: 800, color: '#F2F3F5', letterSpacing: '-0.03em', marginBottom: 8 }}>Payment sent!</h2>
-          <p style={{ fontSize: 14, color: '#8A8F9E', lineHeight: 1.6, marginBottom: 24 }}>
-            You successfully paid <strong style={{ color: '#F2F3F5' }}>{fmt(req.amount)} {req.currency}</strong><br />for "{req.title}".
+          <h2 style={{ fontSize: 26, fontWeight: 800, color: '#111827', letterSpacing: '-0.03em', marginBottom: 8 }}>Payment sent!</h2>
+          <p style={{ fontSize: 14, color: '#6B7280', lineHeight: 1.6, marginBottom: 24 }}>
+            You successfully paid <strong style={{ color: '#111827' }}>{fmt(req.amount)} {req.currency}</strong><br />for "{req.title}".
           </p>
           <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
             <a href={`https://explorer.arc.io/tx/${successHash}`} target="_blank" rel="noreferrer"
@@ -679,7 +682,7 @@ export function PaymentRequestPayPage({
         </div>
         <div style={{ marginTop: 20, display: 'flex', alignItems: 'center', gap: 6, opacity: 0.35 }}>
           <NanLogo height={13} />
-          <span style={{ fontSize: 11, color: '#8A8F9E', fontFamily: F }}>Powered by NAN</span>
+          <span style={{ fontSize: 11, color: '#6B7280', fontFamily: F }}>Powered by NAN</span>
         </div>
       </div>
     )
@@ -690,7 +693,7 @@ export function PaymentRequestPayPage({
     <div style={{ minHeight: '100dvh', background: BG, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', padding: '32px 16px 48px', fontFamily: F, overflowY: 'auto', overflowX: 'hidden', WebkitOverflowScrolling: 'touch' }}>
 
       {/* Card */}
-      <div style={{ background: SURF, borderRadius: 24, border: `1px solid ${BDR}`, width: '100%', maxWidth: 460, boxShadow: '0 8px 48px rgba(0,0,0,0.40)' }}>
+      <div style={{ background: SURF, borderRadius: 24, border: `1px solid ${BDR}`, width: '100%', maxWidth: 460, boxShadow: '0 4px 24px rgba(0,0,0,0.08)' }}>
 
         {/* Top header — NAN branding */}
         <div style={{ background: BLUE, padding: '18px 24px', borderRadius: '24px 24px 0 0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -700,7 +703,7 @@ export function PaymentRequestPayPage({
               {isQuickInvoice ? 'Payment Request' : 'Payment Request'}
             </span>
           </div>
-          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.75)', fontFamily: MONO, letterSpacing: '0.04em' }}>Arc</span>
+          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.90)', fontFamily: MONO, letterSpacing: '0.04em' }}>Arc</span>
         </div>
 
         {/* Request info */}
@@ -708,25 +711,25 @@ export function PaymentRequestPayPage({
 
           {/* From */}
           <div style={{ marginBottom: 20 }}>
-            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 6 }}>
+            <div style={{ fontSize: 11, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 6 }}>
               Payment request from
             </div>
-            <div style={{ fontSize: 20, fontWeight: 800, color: '#F2F3F5', letterSpacing: '-0.02em', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            <div style={{ fontSize: 20, fontWeight: 800, color: '#111827', letterSpacing: '-0.02em', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {req.creatorName || req.title || (req.creatorAddress ? `${req.creatorAddress.slice(0, 10)}…${req.creatorAddress.slice(-6)}` : 'NAN User')}
             </div>
             {(req as PaymentRequest & { creatorNanHandle?: string }).creatorNanHandle && (
               <div style={{ fontSize: 13, color: 'var(--nan-blue)', fontWeight: 700, marginTop: 2 }}>@{(req as PaymentRequest & { creatorNanHandle?: string }).creatorNanHandle}</div>
             )}
             {req.recipientName && req.recipientName !== req.creatorName && (
-              <div style={{ fontSize: 13, color: '#8A8F9E', marginTop: 3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{req.recipientName}</div>
+              <div style={{ fontSize: 13, color: '#6B7280', marginTop: 3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{req.recipientName}</div>
             )}
           </div>
 
           {/* Amount hero */}
-          <div style={{ background: SURF2, borderRadius: 14, padding: '20px 22px', marginBottom: 20, display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+          <div style={{ background: BLUE_L, border: `1px solid ${BLUE_M}`, borderRadius: 14, padding: '20px 22px', marginBottom: 20, display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
             <div>
-              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Amount due</div>
-              <div style={{ fontSize: 40, fontWeight: 800, color: '#F2F3F5', letterSpacing: '-0.04em', fontFamily: MONO, lineHeight: 1 }}>
+              <div style={{ fontSize: 11, color: '#3B82F6', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.07em', fontWeight: 600 }}>Amount due</div>
+              <div style={{ fontSize: 40, fontWeight: 800, color: '#111827', letterSpacing: '-0.04em', fontFamily: MONO, lineHeight: 1 }}>
                 {fmt(req.amount)}
               </div>
               <div style={{ fontSize: 15, color: BLUE, fontWeight: 700, marginTop: 4 }}>{req.currency}</div>
@@ -748,8 +751,8 @@ export function PaymentRequestPayPage({
             ...(req.reference  ? [{ label: 'Reference', value: req.reference }] : []),
           ] as { label: string; value: string }[]).map(({ label, value }, i, arr) => (
             <div key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', padding: '9px 0', borderBottom: i < arr.length - 1 ? `1px solid ${BDR}` : 'none', gap: 12 }}>
-              <span style={{ fontSize: 13, color: '#8A8F9E', whiteSpace: 'nowrap', flexShrink: 0 }}>{label}</span>
-              <span style={{ fontSize: 13, fontWeight: 600, color: '#F2F3F5', textAlign: 'right' }}>{value}</span>
+              <span style={{ fontSize: 13, color: '#6B7280', whiteSpace: 'nowrap', flexShrink: 0 }}>{label}</span>
+              <span style={{ fontSize: 13, fontWeight: 600, color: '#111827', textAlign: 'right' }}>{value}</span>
             </div>
           ))}
 
@@ -766,12 +769,12 @@ export function PaymentRequestPayPage({
             {/* Divider */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '4px 0 20px' }}>
               <div style={{ flex: 1, height: 1, background: BDR }} />
-              <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.07em' }}>No account needed</span>
+              <span style={{ fontSize: 11, color: '#9CA3AF', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.07em' }}>No account needed</span>
               <div style={{ flex: 1, height: 1, background: BDR }} />
             </div>
 
             {/* Method tabs — 3 primary */}
-            <div style={{ display: 'flex', gap: 6, background: 'rgba(255,255,255,0.05)', borderRadius: 14, padding: 4, marginBottom: 14 }}>
+            <div style={{ display: 'flex', gap: 6, background: '#F3F4F6', borderRadius: 14, padding: 4, marginBottom: 14 }}>
               <MethodTab icon={<CreditCard size={18} />} label="Card"       active={method === 'card'}   onClick={() => setMethod('card')} />
               <MethodTab icon={<Wallet size={18} />}     label="Wallet"     active={method === 'wallet'} onClick={() => setMethod('wallet')} />
               <MethodTab icon={<span style={{ fontSize: 14, fontWeight: 800, lineHeight: 1 }}>N</span>} label="NAN" active={method === 'nan'} onClick={() => setMethod('nan')} />
@@ -781,7 +784,7 @@ export function PaymentRequestPayPage({
             <div style={{ display: 'flex', gap: 6, marginBottom: 20 }}>
               <button onClick={() => setMethod('qr')}
                 style={{ flex: '1 1 auto', minWidth: 0, padding: '0 8px', whiteSpace: 'nowrap', height: 36, borderRadius: 10, cursor: 'pointer', fontFamily: F,
-                  background: method === 'qr' ? 'rgba(0,102,255,0.12)' : 'rgba(255,255,255,0.04)',
+                  background: method === 'qr' ? BLUE_L : SURF2,
                   border: `1px solid ${method === 'qr' ? 'rgba(0,102,255,0.35)' : BDR}`,
                   color: method === 'qr' ? BLUE : '#8A8F9E', fontSize: 12, fontWeight: 600,
                   display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5 }}>
@@ -789,7 +792,7 @@ export function PaymentRequestPayPage({
               </button>
               <button onClick={() => setMethod('copy')}
                 style={{ flex: '1 1 auto', minWidth: 0, padding: '0 8px', whiteSpace: 'nowrap', height: 36, borderRadius: 10, cursor: 'pointer', fontFamily: F,
-                  background: method === 'copy' ? 'rgba(0,102,255,0.12)' : 'rgba(255,255,255,0.04)',
+                  background: method === 'copy' ? BLUE_L : SURF2,
                   border: `1px solid ${method === 'copy' ? 'rgba(0,102,255,0.35)' : BDR}`,
                   color: method === 'copy' ? BLUE : '#8A8F9E', fontSize: 12, fontWeight: 600,
                   display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5 }}>
@@ -812,7 +815,7 @@ export function PaymentRequestPayPage({
       {/* Powered by NAN footer */}
       <div style={{ marginTop: 24, display: 'flex', alignItems: 'center', gap: 7, opacity: 0.35 }}>
         <NanLogo height={14} />
-        <span style={{ fontSize: 11, color: '#8A8F9E', fontFamily: F }}>Powered by NAN · Circle · Arc</span>
+        <span style={{ fontSize: 11, color: '#6B7280', fontFamily: F }}>Powered by NAN · Circle · Arc</span>
       </div>
 
       {/* Spinner animation */}

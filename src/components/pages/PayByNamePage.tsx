@@ -32,15 +32,18 @@ import { usePublicPage } from '../../hooks/usePublicPage'
 // ── Constants ──────────────────────────────────────────────────────────────────
 const F    = "'Inter', -apple-system, sans-serif"
 const MONO = "'JetBrains Mono', Menlo, monospace"
-const BLUE = 'var(--nan-blue)'
-const BG   = '#0A0C10'
-const SURF = '#13151A'
-const SURF2= '#1C1F28'
-const BDR  = 'rgba(255,255,255,0.08)'
-const TEXT  = '#F2F3F5'
-const TEXT2 = '#8A8F9E'
-const TEXT3 = 'rgba(138,143,158,0.5)'
-const GREEN = 'var(--nan-green)'
+const BLUE  = '#2563EB'
+const BLUE_L = '#EFF4FF'
+const BLUE_M = '#DBEAFE'
+const BG    = '#F3F4F6'
+const SURF  = '#FFFFFF'
+const SURF2 = '#F9FAFB'
+const BDR   = '#E5E7EB'
+const TEXT  = '#111827'
+const TEXT2 = '#6B7280'
+const TEXT3 = '#9CA3AF'
+const GREEN  = '#16A34A'
+const GREEN_L = '#DCFCE7'
 
 const ARC_ID        = 5042
 const USDC_ADDRESS  = '0x3600000000000000000000000000000000000000' as `0x${string}`
@@ -103,7 +106,7 @@ function Avatar({ handle, size = 56 }: { handle: string; size?: number }) {
   return (
     <div style={{ width: size, height: size, borderRadius: '50%', background: bg,
       display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-      boxShadow: '0 0 0 3px rgba(255,255,255,0.10)', fontSize: size * 0.36,
+      boxShadow: '0 2px 8px rgba(0,0,0,0.15)', fontSize: size * 0.36,
       fontWeight: 800, color: '#fff', fontFamily: F, userSelect: 'none' }}>
       {initials}
     </div>
@@ -174,9 +177,8 @@ function CardPayPanel({ toAddress, amount, handle }: { toAddress: string; amount
 
   if (state === 'success') return (
     <div style={{ textAlign: 'center', padding: '20px 0' }}>
-      <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'rgba(16,185,129,0.12)',
-        border: '2px solid rgba(16,185,129,0.25)', display: 'flex', alignItems: 'center',
-        justifyContent: 'center', margin: '0 auto 16px' }}>
+      <div style={{ width: 64, height: 64, borderRadius: '50%', background: GREEN_L,
+        display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
         <CheckCircle2 size={30} color={GREEN} />
       </div>
       <div style={{ fontSize: 18, fontWeight: 800, color: TEXT, marginBottom: 6 }}>Purchase submitted!</div>
@@ -218,21 +220,23 @@ function CardPayPanel({ toAddress, amount, handle }: { toAddress: string; amount
   return (
     <div>
       {state === 'error' && (
-        <div style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)',
-          borderRadius: 10, padding: '10px 14px', fontSize: 12, color: '#EF4444', marginBottom: 14 }}>
+        <div style={{ background: '#FEF2F2', border: '1px solid #FECACA',
+          borderRadius: 10, padding: '10px 14px', fontSize: 12, color: '#DC2626', marginBottom: 14 }}>
           {error}
         </div>
       )}
       {!CIRCLE_APP_ID && (
-        <div style={{ background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.20)',
-          borderRadius: 10, padding: '10px 14px', fontSize: 12, color: '#F59E0B', marginBottom: 14, lineHeight: 1.5 }}>
+        <div style={{ background: '#FFFBEB', border: '1px solid #FDE68A',
+          borderRadius: 10, padding: '10px 14px', fontSize: 12, color: '#92400E', marginBottom: 14, lineHeight: 1.5 }}>
           Card checkout requires <code>VITE_CIRCLE_APP_ID</code> to be configured.
         </div>
       )}
-      <p style={{ fontSize: 13, color: TEXT2, lineHeight: 1.6, marginBottom: 16 }}>
-        Pay with debit or credit card. Circle converts your payment to USDC and sends it directly to
-        {' '}<strong style={{ color: TEXT }}>@{handle}</strong>. No crypto wallet needed.
-      </p>
+      <div style={{ background: BLUE_L, border: `1px solid ${BLUE_M}`, borderRadius: 12, padding: '12px 14px', marginBottom: 16 }}>
+        <p style={{ fontSize: 13, color: '#1E40AF', lineHeight: 1.6, margin: 0 }}>
+          Pay with debit or credit card — Circle converts to USDC and sends it directly to{' '}
+          <strong>@{handle}</strong>. No crypto wallet needed.
+        </p>
+      </div>
       {amount <= 0 && (
         <div style={{ fontSize: 12, color: TEXT3, textAlign: 'center', marginBottom: 10 }}>
           Enter an amount above to continue.
@@ -246,7 +250,7 @@ function CardPayPanel({ toAddress, amount, handle }: { toAddress: string; amount
           color: (state === 'loading' || amount <= 0) ? TEXT3 : '#fff',
           fontSize: 16, fontWeight: 700, cursor: (state === 'loading' || amount <= 0) ? 'not-allowed' : 'pointer',
           fontFamily: F, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9,
-          boxShadow: (state === 'loading' || amount <= 0) ? 'none' : `0 4px 24px rgba(0,102,255,0.35)`,
+          boxShadow: (state === 'loading' || amount <= 0) ? 'none' : `0 4px 16px rgba(37,99,235,0.3)`,
           transition: 'all 0.15s' }}>
         {state === 'loading'
           ? <><Loader2 size={18} style={{ animation: 'nbspin 1s linear infinite' }} />Opening checkout…</>
@@ -316,14 +320,14 @@ function WalletPayPanel({
         {address!.slice(0, 10)}…{address!.slice(-6)}
       </div>
       {onWrongChain && (
-        <div style={{ background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.20)',
-          borderRadius: 10, padding: '10px 14px', fontSize: 12, color: '#F59E0B', marginBottom: 12 }}>
+        <div style={{ background: '#FFFBEB', border: '1px solid #FDE68A',
+          borderRadius: 10, padding: '10px 14px', fontSize: 12, color: '#92400E', marginBottom: 12 }}>
           Wrong network — click Pay to switch to Arc automatically.
         </div>
       )}
       {writeError && (
-        <div style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.20)',
-          borderRadius: 10, padding: '10px 14px', fontSize: 12, color: '#EF4444', marginBottom: 12 }}>
+        <div style={{ background: '#FEF2F2', border: '1px solid #FECACA',
+          borderRadius: 10, padding: '10px 14px', fontSize: 12, color: '#DC2626', marginBottom: 12 }}>
           {writeError.message?.includes('rejected') ? 'Rejected in wallet.' : 'Transaction failed. Please try again.'}
         </div>
       )}
@@ -345,7 +349,7 @@ function WalletPayPanel({
           color: (busy || noAmt) ? TEXT3 : '#fff',
           fontSize: 16, fontWeight: 700, cursor: (busy || noAmt) ? 'not-allowed' : 'pointer',
           fontFamily: F, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-          boxShadow: (busy || noAmt) ? 'none' : `0 4px 24px rgba(0,102,255,0.35)`,
+          boxShadow: (busy || noAmt) ? 'none' : `0 4px 16px rgba(37,99,235,0.3)`,
           transition: 'all 0.15s' }}>
         {switching ? 'Switching to Arc…'
           : isPending ? 'Approve in wallet…'
@@ -379,7 +383,7 @@ function QrTab({ toAddress, amount, onConfirm }: { toAddress: string; amount: nu
     : toAddress
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14, padding: '8px 0' }}>
-      <div style={{ background: '#fff', borderRadius: 16, padding: 14 }}>
+      <div style={{ background: '#fff', borderRadius: 16, padding: 14, border: `1px solid ${BDR}`, boxShadow: '0 2px 12px rgba(0,0,0,0.08)' }}>
         <QRCodeSVG value={qrValue} size={180} bgColor="#ffffff" fgColor="#111111" level="M" />
       </div>
       <div style={{ textAlign: 'center', fontSize: 12, color: TEXT2, lineHeight: 1.5 }}>
@@ -412,7 +416,7 @@ function CopyAddressPanel({ toAddress, amount, handle, onConfirm }: { toAddress:
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-      <div style={{ background: SURF2, borderRadius: 12, padding: '14px 16px' }}>
+      <div style={{ background: SURF2, borderRadius: 12, padding: '14px 16px', border: `1px solid ${BDR}` }}>
         {steps.map((s, i) => (
           <div key={s.n} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: i < steps.length - 1 ? 10 : 0 }}>
             <span style={{ width: 20, height: 20, borderRadius: '50%', background: BLUE, color: '#fff',
@@ -512,7 +516,7 @@ function TxConfirmField({ onConfirm }: { onConfirm: () => void }) {
               boxSizing: 'border-box' }}
           />
           <button onClick={() => void submit()} disabled={busy}
-            style={{ height: 42, borderRadius: 10, background: busy ? SURF2 : GREEN,
+            style={{ height: 42, borderRadius: 10, background: busy ? SURF2 : '#16A34A',
               border: 'none', color: '#fff', fontSize: 14, fontWeight: 700,
               cursor: busy ? 'not-allowed' : 'pointer', fontFamily: F,
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7 }}>
@@ -542,7 +546,7 @@ function AmountPicker({ value, onChange, fixed }: { value: number; onChange: (n:
     <div style={{ padding: '14px 0 8px' }}>
       <div style={{ fontSize: 11, color: TEXT3, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 8 }}>Enter amount</div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '12px 16px',
-        background: SURF2, border: `1.5px solid ${BDR}`, borderRadius: 12, marginBottom: 10 }}>
+        background: SURF, border: `1.5px solid ${BDR}`, borderRadius: 12, marginBottom: 10, boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
         <span style={{ fontSize: 26, fontWeight: 800, color: TEXT3 }}>$</span>
         <input type="number" min={0} value={raw} placeholder="0.00"
           onChange={e => { setRaw(e.target.value); const n = parseFloat(e.target.value); if (!isNaN(n) && n > 0) onChange(n) }}
@@ -577,8 +581,8 @@ function NoteInput({ value, onChange }: { value: string; onChange: (s: string) =
         maxLength={80}
         onChange={e => onChange(e.target.value)}
         style={{ width: '100%', padding: '11px 14px', borderRadius: 10, border: `1px solid ${BDR}`,
-          background: SURF2, color: TEXT, fontSize: 13, fontFamily: F, outline: 'none',
-          boxSizing: 'border-box' }}
+          background: SURF, color: TEXT, fontSize: 13, fontFamily: F, outline: 'none',
+          boxSizing: 'border-box', boxShadow: '0 1px 2px rgba(0,0,0,0.04)' }}
       />
     </div>
   )
@@ -639,12 +643,13 @@ function SuccessScreen({ txHash, handle, amount }: { txHash: string; handle: str
             style={{ flex: 1, height: 46, borderRadius: 12, background: BLUE, border: 'none',
               color: '#fff', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: F,
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-              boxShadow: '0 4px 16px rgba(0,102,255,0.30)' }}>
+              boxShadow: '0 4px 16px rgba(37,99,235,0.25)' }}>
             <Share2 size={14} />Share receipt
           </button>
           <button onClick={copyLink}
-            style={{ width: 46, height: 46, borderRadius: 12, background: copied ? 'rgba(16,185,129,0.12)' : SURF2,
-              border: `1px solid ${copied ? 'rgba(16,185,129,0.3)' : BDR}`,
+            style={{ width: 46, height: 46, borderRadius: 12,
+              background: copied ? GREEN_L : SURF2,
+              border: `1px solid ${copied ? '#86EFAC' : BDR}`,
               color: copied ? GREEN : TEXT2, cursor: 'pointer', fontFamily: F,
               display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
             {copied ? <Check size={16} /> : <Copy size={16} />}
@@ -886,12 +891,13 @@ function Shell({ children }: { children: React.ReactNode }) {
       fontFamily: F, overflowY: 'auto', overflowX: 'hidden', WebkitOverflowScrolling: 'touch' }}>
       {/* Card */}
       <div style={{ background: SURF, borderRadius: 24, border: `1px solid ${BDR}`,
-        width: '100%', maxWidth: 460, boxShadow: '0 8px 48px rgba(0,0,0,0.40)' }}>
+        width: '100%', maxWidth: 460, boxShadow: '0 4px 24px rgba(0,0,0,0.08)' }}>
         {/* Header bar */}
         <div style={{ background: BLUE, padding: '16px 22px', borderRadius: '24px 24px 0 0',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <NanLogo height={20} showText={true} />
-          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.65)', fontFamily: MONO, letterSpacing: '0.04em' }}>
+          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.75)', fontFamily: MONO, letterSpacing: '0.04em',
+            background: 'rgba(255,255,255,0.15)', padding: '3px 8px', borderRadius: 999 }}>
             Arc · USDC
           </span>
         </div>
@@ -901,7 +907,7 @@ function Shell({ children }: { children: React.ReactNode }) {
         </div>
       </div>
       {/* Footer */}
-      <div style={{ marginTop: 20, display: 'flex', alignItems: 'center', gap: 7, opacity: 0.35 }}>
+      <div style={{ marginTop: 20, display: 'flex', alignItems: 'center', gap: 7, opacity: 0.5 }}>
         <NanLogo height={13} />
         <span style={{ fontSize: 11, color: TEXT2 }}>Powered by NAN · Circle · Arc</span>
       </div>
