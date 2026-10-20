@@ -11,12 +11,13 @@
  *  5. After QR/Copy: tx hash confirmation field → /api/invoice-claim
  *  6. No NAN account required on either side
  */
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
-  CreditCard, Wallet, ArrowUpRight, AlertCircle,
+  Wallet, ArrowUpRight, AlertCircle,
   CheckCircle2, ExternalLink, Copy, Check, Loader2,
   Smartphone, AtSign, Share2, ChevronDown, ChevronUp,
 } from 'lucide-react'
+import { OnrampCardPanel } from './OnrampCardPanel'
 import {
   useWriteContract, useWaitForTransactionReceipt,
   useAccount, useChainId, useSwitchChain,
@@ -33,8 +34,6 @@ import { usePublicPage } from '../../hooks/usePublicPage'
 const F    = "'Inter', -apple-system, sans-serif"
 const MONO = "'JetBrains Mono', Menlo, monospace"
 const BLUE  = '#2563EB'
-const BLUE_L = '#EFF4FF'
-const BLUE_M = '#DBEAFE'
 const BG    = '#F3F4F6'
 const SURF  = '#FFFFFF'
 const SURF2 = '#F9FAFB'
@@ -50,7 +49,7 @@ const USDC_ADDRESS  = '0x3600000000000000000000000000000000000000' as `0x${strin
 const USDC_DECIMALS = 6
 const ARC_RPC       = 'https://rpc.mainnet.arc.io'
 const NAME_REGISTRY = (import.meta.env.VITE_NAME_REGISTRY as string | undefined) ?? ''
-const CIRCLE_APP_ID = (import.meta.env.VITE_CIRCLE_APP_ID as string | undefined) ?? ''
+
 
 const RESOLVE_ABI = [
   { name: 'resolve',     type: 'function', stateMutability: 'view', inputs: [{ name: 'name', type: 'string' }], outputs: [{ name: '', type: 'address' }] },
@@ -113,25 +112,6 @@ function Avatar({ handle, size = 56 }: { handle: string; size?: number }) {
   )
 }
 
-// ── Onramp session ─────────────────────────────────────────────────────────────
-async function mintOnrampSession(destinationAddress: string, amount: number): Promise<{ widgetUrl?: string; error?: string }> {
-  try {
-    const res = await fetch('/api/onramp-session', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ destinationAddress, amount: String(amount), appUserId: destinationAddress }),
-    })
-    if (!res.ok) {
-      const j = await res.json().catch(() => ({})) as { message?: string }
-      return { error: j.message ?? `HTTP ${res.status}` }
-    }
-    const d = await res.json() as { widgetUrl?: string }
-    return d
-  } catch (e) {
-    return { error: e instanceof Error ? e.message : 'Network error' }
-  }
-}
-
 // ── Share receipt helper ───────────────────────────────────────────────────────
 function shareReceipt(txHash: string, handle: string, amount: number) {
   const url = `https://explorer.arc.io/tx/${txHash}`
@@ -142,127 +122,6 @@ function shareReceipt(txHash: string, handle: string, amount: number) {
     void navigator.clipboard.writeText(`${text}\n${url}`)
     toast.success('Receipt link copied!')
   }
-}
-
-// ── Card payment panel ─────────────────────────────────────────────────────────
-type OnrampState = 'idle' | 'loading' | 'widget' | 'success' | 'error'
-
-function CardPayPanel({ toAddress, amount, handle }: { toAddress: string; amount: number; handle: string }) {
-  const [state, setState]     = useState<OnrampState>('idle')
-  const [widgetUrl, setUrl]   = useState('')
-  const [widgetReady, setRdy] = useState(false)
-  const [error, setError]     = useState('')
-
-  const start = useCallback(async () => {
-    setState('loading'); setError('')
-    const { widgetUrl: url, error: err } = await mintOnrampSession(toAddress, amount)
-    if (err || !url) { setError(err ?? 'Could not start checkout'); setState('error'); return }
-    setUrl(url); setState('widget')
-  }, [toAddress, amount])
-
-  useEffect(() => {
-    if (state !== 'widget') return
-    const onMsg = (evt: MessageEvent) => {
-      try {
-        const msg = evt.data as { event?: string; code?: string }
-        if (!msg?.event) return
-        if (msg.event === 'INITIALIZATION_SUCCESS') setRdy(true)
-        if (msg.event === 'DEPOSIT_SUBMITTED' || msg.event === 'DEPOSIT_SETTLED') setState('success')
-        if (msg.event === 'DEPOSIT_NOT_COMPLETED' && msg.code === 'CANCELED_BY_CUSTOMER') setState('idle')
-      } catch { /* ignore */ }
-    }
-    window.addEventListener('message', onMsg)
-    return () => window.removeEventListener('message', onMsg)
-  }, [state])
-
-  if (state === 'success') return (
-    <div style={{ textAlign: 'center', padding: '20px 0' }}>
-      <div style={{ width: 64, height: 64, borderRadius: '50%', background: GREEN_L,
-        display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
-        <CheckCircle2 size={30} color={GREEN} />
-      </div>
-      <div style={{ fontSize: 18, fontWeight: 800, color: TEXT, marginBottom: 6 }}>Purchase submitted!</div>
-      <div style={{ fontSize: 13, color: TEXT2, lineHeight: 1.6 }}>
-        USDC will arrive in @{handle}'s wallet once Circle settles the payment.
-      </div>
-      <button onClick={() => setState('idle')}
-        style={{ marginTop: 20, padding: '11px 28px', borderRadius: 12, background: SURF2,
-          border: `1px solid ${BDR}`, color: TEXT2, fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: F }}>
-        Done
-      </button>
-    </div>
-  )
-
-  if (state === 'widget') return (
-    <div style={{ position: 'relative' }}>
-      {!widgetReady && (
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
-          alignItems: 'center', justifyContent: 'center', background: SURF, zIndex: 5,
-          gap: 12, borderRadius: 14 }}>
-          <Loader2 size={28} color={BLUE} style={{ animation: 'nbspin 1s linear infinite' }} />
-          <div style={{ fontSize: 13, color: TEXT2 }}>Loading checkout…</div>
-        </div>
-      )}
-      <iframe src={widgetUrl} title="Circle Onramp"
-        onLoad={() => setRdy(true)}
-        allow="camera; microphone; payment; clipboard-write"
-        referrerPolicy="strict-origin-when-cross-origin"
-        style={{ width: '100%', height: 600, border: 'none', borderRadius: 14, display: 'block' }} />
-      <button onClick={() => setState('idle')}
-        style={{ marginTop: 10, width: '100%', padding: '10px', borderRadius: 12, background: 'none',
-          border: `1px solid ${BDR}`, color: TEXT2, fontSize: 13, fontWeight: 600,
-          cursor: 'pointer', fontFamily: F }}>
-        ← Back
-      </button>
-    </div>
-  )
-
-  return (
-    <div>
-      {state === 'error' && (
-        <div style={{ background: '#FEF2F2', border: '1px solid #FECACA',
-          borderRadius: 10, padding: '10px 14px', fontSize: 12, color: '#DC2626', marginBottom: 14 }}>
-          {error}
-        </div>
-      )}
-      {!CIRCLE_APP_ID && (
-        <div style={{ background: '#FFFBEB', border: '1px solid #FDE68A',
-          borderRadius: 10, padding: '10px 14px', fontSize: 12, color: '#92400E', marginBottom: 14, lineHeight: 1.5 }}>
-          Card checkout requires <code>VITE_CIRCLE_APP_ID</code> to be configured.
-        </div>
-      )}
-      <div style={{ background: BLUE_L, border: `1px solid ${BLUE_M}`, borderRadius: 12, padding: '12px 14px', marginBottom: 16 }}>
-        <p style={{ fontSize: 13, color: '#1E40AF', lineHeight: 1.6, margin: 0 }}>
-          Pay with debit or credit card — Circle converts to USDC and sends it directly to{' '}
-          <strong>@{handle}</strong>. No crypto wallet needed.
-        </p>
-      </div>
-      {amount <= 0 && (
-        <div style={{ fontSize: 12, color: TEXT3, textAlign: 'center', marginBottom: 10 }}>
-          Enter an amount above to continue.
-        </div>
-      )}
-      <button onClick={() => { void start() }}
-        disabled={state === 'loading' || amount <= 0}
-        style={{ width: '100%', height: 54, borderRadius: 14,
-          background: (state === 'loading' || amount <= 0) ? SURF2 : BLUE,
-          border: (state === 'loading' || amount <= 0) ? `1px solid ${BDR}` : 'none',
-          color: (state === 'loading' || amount <= 0) ? TEXT3 : '#fff',
-          fontSize: 16, fontWeight: 700, cursor: (state === 'loading' || amount <= 0) ? 'not-allowed' : 'pointer',
-          fontFamily: F, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9,
-          boxShadow: (state === 'loading' || amount <= 0) ? 'none' : `0 4px 16px rgba(37,99,235,0.3)`,
-          transition: 'all 0.15s' }}>
-        {state === 'loading'
-          ? <><Loader2 size={18} style={{ animation: 'nbspin 1s linear infinite' }} />Opening checkout…</>
-          : amount <= 0
-            ? <><CreditCard size={18} />Enter amount above</>
-            : <><CreditCard size={18} />Pay {fmt(amount)} USDC with Card</>}
-      </button>
-      <p style={{ fontSize: 11, color: TEXT3, marginTop: 10, textAlign: 'center', lineHeight: 1.5 }}>
-        Powered by Circle · Debit, credit &amp; bank transfer · Fees shown at checkout
-      </p>
-    </div>
-  )
 }
 
 // ── Wallet pay panel ───────────────────────────────────────────────────────────
@@ -811,7 +670,7 @@ export function PayByNamePage({ handle }: { handle: string }) {
       {/* Primary CTA: Card */}
       <div style={{ marginTop: 16 }}>
         {method === 'card' && (
-          <CardPayPanel toAddress={toAddress} amount={amount} handle={cleanHandle} />
+          <OnrampCardPanel toAddress={toAddress} amount={amount} recipientLabel={`@${cleanHandle}`} />
         )}
         {method === 'wallet' && (
           <WalletPayPanel toAddress={toAddress} amount={amount} handle={cleanHandle} note={note} onSuccess={setSuccessHash} />

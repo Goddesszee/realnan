@@ -13,6 +13,7 @@ import { toast } from 'sonner'
 import { useAppStore, type Invoice } from '../../store/appStore'
 import { buildTxExplorerUrl } from '@/onchain-facts'
 import { usePublicPage } from '../../hooks/usePublicPage'
+import { OnrampCardPanel } from './OnrampCardPanel'
 
 const F     = "'Inter', -apple-system, sans-serif"
 const MONO  = "'JetBrains Mono', 'SF Mono', Menlo, monospace"
@@ -371,23 +372,16 @@ export function PayByInvoicePage({ invoiceId, isRequest = false }: Props) {
 
             {/* ── Card tab ── */}
             {tab === 'card' && (
-              <div>
-                <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start', padding: '14px 16px', background: BLUE_L, borderRadius: 14, marginBottom: 20, border: `1px solid ${BLUE_M}` }}>
-                  <CreditCard size={18} color={BLUE} style={{ flexShrink: 0, marginTop: 1 }} />
-                  <div>
-                    <div style={{ fontSize: 14, fontWeight: 600, color: '#1E40AF', marginBottom: 3 }}>Pay with card or bank transfer</div>
-                    <div style={{ fontSize: 13, color: '#3B82F6', lineHeight: 1.5 }}>No crypto wallet needed — buy USDC with your card and it's sent directly to the merchant.</div>
-                  </div>
-                </div>
-                {invoice.payToAddress ? (
-                  <a href={`https://nanarc.xyz/?onramp=1&to=${encodeURIComponent(invoice.payToAddress)}&amount=${invoice.amountDue}&note=${encodeURIComponent(`${isRequest ? 'Payment Request' : 'Invoice'} ${invoice.number}`)}&currency=${invoice.currency}`}
-                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, width: '100%', height: 52, background: BLUE, color: '#fff', border: 'none', borderRadius: 14, fontSize: 15, fontWeight: 700, textDecoration: 'none', boxSizing: 'border-box', boxShadow: '0 4px 16px rgba(37,99,235,0.3)' }}>
-                    <CreditCard size={17} /> Buy &amp; pay with card
-                  </a>
-                ) : (
-                  <div style={{ fontSize: 13, color: RED, textAlign: 'center', padding: '12px 0' }}>No wallet address on this invoice.</div>
-                )}
-              </div>
+              invoice.payToAddress ? (
+                <OnrampCardPanel
+                  toAddress={invoice.payToAddress}
+                  amount={invoice.amountDue}
+                  recipientLabel={invoice.businessName || 'merchant'}
+                  currency={invoice.currency}
+                />
+              ) : (
+                <div style={{ fontSize: 13, color: RED, textAlign: 'center', padding: '12px 0' }}>No wallet address on this invoice.</div>
+              )
             )}
 
             {/* ── Crypto / address tab ── */}

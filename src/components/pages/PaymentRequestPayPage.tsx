@@ -16,6 +16,7 @@ import { toast } from 'sonner'
 import { useAppStore, PaymentRequest } from '../../store/appStore'
 import { NanLogo } from '../NanLogo'
 import { usePublicPage } from '../../hooks/usePublicPage'
+import { OnrampCardPanel } from './OnrampCardPanel'
 
 const F    = "'Inter', -apple-system, sans-serif"
 const MONO = "'JetBrains Mono', Menlo, monospace"
@@ -26,7 +27,6 @@ const BG    = '#F3F4F6'
 const SURF  = '#FFFFFF'
 const SURF2 = '#F9FAFB'
 const BDR   = '#E5E7EB'
-const GREEN = '#16A34A'
 const ARC_ID = 5042
 const USDC_ADDRESS   = '0x3600000000000000000000000000000000000000' as `0x${string}`
 const USDC_DECIMALS  = 6
@@ -365,42 +365,19 @@ function CopyPanel({ req }: { req: PaymentRequest }) {
 // ── Card / onramp panel ────────────────────────────────────────────────────────
 function CardPanel({ req }: { req: PaymentRequest }) {
   const addr = req.creatorAddress ?? ''
-  const onrampUrl = addr
-    ? `https://nanarc.xyz/?onramp=1&to=${encodeURIComponent(addr)}&amount=${req.amount}&note=${encodeURIComponent(req.title)}&currency=${req.currency ?? 'USDC'}`
-    : ''
-
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      <div style={{ background: BLUE_L, border: `1px solid ${BLUE_M}`, borderRadius: 12, padding: '14px 16px' }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: '#1E40AF', marginBottom: 6 }}>Pay with debit or credit card</div>
-        <div style={{ fontSize: 13, color: '#3B82F6', lineHeight: 1.6 }}>
-          Don't have USDC? Buy it instantly with your card and it will be sent directly to the recipient. No crypto wallet needed.
-        </div>
-      </div>
-
-      <div style={{ background: SURF2, borderRadius: 12, padding: '12px 16px', border: `1px solid ${BDR}` }}>
-        <div style={{ fontSize: 11, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>Amount</div>
-        <div style={{ fontSize: 22, fontWeight: 800, color: '#111827' }}>{req.amount.toLocaleString('en', { minimumFractionDigits: 2 })} {req.currency}</div>
-      </div>
-
-      {addr ? (
-        <a href={onrampUrl}
-          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-            height: 54, borderRadius: 14, background: BLUE, color: '#fff',
-            fontFamily: F, fontSize: 15, fontWeight: 700, textDecoration: 'none',
-            boxShadow: '0 4px 24px rgba(0,102,255,0.35)' }}>
-          <CreditCard size={18} /> Buy &amp; Pay with Card
-        </a>
-      ) : (
-        <div style={{ textAlign: 'center', fontSize: 13, color: '#6B7280', padding: '10px 0' }}>
-          No recipient address on this request.
-        </div>
-      )}
-
-      <div style={{ fontSize: 11, color: '#9CA3AF', textAlign: 'center', lineHeight: 1.5 }}>
-        Powered by Circle · Settles instantly as USDC on Arc.
-      </div>
+  const label = req.creatorName || req.title || 'recipient'
+  if (!addr) return (
+    <div style={{ textAlign: 'center', fontSize: 13, color: '#6B7280', padding: '10px 0' }}>
+      No recipient address on this request.
     </div>
+  )
+  return (
+    <OnrampCardPanel
+      toAddress={addr}
+      amount={req.amount}
+      recipientLabel={label}
+      currency={req.currency ?? 'USDC'}
+    />
   )
 }
 
