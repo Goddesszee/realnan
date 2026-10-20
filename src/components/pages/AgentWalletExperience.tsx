@@ -933,12 +933,13 @@ function ManagePolicyModal({ onClose, C }: { onClose: () => void; C: ReturnType<
 }
 
 // ── Unified bottom drawer ─────────────────────────────────────────────────────
-type DrawerView = 'fund' | 'send' | 'recurring' | null
+type DrawerView = 'fund' | 'send' | 'recurring' | 'capabilities' | null
 
 const DRAWER_TITLES: Record<Exclude<DrawerView, null>, string> = {
-  fund:      'Fund Agent Wallet',
-  send:      'Send from Agent Wallet',
-  recurring: 'Recurring Payments',
+  fund:         'Fund Agent Wallet',
+  send:         'Send from Agent Wallet',
+  recurring:    'Recurring Payments',
+  capabilities: 'Agent Capabilities',
 }
 
 function ActionDrawer({ view, agentAddress, onClose, C }: {
@@ -1088,6 +1089,57 @@ function ActionDrawer({ view, agentAddress, onClose, C }: {
     )
 
     if (view === 'recurring') return <AgentRecurringTab C={themeColors} />
+
+    if (view === 'capabilities') {
+      const { agentPermissions: perms, setAgentPermissions: setPerms } = useAppStore.getState()
+      const caps = [
+        { key: 'canSend'        as const, label: 'Send USDC',          note: 'Send to permitted addresses',      icon: '→' },
+        { key: 'canPayServices' as const, label: 'Pay for services',   note: 'Pay APIs & tools on your behalf',  icon: '⚡' },
+        { key: 'canRecurring'   as const, label: 'Recurring payments', note: 'Scheduled automatic payments',     icon: '↻' },
+        { key: 'canBridge'      as const, label: 'Bridge USDC',        note: 'Move USDC across chains',          icon: '⇄' },
+        { key: 'canSwap'        as const, label: 'Swap tokens',        note: 'Convert USDC to other tokens',     icon: '⇌' },
+      ]
+      return (
+        <div>
+          <div style={{ fontSize: 13, color: C.t2, marginBottom: 18, lineHeight: 1.5 }}>
+            Control exactly what your NAN Agent is allowed to do autonomously.
+          </div>
+          {caps.map(({ key, label, note, icon }) => {
+            const enabled = perms[key] !== false
+            return (
+              <div key={key} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '13px 0', borderBottom: `1px solid ${C.bdr}` }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <div style={{ width: 34, height: 34, borderRadius: 10, background: enabled ? 'rgba(37,99,235,0.10)' : C.surf2, border: `1px solid ${enabled ? 'rgba(37,99,235,0.2)' : C.bdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}>
+                    {icon}
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: enabled ? C.text : C.t3 }}>{label}</div>
+                    <div style={{ fontSize: 11, color: C.t3, marginTop: 2 }}>{note}</div>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setPerms({ [key]: !enabled })}
+                  style={{
+                    width: 44, height: 26, borderRadius: 13, border: 'none', cursor: 'pointer',
+                    background: enabled ? BLUE : C.surf2,
+                    position: 'relative', flexShrink: 0, transition: 'background 0.2s',
+                    WebkitTapHighlightColor: 'transparent',
+                  }}
+                  aria-checked={enabled} role="switch"
+                >
+                  <div style={{
+                    position: 'absolute', top: 3, left: enabled ? 21 : 3,
+                    width: 20, height: 20, borderRadius: '50%', background: '#fff',
+                    boxShadow: '0 1px 4px rgba(0,0,0,0.22)', transition: 'left 0.2s',
+                  }} />
+                </button>
+              </div>
+            )
+          })}
+        </div>
+      )
+    }
+
     return null
   })()
 
@@ -1133,7 +1185,7 @@ const PRIMARY_TABS: { id: DashTab; label: string }[] = [
 ]
 
 function DashboardScreen({ C, onDisconnect }: { C: ReturnType<typeof useNanTheme>; onDisconnect: () => void }) {
-  const { agentWallet, setAgentWallet, agentSpendLog, activity, recurringTasks, setActiveView, auth } = useAppStore()
+  const { agentWallet, setAgentWallet, agentSpendLog, activity, recurringTasks, setActiveView, agentPermissions, setAgentPermissions, auth } = useAppStore()
   // Detect if agent wallet shares the same address as the main NAN wallet
   // (affects users who set up the agent wallet before the refId='agent' fix)
   const mainAddr = (auth?.circleWalletAddress ?? auth?.walletAddress ?? '').toLowerCase()
@@ -1622,26 +1674,41 @@ function DashboardScreen({ C, onDisconnect }: { C: ReturnType<typeof useNanTheme
             )
           })()}
 
-          {/* ── What your agent can do ─────────────────────────────────────────── */}
-          <div style={{ background: C.surf, border: `1px solid ${C.bdr}`, borderRadius: 16, overflow: 'hidden' }}>
-            <div style={{ padding: '14px 16px 10px', borderBottom: `1px solid ${C.bdr}` }}>
-              <div style={{ fontSize: 10, fontWeight: 700, color: C.t3, textTransform: 'uppercase', letterSpacing: '0.08em' }}>What Your Agent Can Do</div>
-            </div>
-            <div style={{ padding: '4px 16px' }}>
-              <CapabilityRow label="Hold USDC"              status="enabled"        C={C} />
-              <CapabilityRow label="Receive USDC"           status="enabled"        C={C} />
-              <CapabilityRow label="Send USDC"              status="enabled"        note="To permitted addresses" C={C} />
-              <CapabilityRow label="Pay for services"       status="enabled"        note="Pay on your behalf" C={C} />
-              <CapabilityRow label="Recurring payments"     status="enabled"        note="Tap Recurring above" C={C} />
-              <CapabilityRow label="Bridge / Swap"          status="not_configured" note="Use the main wallet Bridge & Swap tabs" C={C} noBorder />
-            </div>
-          </div>
-
-          {/* ── Automate via chat tip ─────────────────────────────────────────── */}
-          <div style={{ background: 'rgba(8,102,245,0.05)', border: '1px solid rgba(37,99,235,0.12)', borderRadius: 12, padding: '10px 14px', display: 'flex', alignItems: 'flex-start', gap: 8 }}>
-            <Zap size={13} color={BLUE} style={{ flexShrink: 0, marginTop: 1 }} />
-            <span style={{ fontSize: 12, color: C.t2, lineHeight: 1.5 }}>Recurring Payments run automatically when you ask NAN in the chat. Use the main wallet for Bridge and Swap.</span>
-          </div>
+          {/* ── What your agent can do — tappable row → drawer ────────────────── */}
+          {(() => {
+            const perms = agentPermissions
+            const caps = [
+              { key: 'canSend',        label: 'Send USDC',         note: 'Send to permitted addresses',    icon: '→' },
+              { key: 'canPayServices', label: 'Pay for services',  note: 'Pay APIs & tools on your behalf', icon: '⚡' },
+              { key: 'canRecurring',   label: 'Recurring payments', note: 'Scheduled automatic payments',  icon: '↻' },
+              { key: 'canBridge',      label: 'Bridge USDC',       note: 'Move USDC across chains',        icon: '⇄' },
+              { key: 'canSwap',        label: 'Swap tokens',       note: 'Convert USDC to other tokens',   icon: '⇌' },
+            ] as const
+            const enabledCount = caps.filter(c => perms[c.key] !== false).length
+            return (
+              <>
+                <button
+                  onClick={() => setDrawerView('capabilities' as DrawerView)}
+                  style={{ width: '100%', background: C.surf, border: `1px solid ${C.bdr}`, borderRadius: 16, padding: '14px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', fontFamily: F, WebkitTapHighlightColor: 'transparent', textAlign: 'left' as const }}
+                >
+                  <div>
+                    <div style={{ fontSize: 10, fontWeight: 700, color: C.t3, textTransform: 'uppercase' as const, letterSpacing: '0.08em', marginBottom: 6 }}>What Your Agent Can Do</div>
+                    <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' as const }}>
+                      {caps.map(c => (
+                        <span key={c.key} style={{ fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 20, background: perms[c.key] !== false ? 'rgba(16,185,129,0.10)' : C.surf2, color: perms[c.key] !== false ? GREEN : C.t3, border: `1px solid ${perms[c.key] !== false ? 'rgba(16,185,129,0.25)' : C.bdr}` }}>
+                          {c.label}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column' as const, alignItems: 'flex-end', gap: 4, flexShrink: 0, marginLeft: 12 }}>
+                    <span style={{ fontSize: 11, fontWeight: 700, color: BLUE }}>{enabledCount}/{caps.length}</span>
+                    <ChevronRight size={14} color={C.t3} />
+                  </div>
+                </button>
+              </>
+            )
+          })()}
 
           {/* ── Wallet details (collapsible) ───────────────────────────────────── */}
           <div style={{ background: C.surf, border: `1px solid ${C.bdr}`, borderRadius: 16, overflow: 'hidden' }}>

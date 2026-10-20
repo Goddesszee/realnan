@@ -68,6 +68,12 @@ export interface AgentPermissions {
   requireApproval: boolean
   autoApproveUnder: number
   requireApprovalAbove: number
+  // per-capability toggles
+  canSend: boolean
+  canPayServices: boolean
+  canRecurring: boolean
+  canBridge: boolean
+  canSwap: boolean
 }
 
 export interface AgentExecutionLog {
@@ -505,6 +511,7 @@ export const useAppStore = create<AppState>()(
         perTxLimit: 10, perServiceLimit: 5,
         allowedCategories: ['tech', 'digital', 'home'],
         requireApproval: false, autoApproveUnder: 1, requireApprovalAbove: 5,
+        canSend: true, canPayServices: true, canRecurring: true, canBridge: true, canSwap: true,
       },
       setAgentPermissions: (update) =>
         set((s) => ({ agentPermissions: { ...s.agentPermissions, ...update } })),
