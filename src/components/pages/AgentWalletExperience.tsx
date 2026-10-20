@@ -1213,18 +1213,18 @@ function DashboardScreen({ C, onDisconnect }: { C: ReturnType<typeof useNanTheme
   return (
     <div style={{ fontFamily: F, width: '100%', maxWidth: '100%', boxSizing: 'border-box', overflowX: 'hidden', display: 'flex', flexDirection: 'column', background: C.bg }}>
 
-      {/* ── Top action bar (refresh only — title/back handled by AppShell) ─── */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px 4px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <div style={{ width: 7, height: 7, borderRadius: '50%', background: isActive ? GREEN : AMBER }} />
+      {/* ── Slim status + refresh row ─────────────────────────────────────── */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+          <div style={{ width: 6, height: 6, borderRadius: '50%', background: isActive ? GREEN : AMBER }} />
           <span style={{ fontSize: 11, color: C.t3 }}>Circle Agent Stack</span>
         </div>
         <button
           onClick={() => void refresh()}
           aria-label="Refresh balance"
-          style={{ width: 32, height: 32, borderRadius: 9, background: C.surf, border: `1px solid ${C.bdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', WebkitTapHighlightColor: 'transparent' }}
+          style={{ width: 30, height: 30, borderRadius: 8, background: C.surf, border: `1px solid ${C.bdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', WebkitTapHighlightColor: 'transparent' }}
         >
-          <RefreshCw size={13} color={refreshing ? BLUE : C.t2} style={{ animation: refreshing ? 'aw-spin 1s linear infinite' : 'none' }} />
+          <RefreshCw size={12} color={refreshing ? BLUE : C.t2} style={{ animation: refreshing ? 'aw-spin 1s linear infinite' : 'none' }} />
         </button>
       </div>
 
@@ -1264,16 +1264,15 @@ function DashboardScreen({ C, onDisconnect }: { C: ReturnType<typeof useNanTheme
         boxSizing: 'border-box',
       }}>
 
-      {/* ── Balance card — always dark for contrast regardless of theme ──── */}
+      {/* ── Balance card — blue gradient, works in both themes ──── */}
       {(() => {
-        const isDark = C.bg === '#0a0a0f' || C.bg === '#0d0d14' || (C.text === '#ffffff' || C.text === '#fff')
-        const cardBg  = isDark ? '#0e1117' : '#111827'
-        const cardBdr = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.10)'
-        const lbl     = 'rgba(255,255,255,0.35)'
+        const cardBg  = 'linear-gradient(135deg, #1a3a8f 0%, #0d2060 100%)'
+        const cardBdr = 'rgba(255,255,255,0.10)'
+        const lbl     = 'rgba(255,255,255,0.5)'
         const val     = '#fff'
-        const sub     = 'rgba(255,255,255,0.35)'
-        const addrBg  = 'rgba(255,255,255,0.06)'
-        const addrClr = 'rgba(255,255,255,0.45)'
+        const sub     = 'rgba(255,255,255,0.45)'
+        const addrBg  = 'rgba(255,255,255,0.08)'
+        const addrClr = 'rgba(255,255,255,0.55)'
         return (
           <div style={{ background: cardBg, border: `1px solid ${cardBdr}`, borderRadius: 20, padding: '20px 18px 16px', marginBottom: 12, position: 'relative', overflow: 'hidden', boxSizing: 'border-box' }}>
             <div style={{ position: 'absolute', top: -50, right: -50, width: 160, height: 160, borderRadius: '50%', background: 'rgba(37,99,235,0.08)', filter: 'blur(50px)', pointerEvents: 'none' }} />
