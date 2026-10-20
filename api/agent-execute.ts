@@ -128,7 +128,11 @@ async function executeNanopayment(
         note: `NAN Agent — ${service_id} — ${randomUUID().slice(0, 8)}`,
       }),
     })
-    const d = await r.json() as { ok?: boolean; txId?: string; error?: string }
+    const d = await r.json() as { ok?: boolean; txId?: string; challengeId?: string; error?: string }
+    // spend returns a challengeId (UCW PIN required) — mark as awaiting_user_action
+    if (d.ok && d.challengeId) {
+      return { paid: false, skipped_reason: 'awaiting_user_action:' + d.challengeId }
+    }
     if (d.ok && d.txId) return { paid: true, txId: d.txId, amount_usdc: cost_usdc, method: 'direct_transfer' }
     return { paid: false, skipped_reason: d.error ?? 'spend failed' }
   } catch (e) {

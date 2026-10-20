@@ -57,6 +57,10 @@ KV_REST_API_TOKEN=...
 CRON_SECRET=<random string>
 VITE_VAPID_PUBLIC_KEY=...
 VAPID_PRIVATE_KEY=...
+VITE_ADMIN_ADDRESS=0x<your-wallet-address>
+ADMIN_PASSWORD=<strong-password>
+AGENT_WALLET_ID=<circle-agent-wallet-id>
+AGENT_WALLET_ADDRESS=0x<agent-wallet-address>
 ```
 
 ## Architecture Notes

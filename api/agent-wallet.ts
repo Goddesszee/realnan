@@ -601,6 +601,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
     }
 
+    // Path B returned a challengeId — surface it so the frontend can open the PIN popup
+    const awaitingMatch = nanopayment.skipped_reason?.match(/^awaiting_user_action:(.+)$/)
+    if (awaitingMatch) {
+      return res.status(200).json({
+        ok: true,
+        awaiting_user_action: true,
+        challengeId: awaitingMatch[1],
+        cost_usdc,
+        real_balance: realBalance.toFixed(6),
+        service: serviceCard,
+        message: `Payment of ${cost_usdc.toFixed(4)} USDC requires your approval. Open the PIN popup to confirm.`,
+      })
+    }
+
     if (executeError && !executeResult) {
       return res.status(200).json({ ok: false, execute_error: true, reason: executeError, cost_usdc, service: serviceCard, nanopayment })
     }

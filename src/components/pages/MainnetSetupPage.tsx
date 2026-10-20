@@ -61,7 +61,7 @@ const ENV_GROUPS: EnvGroup[] = [
         key: 'ALLOWED_ORIGIN',
         label: 'Allowed Origin (CORS)',
         description: 'Your production frontend URL. Restricts API CORS to only your domain.',
-        placeholder: 'https://paywell-puce.vercel.app',
+        placeholder: 'https://nanarc.xyz',
         type: 'url',
         required: true,
       },
@@ -207,7 +207,7 @@ const ENV_GROUPS: EnvGroup[] = [
 
 function buildVercelDeployUrl(values: Record<string, string>): string {
   const repo = 'Goddesszee/realnan'
-  const base = `https://vercel.com/new/clone?repository-url=https://github.com/${repo}&project-name=paywell&repository-name=paywell`
+  const base = `https://vercel.com/new/clone?repository-url=https://github.com/${repo}&project-name=nan&repository-name=nan`
 
   const envPairs = Object.entries(values)
     .filter(([, v]) => v.trim() !== '')

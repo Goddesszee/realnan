@@ -1,5 +1,5 @@
 /**
- * Paywell Backend Server
+ * NAN Backend Server
  * Bun + Express, runs on port 3001
  * Vite dev proxy forwards /api/* here
  */
@@ -184,7 +184,7 @@ function requireAdmin(req: express.Request, res: express.Response, next: express
 
 // ── health ────────────────────────────────────────────────────────────────────
 app.get('/health', (_req, res) => {
-  res.json({ ok: true, service: 'paywell-api', ts: Date.now() })
+  res.json({ ok: true, service: 'nan-api', ts: Date.now() })
 })
 
 // ── Download helper ───────────────────────────────────────────────────────────
@@ -990,7 +990,7 @@ async function groqChat(apiKey: string, message: string, usdcBal: string, wallet
       messages: [
         {
           role: 'system',
-          content: `You are the Paywell AI shopping assistant. The user's wallet address is ${walletAddress} and they have ${usdcBal} USDC available. Help them find products, answer questions about payments, and suggest purchases from the Paywell marketplace. Be concise and helpful. Never ask for private keys or seed phrases.`,
+          content: `You are the NAN AI assistant. The user's wallet address is ${walletAddress} and they have ${usdcBal} USDC available. Help them find products, answer questions about payments, and help with payments and finances. Be concise and helpful. Never ask for private keys or seed phrases.`,
         },
         { role: 'user', content: message },
       ],
@@ -1033,12 +1033,12 @@ async function sendOtpEmail(to: string, code: string) {
     auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
   })
   await transporter.sendMail({
-    from: `Paywell <${process.env.SMTP_USER}>`,
+    from: `NAN <${process.env.SMTP_USER}>`,
     to,
-    subject: 'Your Paywell verification code',
+    subject: 'Your NAN verification code',
     html: `
       <div style="font-family:sans-serif;max-width:400px;margin:0 auto;padding:32px">
-        <h2 style="color:#3B82F6">Paywell</h2>
+        <h2 style="color:#0866F5">NAN</h2>
         <p>Your verification code is:</p>
         <div style="font-size:40px;font-weight:700;letter-spacing:8px;color:#1a1a1a;padding:16px 0">${code}</div>
         <p style="color:#666">Expires in 10 minutes. Do not share this code.</p>
@@ -1050,7 +1050,7 @@ async function sendOtpEmail(to: string, code: string) {
 function mockAgentReply(message: string, usdcBal: string): string {
   const msg = message.toLowerCase()
   if (msg.includes('balance') || msg.includes('how much')) {
-    return `You currently have ${usdcBal} USDC in your Paywell wallet. Would you like to browse products or send a payment?`
+    return `You currently have ${usdcBal} USDC in your NAN wallet. Would you like to browse products or send a payment?`
   }
   if (msg.includes('buy') || msg.includes('purchase') || msg.includes('shop')) {
     return `I can help you shop! Head to the Shop tab to browse products across tech, home, fashion, food, and digital categories. I can add items to your cart automatically — just tell me what you're looking for.`
@@ -1059,9 +1059,9 @@ function mockAgentReply(message: string, usdcBal: string): string {
     return `To send USDC, go to the Wallet tab and tap Send. Enter the recipient address and amount. I can also send payments on your behalf if you enable agent spending in Settings.`
   }
   if (msg.includes('hello') || msg.includes('hi') || msg.includes('hey')) {
-    return `Hi! I'm your Paywell assistant. I can help you shop, send payments, check your balance, and manage your spending. What would you like to do?`
+    return `Hi! I'm NAN, your financial assistant. I can help you shop, send payments, check your balance, and manage your spending. What would you like to do?`
   }
-  return `I'm your Paywell shopping assistant. I can help you find products, send USDC payments, and manage your wallet. You have ${usdcBal} USDC available. What would you like to do?`
+  return `I'm NAN, your financial assistant. I can help you find products, send USDC payments, and manage your wallet. You have ${usdcBal} USDC available. What would you like to do?`
 }
 
 // ── Product catalogue ──────────────────────────────────────────────────────────
@@ -2780,7 +2780,7 @@ app.get(/^(?!\/api).*$/, (_req, res) => {
 
 // ── start ──────────────────────────────────────────────────────────────────────
 app.listen(PORT, () => {
-  console.log(`Paywell API running on port ${PORT}`)
+  console.log(`NAN API running on port ${PORT}`)
   if (!process.env.OPENAI_API_KEY && !process.env.GROQ_API_KEY) console.log('  ⚠  OPENAI_API_KEY / GROQ_API_KEY not set — using mock AI replies')
   if (process.env.OPENAI_API_KEY) console.log('  ✓  OpenAI GPT-4o-mini enabled for AI chat')
   else if (process.env.GROQ_API_KEY) console.log('  ✓  Groq LLaMA enabled for AI chat')
