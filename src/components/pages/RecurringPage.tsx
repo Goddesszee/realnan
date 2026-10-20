@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import {
   Repeat, Plus, Play, Pause, Trash2, Clock, Check,
   AlertCircle, X, ChevronRight,
-  CheckCircle2, ArrowRight,
+  CheckCircle2, ArrowRight, Share2, ExternalLink, Receipt,
 } from 'lucide-react'
 import { useWriteContract, useWaitForTransactionReceipt, useAccount, useSwitchChain } from 'wagmi'
 import { erc20Abi, isAddress } from 'viem'
@@ -157,6 +157,7 @@ export function RecurringPage() {
   const [pausingId,  setPausingId]  = useState<string | null>(null)
   const [deletingId, setDeletingId] = useState<string | null>(null)
   const [confirmDel, setConfirmDel] = useState<string | null>(null)
+  const [receiptTask, setReceiptTask] = useState<typeof recurringTasks[0] | null>(null)
 
   // ── run machinery (unchanged logic) ────────────────────────────────────
   const [runningId, setRunningId] = useState<string | null>(null)
@@ -416,6 +417,11 @@ export function RecurringPage() {
           <div style={{ fontSize: 17, fontWeight: 700, color: TEXT, letterSpacing: '-0.02em' }}>Recurring Payments</div>
           <div style={{ fontSize: 12, color: T2, marginTop: 1 }}>Scheduled USDC transfers</div>
         </div>
+        {(step === 'form' || step === 'review') && (
+          <button onClick={() => step === 'review' ? setStep('form') : setStep('list')} style={{ width: 32, height: 32, borderRadius: 8, background: SURF2, border: `1px solid ${BDR}`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+            <ArrowRight size={14} color={T2} style={{ transform: 'rotate(180deg)' }} />
+          </button>
+        )}
         {step === 'list' && (
           <button onClick={openForm} style={{
             display: 'flex', alignItems: 'center', gap: 6,
@@ -713,20 +719,23 @@ export function RecurringPage() {
                       </div>
                     )}
 
-                    {/* Last run + tx link */}
+                    {/* Last run + tx link + receipt */}
                     {(task.lastRun || task.lastTxHash) && (
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
                         {task.lastRun && (
                           <span style={{ fontSize: 11, color: T3, display: 'flex', alignItems: 'center', gap: 4 }}>
-                            <Clock size={10} color={T3} /> Last run {task.lastRun}
+                            <Clock size={10} color={T3} /> Last run {fmtDate(task.lastRun)}
                           </span>
                         )}
                         {task.lastTxHash && (
                           <a href={buildTxExplorerUrl(ARC, task.lastTxHash)} target="_blank" rel="noopener noreferrer"
                             style={{ fontSize: 11, color: BLUE, fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 3 }}>
-                            View tx <ArrowRight size={10} />
+                            View tx <ExternalLink size={10} />
                           </a>
                         )}
+                        <button onClick={() => setReceiptTask(task)} style={{ fontSize: 11, color: BLUE, fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', gap: 3, fontFamily: F }}>
+                          <Receipt size={10} /> Receipt
+                        </button>
                       </div>
                     )}
 
@@ -815,6 +824,68 @@ export function RecurringPage() {
             </button>
           )}
         </>
+      )}
+
+      {/* ── Receipt modal ──────────────────────────────────────────────── */}
+      {receiptTask && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }} onClick={() => setReceiptTask(null)}>
+          <div style={{ background: 'var(--nan-surface)', borderRadius: '20px 20px 0 0', padding: 24, width: '100%', maxWidth: 480, paddingBottom: 40 }} onClick={e => e.stopPropagation()}>
+            {/* Header */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(34,197,94,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <CheckCircle2 size={20} color={GREEN} />
+                </div>
+                <div>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: TEXT }}>Payment Receipt</div>
+                  <div style={{ fontSize: 11, color: T3, marginTop: 1 }}>Recurring · {freqLabel(receiptTask.frequency)}</div>
+                </div>
+              </div>
+              <button onClick={() => setReceiptTask(null)} style={{ width: 30, height: 30, borderRadius: 8, background: SURF2, border: `1px solid ${BDR}`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+                <X size={14} color={T2} />
+              </button>
+            </div>
+
+            {/* Amount */}
+            <div style={{ textAlign: 'center', padding: '16px 0', borderTop: `1px solid ${BDR}`, borderBottom: `1px solid ${BDR}`, marginBottom: 16 }}>
+              <div style={{ fontSize: 36, fontWeight: 800, color: TEXT, letterSpacing: '-0.04em' }}>{receiptTask.amount}</div>
+              <div style={{ fontSize: 14, fontWeight: 600, color: T2, marginTop: 2 }}>USDC</div>
+            </div>
+
+            {/* Details */}
+            {[
+              { label: 'Payment name',  value: receiptTask.name.replace(/^agent:/, '') },
+              { label: 'Recipient',     value: shortAddr(receiptTask.recipient), mono: true },
+              { label: 'Date',          value: fmtDate(receiptTask.lastRun) },
+              { label: 'Run count',     value: `${receiptTask.runCount} payment${receiptTask.runCount !== 1 ? 's' : ''} total` },
+              ...(receiptTask.lastTxHash && !receiptTask.lastTxHash.startsWith('auto-') ? [{ label: 'Tx hash', value: `${receiptTask.lastTxHash.slice(0, 10)}…${receiptTask.lastTxHash.slice(-6)}`, mono: true }] : []),
+            ].map((row, i, arr) => (
+              <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: i < arr.length - 1 ? `1px solid ${BDR}` : 'none' }}>
+                <span style={{ fontSize: 12, color: T3 }}>{row.label}</span>
+                <span style={{ fontSize: 12, fontWeight: 600, color: TEXT, fontFamily: row.mono ? 'monospace' : F }}>{row.value}</span>
+              </div>
+            ))}
+
+            {/* Actions */}
+            <div style={{ display: 'flex', gap: 8, marginTop: 20 }}>
+              {receiptTask.lastTxHash && !receiptTask.lastTxHash.startsWith('auto-') && (
+                <a href={buildTxExplorerUrl(ARC, receiptTask.lastTxHash)} target="_blank" rel="noopener noreferrer"
+                  style={{ flex: 1, height: 44, background: SURF2, color: TEXT, border: `1px solid ${BDR}`, borderRadius: 11, fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: F, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, textDecoration: 'none' }}>
+                  <ExternalLink size={14} /> View on explorer
+                </a>
+              )}
+              <button
+                onClick={() => {
+                  const text = `NAN Recurring Payment Receipt\n\nPayment: ${receiptTask.name.replace(/^agent:/, '')}\nAmount: ${receiptTask.amount} USDC\nTo: ${receiptTask.recipient}\nDate: ${fmtDate(receiptTask.lastRun)}\nRun #${receiptTask.runCount}${receiptTask.lastTxHash && !receiptTask.lastTxHash.startsWith('auto-') ? `\nTx: ${receiptTask.lastTxHash}` : ''}`
+                  if (navigator.share) { void navigator.share({ title: 'NAN Payment Receipt', text }) }
+                  else { void navigator.clipboard.writeText(text).then(() => toast.success('Receipt copied')) }
+                }}
+                style={{ flex: 1, height: 44, background: BLUE, color: '#fff', border: 'none', borderRadius: 11, fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: F, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+                <Share2 size={14} /> Share receipt
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   )

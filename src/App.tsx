@@ -230,22 +230,24 @@ export default function App() {
     const invoice  = p.get('invoice') ?? ''
     const pr       = p.get('pr') ?? ''
     const pay      = p.get('pay') ?? ''
+    const split    = p.get('split') ?? ''
     const onramp   = p.get('onramp') ?? ''
     const send     = p.get('send') ?? ''
     const to       = p.get('to') ?? ''
     const amount   = parseFloat(p.get('amount') ?? '0')
     const note     = p.get('note') ?? ''
     const currency = (p.get('currency') ?? 'USDC') as 'USDC' | 'EURC'
-    if (nanpay) return { nanpay, invoice: '', pr: '', pay: '', onramp: '', send: '', to: '', amount, note, currency }
-    if (invoice) return { nanpay: '', invoice, pr: '', pay: '', onramp: '', send: '', to: '', amount, note, currency }
-    if (pr || (pay && amount > 0)) return { nanpay: '', invoice: '', pr, pay, onramp: '', send: '', to: '', amount, note, currency }
-    if (onramp) return { nanpay: '', invoice: '', pr: '', pay: '', onramp, send: '', to, amount, note, currency }
-    if (send && to) return { nanpay: '', invoice: '', pr: '', pay: '', onramp: '', send, to, amount, note, currency }
+    if (nanpay) return { nanpay, invoice: '', pr: '', pay: '', split: '', onramp: '', send: '', to: '', amount, note, currency }
+    if (invoice) return { nanpay: '', invoice, pr: '', pay: '', split: '', onramp: '', send: '', to: '', amount, note, currency }
+    if (split && to) return { nanpay: '', invoice: '', pr: '', pay: to, split, onramp: '', send: '', to, amount, note, currency }
+    if (pr || (pay && amount > 0)) return { nanpay: '', invoice: '', pr, pay, split: '', onramp: '', send: '', to: '', amount, note, currency }
+    if (onramp) return { nanpay: '', invoice: '', pr: '', pay: '', split: '', onramp, send: '', to, amount, note, currency }
+    if (send && to) return { nanpay: '', invoice: '', pr: '', pay: '', split: '', onramp: '', send, to, amount, note, currency }
     const invoiceCheck = p.get('invoiceCheck') ?? ''
-    if (invoiceCheck) return { nanpay: '', invoice: '', pr: '', pay: '', onramp: '', send: '', to: '', amount: 0, note: '', currency: 'USDC' as const, invoiceCheck }
+    if (invoiceCheck) return { nanpay: '', invoice: '', pr: '', pay: '', split: '', onramp: '', send: '', to: '', amount: 0, note: '', currency: 'USDC' as const, invoiceCheck }
     // Clean pay link: nanarc.xyz/@zara (only the "@name" form, so no existing path is affected)
     const pathHandle = window.location.pathname.match(/^\/@([a-z0-9][a-z0-9-]{1,30})\/?$/i)?.[1]
-    if (pathHandle) return { nanpay: pathHandle.toLowerCase(), invoice: '', pr: '', pay: '', onramp: '', send: '', to: '', amount, note, currency }
+    if (pathHandle) return { nanpay: pathHandle.toLowerCase(), invoice: '', pr: '', pay: '', split: '', onramp: '', send: '', to: '', amount, note, currency }
     return null
   }, [])
 

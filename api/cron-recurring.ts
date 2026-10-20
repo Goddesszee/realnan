@@ -153,16 +153,36 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           }
 
           const newNextRun = nextRunDate(task.frequency, now)
+          const txHash = data.challengeId ?? `auto-${Date.now().toString(36)}`
           tasks[i] = {
             ...task,
             lastRun: now.toISOString(),
-            lastTxHash: data.challengeId ?? `auto-${Date.now().toString(36)}`,
+            lastTxHash: txHash,
             runCount: (task.runCount ?? 0) + 1,
             nextRunAt: newNextRun.toISOString(),
             status: agentWalletId ? 'sent' : 'challenge_created',
           }
           changed = true
           processed++
+
+          // Write activity record to Redis so the frontend picks it up on next sync
+          try {
+            const actKey = `activity:${wallet}`
+            const existing = (await kv.get<object[]>(actKey)) ?? []
+            existing.unshift({
+              id: `rt-${task.id}-${Date.now()}`,
+              type: 'sent',
+              description: `Recurring: ${task.name}`,
+              amount: parseFloat(task.amount),
+              sign: '-',
+              timestamp: now.toISOString(),
+              status: agentWalletId ? 'confirmed' : 'pending',
+              counterparty: task.recipient,
+              txHash,
+              agentInitiated: true,
+            })
+            await kv.set(actKey, existing.slice(0, 200), { ex: 60 * 60 * 24 * 90 })
+          } catch { /* activity write failure is non-fatal */ }
         } catch (e) {
           tasks[i] = { ...task, status: `error: ${e instanceof Error ? e.message : 'unknown'}`.slice(0, 80) }
           changed = true
