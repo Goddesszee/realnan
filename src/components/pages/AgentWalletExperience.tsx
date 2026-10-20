@@ -1133,7 +1133,7 @@ const PRIMARY_TABS: { id: DashTab; label: string }[] = [
 ]
 
 function DashboardScreen({ C, onDisconnect }: { C: ReturnType<typeof useNanTheme>; onDisconnect: () => void }) {
-  const { agentWallet, setAgentWallet, agentSpendLog, activity, recurringTasks, setActiveView, previousView, auth } = useAppStore()
+  const { agentWallet, setAgentWallet, agentSpendLog, activity, recurringTasks, setActiveView, auth } = useAppStore()
   // Detect if agent wallet shares the same address as the main NAN wallet
   // (affects users who set up the agent wallet before the refId='agent' fix)
   const mainAddr = (auth?.circleWalletAddress ?? auth?.walletAddress ?? '').toLowerCase()
@@ -1213,43 +1213,19 @@ function DashboardScreen({ C, onDisconnect }: { C: ReturnType<typeof useNanTheme
   return (
     <div style={{ fontFamily: F, width: '100%', maxWidth: '100%', boxSizing: 'border-box', overflowX: 'hidden', display: 'flex', flexDirection: 'column', background: C.bg }}>
 
-      {/* ── Sticky header ───────────────────────────────────────────────────── */}
-      <div style={{
-        position: 'sticky', top: 0, zIndex: 20,
-        background: C.bg ?? 'var(--nan-bg)',
-        borderBottom: `1px solid ${C.bdr}`,
-        paddingTop: 'max(12px, env(safe-area-inset-top))',
-        paddingLeft: 16, paddingRight: 16, paddingBottom: 12,
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <button
-            onClick={() => setActiveView(previousView && previousView !== 'agent-wallet' ? previousView : 'home')}
-            aria-label="Back"
-            style={{ width: 34, height: 34, borderRadius: 9, background: C.surf, border: `1px solid ${C.bdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0, WebkitTapHighlightColor: 'transparent', padding: 0 }}
-          >
-            <ArrowLeft size={16} color={C.t2} strokeWidth={2.2} />
-          </button>
-
-          <div style={{ width: 32, height: 32, borderRadius: 9, background: 'rgba(37,99,235,0.10)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-            <Wallet size={15} color={BLUE} strokeWidth={1.8} />
-          </div>
-
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontSize: 15, fontWeight: 800, color: C.text, letterSpacing: '-0.02em', lineHeight: 1.2 }}>Agent Wallet</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginTop: 1 }}>
-              <div style={{ width: 5, height: 5, borderRadius: '50%', background: isActive ? GREEN : AMBER, flexShrink: 0 }} />
-              <span style={{ fontSize: 10, color: C.t3 }}>Circle Agent Stack</span>
-            </div>
-          </div>
-
-          <button
-            onClick={() => void refresh()}
-            aria-label="Refresh balance"
-            style={{ width: 34, height: 34, borderRadius: 9, background: C.surf, border: `1px solid ${C.bdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0, WebkitTapHighlightColor: 'transparent' }}
-          >
-            <RefreshCw size={13} color={refreshing ? BLUE : C.t2} style={{ animation: refreshing ? 'aw-spin 1s linear infinite' : 'none' }} />
-          </button>
+      {/* ── Top action bar (refresh only — title/back handled by AppShell) ─── */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px 4px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <div style={{ width: 7, height: 7, borderRadius: '50%', background: isActive ? GREEN : AMBER }} />
+          <span style={{ fontSize: 11, color: C.t3 }}>Circle Agent Stack</span>
         </div>
+        <button
+          onClick={() => void refresh()}
+          aria-label="Refresh balance"
+          style={{ width: 32, height: 32, borderRadius: 9, background: C.surf, border: `1px solid ${C.bdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', WebkitTapHighlightColor: 'transparent' }}
+        >
+          <RefreshCw size={13} color={refreshing ? BLUE : C.t2} style={{ animation: refreshing ? 'aw-spin 1s linear infinite' : 'none' }} />
+        </button>
       </div>
 
       {/* ── Migration notice: agent address = main address (pre-fix users) ─── */}
