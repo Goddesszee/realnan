@@ -28,6 +28,7 @@ import { useAppStore } from '../../store/appStore'
 import { executeWithGuard } from '../../lib/circle-execute'
 import { useNanTheme } from '../../hooks/useNanTheme'
 import { AgentRecurringTab } from './AgentRecurringTab'
+import { OnrampCardPanel } from './OnrampCardPanel'
 
 // ── design tokens ─────────────────────────────────────────────────────────────
 
@@ -932,6 +933,88 @@ function ManagePolicyModal({ onClose, C }: { onClose: () => void; C: ReturnType<
   )
 }
 
+// ── Fund panel — two tabs: Buy with card (onramp) + Send from wallet ─────────
+function FundPanel({ agentAddress, copied, onCopy, C }: {
+  agentAddress: string
+  copied: boolean
+  onCopy: () => void
+  C: ReturnType<typeof useNanTheme>
+}) {
+  const [tab, setTab] = React.useState<'card' | 'wallet'>('card')
+  const [cardAmount, setCardAmount] = React.useState<string>('10')
+
+  return (
+    <div>
+      {/* Tab switcher */}
+      <div style={{ display: 'flex', gap: 6, marginBottom: 18, background: C.surf2, borderRadius: 12, padding: 4 }}>
+        {(['card', 'wallet'] as const).map(t => (
+          <button
+            key={t}
+            onClick={() => setTab(t)}
+            style={{
+              flex: 1, height: 36, borderRadius: 9, border: 'none', cursor: 'pointer',
+              fontFamily: F, fontSize: 13, fontWeight: 700,
+              background: tab === t ? C.surf : 'transparent',
+              color: tab === t ? BLUE : C.t2,
+              boxShadow: tab === t ? '0 1px 4px rgba(0,0,0,0.08)' : 'none',
+              transition: 'all 0.15s',
+              WebkitTapHighlightColor: 'transparent',
+            }}
+          >
+            {t === 'card' ? 'Buy with card' : 'Send from wallet'}
+          </button>
+        ))}
+      </div>
+
+      {tab === 'card' && (
+        <div>
+          <div style={{ marginBottom: 14 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: C.t2, textTransform: 'uppercase' as const, letterSpacing: '0.05em', marginBottom: 6 }}>Amount (USDC)</div>
+            <div style={{ position: 'relative' as const }}>
+              <input
+                type="number" min="1" step="1"
+                value={cardAmount}
+                onChange={e => setCardAmount(e.target.value)}
+                style={{ width: '100%', boxSizing: 'border-box' as const, padding: '11px 52px 11px 14px', border: `1.5px solid ${BLUE}`, borderRadius: 12, fontFamily: F, fontSize: 16, fontWeight: 700, color: C.text, background: C.surf2, outline: 'none' }}
+              />
+              <span style={{ position: 'absolute' as const, right: 14, top: '50%', transform: 'translateY(-50%)', fontSize: 12, fontWeight: 700, color: C.t2 }}>USDC</span>
+            </div>
+          </div>
+          {parseFloat(cardAmount) > 0 && (
+            <OnrampCardPanel
+              toAddress={agentAddress}
+              amount={parseFloat(cardAmount)}
+              recipientLabel="Agent Wallet"
+              currency="USDC"
+            />
+          )}
+        </div>
+      )}
+
+      {tab === 'wallet' && (
+        <div>
+          <div style={{ fontSize: 13, color: C.t2, marginBottom: 14, lineHeight: 1.5 }}>
+            Send USDC on Arc from any wallet to this address.
+          </div>
+          <div style={{ background: C.surf, border: `1px solid ${C.bdr}`, borderRadius: 14, padding: 16, marginBottom: 12 }}>
+            <div style={{ fontSize: 10, fontWeight: 700, color: C.t3, textTransform: 'uppercase' as const, letterSpacing: '0.07em', marginBottom: 8 }}>Agent Wallet Address</div>
+            <div style={{ fontSize: 12, fontFamily: MONO, color: C.text, wordBreak: 'break-all' as const, lineHeight: 1.7 }}>{agentAddress}</div>
+          </div>
+          <div style={{ background: 'rgba(255,149,0,0.06)', border: '1px solid rgba(255,149,0,0.2)', borderRadius: 10, padding: '9px 13px', marginBottom: 16, fontSize: 12, color: C.t2, lineHeight: 1.5 }}>
+            Only send <strong style={{ color: C.text }}>USDC on Arc</strong>. Other tokens may be lost.
+          </div>
+          <button
+            onClick={onCopy}
+            style={{ width: '100%', height: 46, background: BLUE, color: '#fff', border: 'none', borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: F, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, WebkitTapHighlightColor: 'transparent' }}
+          >
+            {copied ? <><Check size={15} /> Copied!</> : <><Copy size={15} /> Copy Address</>}
+          </button>
+        </div>
+      )}
+    </div>
+  )
+}
+
 // ── Unified bottom drawer ─────────────────────────────────────────────────────
 type DrawerView = 'fund' | 'send' | 'recurring' | 'capabilities' | null
 
@@ -1019,21 +1102,7 @@ function ActionDrawer({ view, agentAddress, onClose, C }: {
 
   const content = (() => {
     if (view === 'fund') return (
-      <div>
-        <div style={{ fontSize: 13, color: C.t2, marginBottom: 18, lineHeight: 1.5 }}>
-          Send USDC on Arc to this address to fund your Agent Wallet.
-        </div>
-        <div style={{ background: C.surf, border: `1px solid ${C.bdr}`, borderRadius: 14, padding: 16, marginBottom: 14 }}>
-          <div style={{ fontSize: 10, fontWeight: 700, color: C.t3, textTransform: 'uppercase' as const, letterSpacing: '0.07em', marginBottom: 8 }}>Agent Wallet Address</div>
-          <div style={{ fontSize: 13, fontFamily: MONO, color: C.text, wordBreak: 'break-all' as const, lineHeight: 1.7 }}>{agentAddress}</div>
-        </div>
-        <div style={{ background: 'rgba(255,149,0,0.06)', border: '1px solid rgba(255,149,0,0.2)', borderRadius: 12, padding: '10px 14px', marginBottom: 18, fontSize: 12, color: C.t2, lineHeight: 1.5 }}>
-          Only send <strong style={{ color: C.text }}>USDC on Arc</strong>. Sending other tokens may result in permanent loss.
-        </div>
-        <button onClick={copy} style={{ width: '100%', height: 48, background: BLUE, color: '#fff', border: 'none', borderRadius: 14, fontSize: 15, fontWeight: 700, cursor: 'pointer', fontFamily: F, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-          {copied ? <><Check size={16} /> Copied!</> : <><Copy size={16} /> Copy Address</>}
-        </button>
-      </div>
+      <FundPanel agentAddress={agentAddress} copied={copied} onCopy={copy} C={C} />
     )
 
     if (view === 'send') return (
@@ -1695,7 +1764,7 @@ function DashboardScreen({ C, onDisconnect }: { C: ReturnType<typeof useNanTheme
             return (
               <>
                 <button
-                  onClick={() => setDrawerView('capabilities' as DrawerView)}
+                  onClick={() => setDrawerView('capabilities')}
                   style={{ width: '100%', background: C.surf, border: `1px solid ${C.bdr}`, borderRadius: 16, padding: '14px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', fontFamily: F, WebkitTapHighlightColor: 'transparent', textAlign: 'left' as const }}
                 >
                   <div>
