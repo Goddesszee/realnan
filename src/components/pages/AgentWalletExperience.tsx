@@ -1265,21 +1265,6 @@ function DashboardScreen({ C, onDisconnect }: { C: ReturnType<typeof useNanTheme
   return (
     <div style={{ fontFamily: F, width: '100%', maxWidth: '100%', boxSizing: 'border-box', overflowX: 'hidden', display: 'flex', flexDirection: 'column', background: C.bg }}>
 
-      {/* ── Slim status + refresh row ─────────────────────────────────────── */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-          <div style={{ width: 6, height: 6, borderRadius: '50%', background: isActive ? GREEN : AMBER }} />
-          <span style={{ fontSize: 11, color: C.t3 }}>Circle Agent Stack</span>
-        </div>
-        <button
-          onClick={() => void refresh()}
-          aria-label="Refresh balance"
-          style={{ width: 30, height: 30, borderRadius: 8, background: C.surf, border: `1px solid ${C.bdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', WebkitTapHighlightColor: 'transparent' }}
-        >
-          <RefreshCw size={12} color={refreshing ? BLUE : C.t2} style={{ animation: refreshing ? 'aw-spin 1s linear infinite' : 'none' }} />
-        </button>
-      </div>
-
       {/* ── Migration notice: agent address = main address (pre-fix users) ─── */}
       {sameAddressAsMain && !migDismissed && (
         <div style={{ margin: '10px 16px 0', padding: '12px 14px', borderRadius: 12, background: 'rgba(255,149,0,0.08)', border: '1px solid rgba(255,149,0,0.3)', display: 'flex', alignItems: 'flex-start', gap: 10 }}>
@@ -1310,25 +1295,40 @@ function DashboardScreen({ C, onDisconnect }: { C: ReturnType<typeof useNanTheme
       {/* ── Scrollable content ──────────────────────────────────────────────── */}
       <div style={{
         flex: 1, overflowY: 'auto', overflowX: 'hidden',
-        padding: '16px 16px',
+        padding: '4px 16px 0',
         paddingBottom: 'max(120px, calc(env(safe-area-inset-bottom) + 100px))',
         WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none',
         boxSizing: 'border-box',
       }}>
 
+      {/* ── Slim status + refresh row ─────────────────────────────────────── */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+          <div style={{ width: 6, height: 6, borderRadius: '50%', background: isActive ? GREEN : AMBER }} />
+          <span style={{ fontSize: 11, color: C.t3 }}>Circle Agent Stack</span>
+        </div>
+        <button
+          onClick={() => void refresh()}
+          aria-label="Refresh balance"
+          style={{ width: 28, height: 28, borderRadius: 8, background: C.surf, border: `1px solid ${C.bdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', WebkitTapHighlightColor: 'transparent' }}
+        >
+          <RefreshCw size={11} color={refreshing ? BLUE : C.t2} style={{ animation: refreshing ? 'aw-spin 1s linear infinite' : 'none' }} />
+        </button>
+      </div>
+
       {/* ── Balance card — white card matching NAN design system ──── */}
       <div style={{
         background: C.surf, border: `1px solid ${C.bdr}`,
         borderRadius: 20, overflow: 'hidden',
-        marginBottom: 12, boxSizing: 'border-box' as const,
+        marginBottom: 8, boxSizing: 'border-box' as const,
         boxShadow: C.isDark ? 'none' : '0 1px 6px rgba(0,0,0,0.05)',
       }}>
         {/* Blue accent top border */}
         <div style={{ height: 3, background: BLUE }} />
 
-        <div style={{ padding: '16px 18px 14px' }}>
+        <div style={{ padding: '12px 16px 12px' }}>
           {/* Top row: label + status badge */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
             <span style={{ fontSize: 12, color: C.t2, fontWeight: 500 }}>Available balance</span>
             <div style={{
               background: isActive ? 'rgba(16,185,129,0.10)' : 'rgba(255,149,0,0.10)',
@@ -1345,11 +1345,11 @@ function DashboardScreen({ C, onDisconnect }: { C: ReturnType<typeof useNanTheme
           {refreshing ? (
             <div style={{ height: 40, width: 140, background: C.surf2, borderRadius: 10, marginBottom: 10, animation: 'nan-shimmer 1.4s ease infinite' }} />
           ) : (
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 10 }}>
-              <span style={{ fontSize: 36, fontWeight: 800, color: C.text, fontFamily: MONO, letterSpacing: '-0.03em', lineHeight: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 5, marginBottom: 6 }}>
+              <span style={{ fontSize: 28, fontWeight: 800, color: C.text, fontFamily: MONO, letterSpacing: '-0.03em', lineHeight: 1 }}>
                 {balance.toFixed(2)}
               </span>
-              <span style={{ fontSize: 16, fontWeight: 600, color: C.t2 }}>USDC</span>
+              <span style={{ fontSize: 14, fontWeight: 600, color: C.t2 }}>USDC</span>
             </div>
           )}
 
@@ -1357,7 +1357,7 @@ function DashboardScreen({ C, onDisconnect }: { C: ReturnType<typeof useNanTheme
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: 5,
             background: C.surf2, border: `1px solid ${C.bdr}`,
-            borderRadius: 8, padding: '4px 8px', marginBottom: 12,
+            borderRadius: 8, padding: '3px 7px', marginBottom: 8,
           }}>
             <svg width="10" height="10" viewBox="0 0 20 20" fill="none">
               <rect x="2" y="5" width="16" height="12" rx="2" stroke={C.t3} strokeWidth="1.6"/>
@@ -1424,7 +1424,7 @@ function DashboardScreen({ C, onDisconnect }: { C: ReturnType<typeof useNanTheme
       })()}
 
       {/* ── Action buttons — circular icons matching HomePage ActionBtn ────── */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 20, gap: 4 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12, gap: 4 }}>
         {([
           { label: 'Fund',      Icon: Coins,       view: 'fund',      primary: true  },
           { label: 'Send',      Icon: ArrowRight,  view: 'send',      primary: false },
@@ -1436,13 +1436,13 @@ function DashboardScreen({ C, onDisconnect }: { C: ReturnType<typeof useNanTheme
             WebkitTapHighlightColor: 'transparent', flex: 1, padding: '4px 0', minWidth: 0,
           }}>
             <div style={{
-              width: 56, height: 56, borderRadius: 28, flexShrink: 0,
+              width: 46, height: 46, borderRadius: 23, flexShrink: 0,
               background: primary ? BLUE : C.surf,
               border: primary ? 'none' : `1.5px solid ${C.bdr}`,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               boxShadow: primary ? `0 4px 16px rgba(8,102,245,0.30)` : C.isDark ? 'none' : '0 1px 4px rgba(0,0,0,0.06)',
             }}>
-              <Icon size={21} color={primary ? '#fff' : BLUE} strokeWidth={primary ? 2.2 : 1.8} />
+              <Icon size={18} color={primary ? '#fff' : BLUE} strokeWidth={primary ? 2.2 : 1.8} />
             </div>
             <span style={{ fontSize: 11, fontWeight: 600, color: primary ? BLUE : C.t2, whiteSpace: 'nowrap' as const }}>{label}</span>
           </button>
@@ -1450,7 +1450,7 @@ function DashboardScreen({ C, onDisconnect }: { C: ReturnType<typeof useNanTheme
       </div>
 
       {/* ── Tab bar ───────────────────────────────────────────────────────── */}
-      <div style={{ display: 'flex', borderBottom: `1px solid ${C.bdr}`, marginBottom: 16, gap: 0 }}>
+      <div style={{ display: 'flex', borderBottom: `1px solid ${C.bdr}`, marginBottom: 10, gap: 0 }}>
         {PRIMARY_TABS.map(t => {
           const active = dashTab === t.id
           return (
